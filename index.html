@@ -205,6 +205,9 @@
     /* Problem section "01 · Who We Serve" 1fr 2fr -> stack */
     section div[style*="1fr 2fr"] { grid-template-columns: 1fr !important; gap: 24px !important; }
 
+    /* Pricing grid 2-col -> stack on mobile */
+    .pricing-grid { grid-template-columns: 1fr !important; }
+
     /* Footer 5-col -> stack cleanly on mobile */
     footer > div.footer-top[style*="1.8fr 1fr 1fr 1fr 1.2fr"],
     footer > div:first-child[style*="1.8fr 1fr 1fr 1fr 1.2fr"] { grid-template-columns: 1fr !important; gap: 32px !important; }
@@ -327,6 +330,7 @@
     </div>
     <div style="display:flex;gap:32px;align-items:center;" id="landing-nav-right">
       <a onclick="go('how-it-works')">How It Works</a>
+      <a onclick="document.getElementById('pricing-section').scrollIntoView({behavior:'smooth'})">Pricing</a>
       <a onclick="go('signin')">Sign In</a>
       <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Get Started →</button>
     </div>
@@ -393,6 +397,125 @@
     <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">02 · Integrated Payment Processors</div>
     <h2 class="display" style="font-size:42px;line-height:1.05;font-weight:400;margin-bottom:48px;max-width:800px;">From first-time solopreneurs to enterprise operators — every tier of payment processor in one application.</h2>
     <div id="processors-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);"></div>
+  </section>
+
+  <!-- =============== PRICING SECTION =============== -->
+  <section id="pricing-section" style="padding:120px 48px 80px;max-width:1400px;margin:0 auto;border-top:1px solid var(--border);">
+    <div style="text-align:center;margin-bottom:64px;">
+      <div class="mono" style="display:inline-block;padding:6px 14px;border:1px solid var(--border-strong);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:24px;">Pricing</div>
+      <h2 class="display" style="font-size:clamp(40px, 5vw, 64px);line-height:1.05;font-weight:400;margin-bottom:20px;">
+        Simple, <span style="font-style:italic;color:var(--accent);">honest</span> pricing.
+      </h2>
+      <p style="font-size:18px;color:var(--fg-muted);max-width:560px;margin:0 auto;line-height:1.5;">
+        Start free. Upgrade when you're ready to access the full underwriting engine. No hidden fees. Cancel anytime.
+      </p>
+    </div>
+
+    <div class="pricing-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:1100px;margin:0 auto;">
+      <!-- FREE TIER -->
+      <div style="border:1px solid var(--border);background:var(--bg-card);padding:48px;display:flex;flex-direction:column;">
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px;">Free Account</div>
+        <h3 class="display" style="font-size:36px;font-weight:500;margin-bottom:8px;">Explore</h3>
+        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;margin-bottom:32px;">Browse the platform and create your business profile — no payment required.</p>
+
+        <div style="margin-bottom:32px;">
+          <div style="display:flex;align-items:baseline;gap:8px;">
+            <span class="display" style="font-size:64px;font-weight:500;line-height:1;">$0</span>
+            <span style="font-size:18px;color:var(--fg-muted);">/forever</span>
+          </div>
+          <div style="font-size:13px;color:var(--fg-muted);margin-top:10px;">Account creation only. Reports require subscription.</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:40px;flex:1;">
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
+            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
+            <span>Free account creation</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
+            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
+            <span>Browse all 27 payment processors</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
+            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
+            <span>Save your business profile</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
+            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
+            <span>Access educational resources</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--fg-dim);">
+            <span style="color:var(--fg-dim);font-weight:700;flex-shrink:0;">✕</span>
+            <span>Underwriting reports (subscription required)</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--fg-dim);">
+            <span style="color:var(--fg-dim);font-weight:700;flex-shrink:0;">✕</span>
+            <span>Approval/denial decisioning across processors</span>
+          </div>
+        </div>
+
+        <button class="btn-ghost" onclick="go('signup')" style="width:100%;justify-content:center;">Create free account →</button>
+        <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--fg-dim);">No credit card required</div>
+      </div>
+
+      <!-- PRO TIER -->
+      <div style="border:2px solid var(--accent);background:var(--bg-card);padding:48px;display:flex;flex-direction:column;position:relative;">
+        <div style="position:absolute;top:-12px;left:48px;background:var(--accent);color:#fff;font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;padding:6px 14px;">Most Popular</div>
+
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">Subscription</div>
+        <h3 class="display" style="font-size:36px;font-weight:500;margin-bottom:8px;">Full Access</h3>
+        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;margin-bottom:32px;">Unlimited underwriting reports across all 27 payment processors.</p>
+
+        <div style="margin-bottom:32px;">
+          <div style="display:flex;align-items:baseline;gap:8px;">
+            <span class="display" style="font-size:64px;font-weight:500;line-height:1;">$29</span>
+            <span style="font-size:18px;color:var(--fg-muted);">/month</span>
+          </div>
+          <div style="font-size:13px;color:var(--fg-muted);margin-top:10px;">Billed monthly. Cancel anytime.</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:40px;flex:1;">
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
+            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
+            <span><strong style="color:var(--fg);">Unlimited</strong> underwriting reports</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
+            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
+            <span>Real-time approval/denial across all 27 processors</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
+            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
+            <span>Match scores and underwriting reasoning</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
+            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
+            <span>Direct apply links to every processor</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
+            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
+            <span>Full report history saved to your account</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
+            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
+            <span>Re-run reports anytime your business changes</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
+            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
+            <span>Priority email support</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
+            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
+            <span>Cancel anytime — no commitments</span>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="startCTA()" style="width:100%;justify-content:center;">Get full access →</button>
+        <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--fg-dim);">$29/month · Cancel anytime</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:48px;font-size:13px;color:var(--fg-muted);max-width:600px;margin-left:auto;margin-right:auto;line-height:1.7;">
+      Have questions about pricing? Read our <a onclick="go('faq')" style="color:var(--accent);cursor:pointer;text-decoration:underline;">FAQ</a> or email <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a>.
+    </div>
   </section>
 
   <section style="padding:120px 48px 160px;max-width:1400px;margin:0 auto;text-align:center;border-top:1px solid var(--border);">
