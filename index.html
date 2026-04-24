@@ -609,6 +609,205 @@
   </section>
 </div>
 
+<!-- =============== SIGN UP =============== -->
+<div id="view-signup" class="hidden">
+  <nav>
+    <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('landing')">
+      <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
+    </div>
+    <div style="display:flex;gap:32px;align-items:center;">
+      <a onclick="go('how-it-works')">How It Works</a>
+      <a onclick="go('signin')" style="color:var(--accent);">Sign In</a>
+    </div>
+  </nav>
+  <main style="flex:1;padding:64px 48px;max-width:520px;margin:0 auto;width:100%;">
+    <div class="fade-up">
+      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Create Account</div>
+      <h1 class="display" style="font-size:42px;font-weight:400;margin-bottom:12px;letter-spacing:-0.02em;">Start your<br>underwriting journey.</h1>
+      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:40px;">Free account. Subscribe for $29/month to unlock unlimited payment processor underwriting reports.</p>
+      <div class="field"><label>Business name</label>
+        <input id="signup-business" placeholder="Acme Commerce LLC" oninput="validateSignup()" />
+      </div>
+      <div class="field"><label>Email address</label>
+        <input id="signup-email" type="email" placeholder="you@business.com" oninput="validateSignup()" />
+      </div>
+      <div class="field"><label>Password</label>
+        <div class="hint">Minimum 8 characters</div>
+        <input id="signup-password" type="password" placeholder="At least 8 characters" oninput="validateSignup()" />
+      </div>
+      <div id="signup-error" style="display:none;padding:14px;background:var(--denied-bg);border:1px solid var(--denied);color:var(--denied);font-size:13px;margin-bottom:16px;"></div>
+      <button id="btn-signup" class="btn-primary" disabled onclick="handleSignup()" style="width:100%;justify-content:center;padding:18px 32px;margin-top:8px;">Create account →</button>
+      <div style="text-align:center;margin-top:24px;font-size:13px;color:var(--fg-muted);">
+        Already have an account? <a onclick="go('signin')" style="color:var(--accent);cursor:pointer;text-decoration:none;">Sign in</a>
+      </div>
+      <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--fg-dim);line-height:1.6;">
+        By creating an account, you agree to the<br>
+        <a onclick="go('tos')" style="color:var(--fg-muted);cursor:pointer;text-decoration:underline;">Terms of Service</a> and <a onclick="go('privacy')" style="color:var(--fg-muted);cursor:pointer;text-decoration:underline;">Privacy Policy</a>.
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- =============== SIGN IN =============== -->
+<div id="view-signin" class="hidden">
+  <nav>
+    <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('landing')">
+      <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
+    </div>
+    <div style="display:flex;gap:32px;align-items:center;">
+      <a onclick="go('how-it-works')">How It Works</a>
+      <a onclick="go('signup')" style="color:var(--accent);">Sign Up</a>
+    </div>
+  </nav>
+  <main style="flex:1;padding:64px 48px;max-width:520px;margin:0 auto;width:100%;">
+    <div class="fade-up">
+      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Welcome Back</div>
+      <h1 class="display" style="font-size:42px;font-weight:400;margin-bottom:12px;letter-spacing:-0.02em;">Sign in to<br>Processor Help.</h1>
+      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:40px;">Access your dashboard, reports, and subscription.</p>
+      <div class="field"><label>Email address</label>
+        <input id="signin-email" type="email" placeholder="you@business.com" oninput="validateSignin()" />
+      </div>
+      <div class="field"><label>Password</label>
+        <input id="signin-password" type="password" placeholder="••••••••" oninput="validateSignin()" onkeydown="if(event.key==='Enter'&&!document.getElementById('btn-signin').disabled)handleSignin()" />
+      </div>
+      <div id="signin-error" style="display:none;padding:14px;background:var(--denied-bg);border:1px solid var(--denied);color:var(--denied);font-size:13px;margin-bottom:16px;"></div>
+      <button id="btn-signin" class="btn-primary" disabled onclick="handleSignin()" style="width:100%;justify-content:center;padding:18px 32px;margin-top:8px;">Sign in →</button>
+      <div style="text-align:center;margin-top:24px;font-size:13px;color:var(--fg-muted);">
+        <a onclick="go('forgot')" style="color:var(--fg-muted);cursor:pointer;text-decoration:none;">Forgot password?</a>
+      </div>
+      <div style="text-align:center;margin-top:12px;font-size:13px;color:var(--fg-muted);">
+        Don't have an account? <a onclick="go('signup')" style="color:var(--accent);cursor:pointer;text-decoration:none;">Create one</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- =============== FORGOT PASSWORD =============== -->
+<div id="view-forgot" class="hidden">
+  <nav>
+    <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('landing')">
+      <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
+    </div>
+    <div style="display:flex;gap:32px;align-items:center;">
+      <a onclick="go('signin')">Sign In</a>
+      <a onclick="go('signup')" style="color:var(--accent);">Sign Up</a>
+    </div>
+  </nav>
+  <main style="flex:1;padding:64px 48px;max-width:520px;margin:0 auto;width:100%;">
+    <div class="fade-up" id="forgot-form">
+      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Reset Password</div>
+      <h1 class="display" style="font-size:42px;font-weight:400;margin-bottom:12px;letter-spacing:-0.02em;">Forgot your<br>password?</h1>
+      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:40px;">Enter your email and we'll send you a reset link.</p>
+      <div class="field"><label>Email address</label>
+        <input id="forgot-email" type="email" placeholder="you@business.com" />
+      </div>
+      <button class="btn-primary" onclick="handleForgot()" style="width:100%;justify-content:center;padding:18px 32px;">Send reset link →</button>
+      <div style="text-align:center;margin-top:24px;font-size:13px;color:var(--fg-muted);">
+        Remembered? <a onclick="go('signin')" style="color:var(--accent);cursor:pointer;text-decoration:none;">Sign in</a>
+      </div>
+    </div>
+    <div class="fade-up hidden" id="forgot-sent" style="text-align:center;padding:48px 0;">
+      <div style="width:72px;height:72px;background:var(--approved-bg);border:2px solid var(--approved);border-radius:50%;margin:0 auto 32px;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--approved);">✓</div>
+      <h2 class="display" style="font-size:32px;font-weight:400;margin-bottom:12px;">Check your email.</h2>
+      <p style="color:var(--fg-muted);font-size:15px;margin-bottom:32px;">If an account exists for that email, a password reset link has been sent.</p>
+      <button class="btn-ghost" onclick="go('signin')">Back to sign in</button>
+    </div>
+  </main>
+</div>
+
+<!-- =============== DASHBOARD =============== -->
+<div id="view-dashboard" class="hidden">
+  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+    <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('dashboard')">
+      <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
+    </div>
+    <div style="display:flex;gap:24px;align-items:center;">
+      <a onclick="go('dashboard')" style="color:var(--accent);font-size:13px;cursor:pointer;">Dashboard</a>
+      <a onclick="go('reports')" style="color:var(--fg);font-size:13px;cursor:pointer;">Reports</a>
+      <a onclick="go('billing')" style="color:var(--fg);font-size:13px;cursor:pointer;">Billing</a>
+      <a onclick="go('settings')" style="color:var(--fg);font-size:13px;cursor:pointer;">Settings</a>
+      <div style="width:1px;height:20px;background:var(--border);"></div>
+      <div id="user-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;cursor:pointer;" onclick="go('settings')"></div>
+      <button class="btn-ghost" onclick="handleLogout()" style="padding:8px 16px;font-size:11px;">Log out</button>
+    </div>
+  </header>
+  <main style="flex:1;padding:48px;max-width:1200px;margin:0 auto;width:100%;">
+    <div id="dashboard-content"></div>
+  </main>
+</div>
+
+<!-- =============== SUBSCRIBE (PAYWALL) =============== -->
+<div id="view-subscribe" class="hidden">
+  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+    <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('dashboard')">
+      <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;color:var(--fg-muted);font-size:12px;">
+      🔒 <span class="mono" style="letter-spacing:0.1em;text-transform:uppercase;">Secure Checkout</span>
+    </div>
+  </header>
+  <main style="flex:1;padding:64px 48px;max-width:1100px;margin:0 auto;width:100%;">
+    <div id="subscribe-content"></div>
+  </main>
+</div>
+
+<!-- =============== SETTINGS =============== -->
+<div id="view-settings" class="hidden">
+  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+    <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('dashboard')">
+      <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
+    </div>
+    <div style="display:flex;gap:24px;align-items:center;">
+      <a onclick="go('dashboard')" style="color:var(--fg);font-size:13px;cursor:pointer;">Dashboard</a>
+      <a onclick="go('reports')" style="color:var(--fg);font-size:13px;cursor:pointer;">Reports</a>
+      <a onclick="go('billing')" style="color:var(--fg);font-size:13px;cursor:pointer;">Billing</a>
+      <a onclick="go('settings')" style="color:var(--accent);font-size:13px;cursor:pointer;">Settings</a>
+      <button class="btn-ghost" onclick="handleLogout()" style="padding:8px 16px;font-size:11px;">Log out</button>
+    </div>
+  </header>
+  <main style="flex:1;padding:48px;max-width:800px;margin:0 auto;width:100%;">
+    <div id="settings-content"></div>
+  </main>
+</div>
+
+<!-- =============== BILLING =============== -->
+<div id="view-billing" class="hidden">
+  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+    <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('dashboard')">
+      <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
+    </div>
+    <div style="display:flex;gap:24px;align-items:center;">
+      <a onclick="go('dashboard')" style="color:var(--fg);font-size:13px;cursor:pointer;">Dashboard</a>
+      <a onclick="go('reports')" style="color:var(--fg);font-size:13px;cursor:pointer;">Reports</a>
+      <a onclick="go('billing')" style="color:var(--accent);font-size:13px;cursor:pointer;">Billing</a>
+      <a onclick="go('settings')" style="color:var(--fg);font-size:13px;cursor:pointer;">Settings</a>
+      <button class="btn-ghost" onclick="handleLogout()" style="padding:8px 16px;font-size:11px;">Log out</button>
+    </div>
+  </header>
+  <main style="flex:1;padding:48px;max-width:900px;margin:0 auto;width:100%;">
+    <div id="billing-content"></div>
+  </main>
+</div>
+
+<!-- =============== REPORTS HISTORY =============== -->
+<div id="view-reports" class="hidden">
+  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+    <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('dashboard')">
+      <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
+    </div>
+    <div style="display:flex;gap:24px;align-items:center;">
+      <a onclick="go('dashboard')" style="color:var(--fg);font-size:13px;cursor:pointer;">Dashboard</a>
+      <a onclick="go('reports')" style="color:var(--accent);font-size:13px;cursor:pointer;">Reports</a>
+      <a onclick="go('billing')" style="color:var(--fg);font-size:13px;cursor:pointer;">Billing</a>
+      <a onclick="go('settings')" style="color:var(--fg);font-size:13px;cursor:pointer;">Settings</a>
+      <button class="btn-ghost" onclick="handleLogout()" style="padding:8px 16px;font-size:11px;">Log out</button>
+    </div>
+  </header>
+  <main style="flex:1;padding:48px;max-width:1200px;margin:0 auto;width:100%;">
+    <div id="reports-content"></div>
+  </main>
+</div>
+
 <!-- =============== APPLICATION =============== -->
 <div id="view-application" class="hidden">
   <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
@@ -1090,6 +1289,7 @@ const PROCESSORS = [
 // =============== STATE ===============
 let currentView = 'landing';
 let currentStep = 0;
+let currentUser = null; // Logged-in user object
 let merchant = {
   businessName: '',
   entityType: 'LLC',
@@ -1114,10 +1314,144 @@ const STEPS = [
   { id: 'review', title: 'Review' },
 ];
 
+const PUBLIC_VIEWS = ['landing','how-it-works','about','processors-list','faq','privacy','tos','signup','signin','forgot'];
+const AUTH_REQUIRED_VIEWS = ['dashboard','settings','billing','reports','subscribe','application','paywall','results'];
+const SUBSCRIPTION_REQUIRED_VIEWS = ['application','paywall','results'];
+
+// =============== AUTH STORAGE (localStorage) ===============
+function simpleHash(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) - h) + str.charCodeAt(i);
+    h |= 0;
+  }
+  return 'h_' + Math.abs(h).toString(36);
+}
+function loadUsers() {
+  try { return JSON.parse(localStorage.getItem('ph_users') || '{}'); } catch(e) { return {}; }
+}
+function saveUsers(u) { localStorage.setItem('ph_users', JSON.stringify(u)); }
+function loadSession() {
+  try { return JSON.parse(localStorage.getItem('ph_session') || 'null'); } catch(e) { return null; }
+}
+function saveSession(email) {
+  if (email) localStorage.setItem('ph_session', JSON.stringify({ email, at: Date.now() }));
+  else localStorage.removeItem('ph_session');
+}
+
+function getCurrentUser() {
+  const session = loadSession();
+  if (!session) return null;
+  const users = loadUsers();
+  return users[session.email] || null;
+}
+
+function saveCurrentUser(userData) {
+  const users = loadUsers();
+  users[userData.email] = userData;
+  saveUsers(users);
+  currentUser = userData;
+}
+
+// =============== AUTH HANDLERS ===============
+function validateSignup() {
+  const b = document.getElementById('signup-business').value.trim();
+  const e = document.getElementById('signup-email').value.trim();
+  const p = document.getElementById('signup-password').value;
+  const valid = b.length >= 2 && e.includes('@') && e.includes('.') && p.length >= 8;
+  document.getElementById('btn-signup').disabled = !valid;
+}
+
+function handleSignup() {
+  const business = document.getElementById('signup-business').value.trim();
+  const email = document.getElementById('signup-email').value.trim().toLowerCase();
+  const password = document.getElementById('signup-password').value;
+  const errorEl = document.getElementById('signup-error');
+
+  const users = loadUsers();
+  if (users[email]) {
+    errorEl.textContent = 'An account with this email already exists. Try signing in instead.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  const newUser = {
+    email,
+    business,
+    passwordHash: simpleHash(password),
+    createdAt: Date.now(),
+    subscribed: false,
+    subscriptionStartDate: null,
+    subscriptionNextBilling: null,
+    paymentMethod: null,
+    reports: [],
+    savedProfile: { ...merchant, businessName: business },
+  };
+
+  users[email] = newUser;
+  saveUsers(users);
+  saveSession(email);
+  currentUser = newUser;
+  errorEl.style.display = 'none';
+  go('dashboard');
+}
+
+function validateSignin() {
+  const e = document.getElementById('signin-email').value.trim();
+  const p = document.getElementById('signin-password').value;
+  const valid = e.includes('@') && p.length > 0;
+  document.getElementById('btn-signin').disabled = !valid;
+}
+
+function handleSignin() {
+  const email = document.getElementById('signin-email').value.trim().toLowerCase();
+  const password = document.getElementById('signin-password').value;
+  const errorEl = document.getElementById('signin-error');
+  const users = loadUsers();
+  const user = users[email];
+  if (!user || user.passwordHash !== simpleHash(password)) {
+    errorEl.textContent = 'Invalid email or password.';
+    errorEl.style.display = 'block';
+    return;
+  }
+  saveSession(email);
+  currentUser = user;
+  errorEl.style.display = 'none';
+  go('dashboard');
+}
+
+function handleLogout() {
+  saveSession(null);
+  currentUser = null;
+  go('landing');
+}
+
+function handleForgot() {
+  document.getElementById('forgot-form').classList.add('hidden');
+  document.getElementById('forgot-sent').classList.remove('hidden');
+}
+
+function startCTA() {
+  if (currentUser) {
+    if (currentUser.subscribed) go('application');
+    else go('subscribe');
+  } else {
+    go('signup');
+  }
+}
+
 // =============== NAVIGATION ===============
 function go(view) {
+  // Auth gating
+  if (AUTH_REQUIRED_VIEWS.includes(view) && !currentUser) {
+    view = 'signup';
+  } else if (SUBSCRIPTION_REQUIRED_VIEWS.includes(view) && currentUser && !currentUser.subscribed) {
+    view = 'subscribe';
+  }
+
   currentView = view;
-  ['landing','application','paywall','results','how-it-works','about','processors-list','faq','privacy','tos'].forEach(v => {
+  const allViews = ['landing','application','paywall','results','how-it-works','about','processors-list','faq','privacy','tos','signup','signin','forgot','dashboard','subscribe','settings','billing','reports'];
+  allViews.forEach(v => {
     const el = document.getElementById('view-' + v);
     if (el) el.classList.toggle('hidden', v !== view);
   });
@@ -1128,6 +1462,15 @@ function go(view) {
   if (view === 'results') renderResults();
   if (view === 'processors-list') renderFullProcessorsList();
   if (view === 'faq') renderFAQ();
+  if (view === 'dashboard') renderDashboard();
+  if (view === 'subscribe') renderSubscribe();
+  if (view === 'settings') renderSettings();
+  if (view === 'billing') renderBilling();
+  if (view === 'reports') renderReportsHistory();
+
+  // update avatar
+  const avatar = document.getElementById('user-avatar');
+  if (avatar && currentUser) avatar.textContent = (currentUser.business || currentUser.email).charAt(0).toUpperCase();
 }
 
 function resetAll() {
@@ -1181,7 +1524,7 @@ function renderApplication() {
   document.getElementById('btn-prev').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
   const btnNext = document.getElementById('btn-next');
   if (currentStep === STEPS.length - 1) {
-    btnNext.innerHTML = '🔒 Continue to payment';
+    btnNext.innerHTML = '⚡ Run underwriting';
   } else {
     btnNext.innerHTML = 'Continue →';
   }
@@ -1318,7 +1661,7 @@ function renderStep(step) {
     return `
       <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Section 04</div>
       <h2 class="display" style="font-size:40px;font-weight:400;margin-bottom:12px;">Review and submit.</h2>
-      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:48px;">Confirm your information. Payment unlocks your full underwriting report across all 21 payment processors.</p>
+      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:48px;">Confirm your information. Your underwriting report across all 21 payment processors will be generated instantly and saved to your account.</p>
 
       <div style="border:1px solid var(--border);background:var(--bg-card);">
         ${rows.map((r, i) => `
@@ -1332,7 +1675,7 @@ function renderStep(step) {
       <div style="margin-top:32px;padding:20px;border:1px solid var(--border-strong);background:var(--bg-elevated);display:flex;gap:14px;align-items:flex-start;">
         <span style="color:var(--accent);font-size:18px;">🔒</span>
         <div style="font-size:13px;color:var(--fg-muted);line-height:1.6;">
-          Your application is ready. Unlock your full underwriting report — showing approval, conditional, and denial decisions across all 21 payment processors — for a one-time $10 access fee.
+          Your application is ready. Click "Run underwriting" to generate your report across all 21 payment processors — saved to your account with unlimited re-access.
         </div>
       </div>
     `;
@@ -1348,7 +1691,15 @@ function nextStep() {
     currentStep++;
     renderApplication();
   } else {
-    go('paywall');
+    // Subscribed users go straight to results (they already pay $29/mo)
+    if (currentUser && currentUser.subscribed) {
+      window._reportJustRan = true;
+      go('results');
+    } else if (currentUser && !currentUser.subscribed) {
+      go('subscribe');
+    } else {
+      go('signup');
+    }
   }
 }
 
@@ -1497,6 +1848,21 @@ function renderResults() {
   const approvedCount = results.filter(r => r.decision.status === 'approved').length;
   const conditionalCount = results.filter(r => r.decision.status === 'conditional').length;
   const deniedCount = results.filter(r => r.decision.status === 'denied').length;
+
+  // Save new report to user's account (if logged in and this is a fresh run from application flow)
+  if (currentUser && window._reportJustRan) {
+    currentUser.reports = currentUser.reports || [];
+    currentUser.reports.push({
+      createdAt: Date.now(),
+      merchant: { ...merchant },
+      approvedCount,
+      conditionalCount,
+      deniedCount,
+    });
+    currentUser.savedProfile = { ...merchant };
+    saveCurrentUser(currentUser);
+    window._reportJustRan = false;
+  }
 
   document.getElementById('results-header').innerHTML = `
     <div class="fade-up mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">
@@ -1697,8 +2063,414 @@ function renderFullProcessorsList() {
   `).join('');
 }
 
+// =============== DASHBOARD RENDER ===============
+function renderDashboard() {
+  const u = currentUser;
+  if (!u) { go('signin'); return; }
+  const content = document.getElementById('dashboard-content');
+  const reportCount = (u.reports || []).length;
+  const latestReport = reportCount > 0 ? u.reports[u.reports.length - 1] : null;
+
+  content.innerHTML = `
+    <div class="fade-up">
+      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Dashboard</div>
+      <h1 class="display" style="font-size:48px;font-weight:400;margin-bottom:12px;letter-spacing:-0.02em;">
+        Welcome, <span style="font-style:italic;color:var(--accent);">${u.business}</span>.
+      </h1>
+      <p style="color:var(--fg-muted);font-size:17px;margin-bottom:48px;">
+        ${u.subscribed ? 'Your subscription is active. Run unlimited underwriting reports anytime.' : 'Subscribe to unlock unlimited underwriting reports across 21 payment processors.'}
+      </p>
+
+      ${!u.subscribed ? `
+        <div style="padding:32px;background:var(--bg-card);border:1px solid var(--accent);margin-bottom:48px;display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;">
+          <div>
+            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Subscription Required</div>
+            <div class="display" style="font-size:26px;font-weight:500;margin-bottom:6px;">Activate your account for $29/month.</div>
+            <div style="font-size:14px;color:var(--fg-muted);">Unlimited reports · All 21 payment processors · Cancel anytime</div>
+          </div>
+          <button class="btn-primary" onclick="go('subscribe')" style="flex-shrink:0;">Subscribe now →</button>
+        </div>
+      ` : ''}
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:48px;">
+        <div style="background:var(--bg-card);padding:28px;">
+          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Reports Run</div>
+          <div class="display" style="font-size:40px;font-weight:500;line-height:1;">${reportCount}</div>
+        </div>
+        <div style="background:var(--bg-card);padding:28px;">
+          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Subscription</div>
+          <div class="display" style="font-size:20px;font-weight:500;line-height:1.2;color:${u.subscribed ? 'var(--approved)' : 'var(--conditional)'};">${u.subscribed ? 'Active' : 'Inactive'}</div>
+          <div style="font-size:12px;color:var(--fg-muted);margin-top:6px;">${u.subscribed ? '$29/mo · Next: ' + new Date(u.subscriptionNextBilling).toLocaleDateString() : 'Subscribe to run reports'}</div>
+        </div>
+        <div style="background:var(--bg-card);padding:28px;">
+          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Member Since</div>
+          <div class="display" style="font-size:20px;font-weight:500;line-height:1.2;">${new Date(u.createdAt).toLocaleDateString('en-US',{month:'short',year:'numeric'})}</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:48px;">
+        <div style="padding:32px;border:1px solid var(--border);background:var(--bg-card);">
+          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Quick Action</div>
+          <div class="display" style="font-size:24px;font-weight:500;margin-bottom:12px;">Run a new report</div>
+          <p style="color:var(--fg-muted);font-size:14px;margin-bottom:24px;line-height:1.6;">Evaluate your business across all 21 payment processors. Takes under 2 minutes.</p>
+          <button class="btn-primary" onclick="go('application')" style="padding:12px 24px;font-size:12px;">Start new report →</button>
+        </div>
+        <div style="padding:32px;border:1px solid var(--border);background:var(--bg-card);">
+          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Report History</div>
+          <div class="display" style="font-size:24px;font-weight:500;margin-bottom:12px;">${reportCount > 0 ? 'View past reports' : 'No reports yet'}</div>
+          <p style="color:var(--fg-muted);font-size:14px;margin-bottom:24px;line-height:1.6;">${reportCount > 0 ? `You have ${reportCount} underwriting report${reportCount>1?'s':''} on file.` : 'Your underwriting reports will appear here after you run your first one.'}</p>
+          <button class="btn-ghost" onclick="go('reports')" style="padding:12px 24px;font-size:12px;" ${reportCount===0?'disabled':''}>View reports →</button>
+        </div>
+      </div>
+
+      ${latestReport ? `
+        <div style="margin-top:24px;">
+          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px;">Latest Report</div>
+          <div onclick="viewPastReport(${u.reports.length - 1})" style="padding:24px 32px;border:1px solid var(--border);background:var(--bg-card);display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
+            <div>
+              <div style="font-size:15px;font-weight:500;margin-bottom:4px;">${latestReport.merchant.businessName || u.business}</div>
+              <div style="font-size:12px;color:var(--fg-muted);">${new Date(latestReport.createdAt).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})} · ${latestReport.approvedCount} approved · ${latestReport.conditionalCount} conditional · ${latestReport.deniedCount} denied</div>
+            </div>
+            <div style="color:var(--fg-muted);">→</div>
+          </div>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+// =============== SUBSCRIBE RENDER ===============
+function renderSubscribe() {
+  const u = currentUser;
+  const content = document.getElementById('subscribe-content');
+  content.innerHTML = `
+    <div class="fade-up" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;" id="subscribe-checkout">
+      <div>
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Activate Subscription</div>
+        <h2 class="display" style="font-size:40px;font-weight:400;margin-bottom:32px;">
+          Unlock your <span style="font-style:italic;color:var(--accent);">underwriting engine.</span>
+        </h2>
+        <div style="border:1px solid var(--border);background:var(--bg-card);margin-bottom:32px;">
+          <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:15px;font-weight:500;">Processor Help — Monthly Subscription</div>
+              <div style="font-size:12px;color:var(--fg-muted);margin-top:4px;">${u.business} · Recurring monthly</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="display" style="font-size:28px;font-weight:500;">$29</div>
+              <div style="font-size:11px;color:var(--fg-muted);">per month</div>
+            </div>
+          </div>
+          <div style="padding:20px 24px;">
+            <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:14px;">What's included</div>
+            ${[
+              'Unlimited underwriting reports across all 21 payment processors',
+              'Real-time approval, conditional, and denial decisions',
+              'Full match score and underwriting reasoning per processor',
+              'Unlimited report history saved to your account',
+              'Update business profile anytime — rerun reports free',
+              'Cancel anytime · No long-term contracts',
+            ].map(item => `
+              <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:13px;line-height:1.5;">
+                <span style="color:var(--approved);font-weight:700;">✓</span>
+                <span>${item}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div style="padding:16px 24px;border-top:1px solid var(--border);background:var(--bg-elevated);display:flex;justify-content:space-between;align-items:center;">
+            <div class="mono" style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;">Total Due Today</div>
+            <div class="display" style="font-size:28px;font-weight:600;color:var(--accent);">$29.00</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:16px;background:var(--bg-elevated);border:1px solid var(--border);">
+          <span style="color:var(--fg-muted);">🛡️</span>
+          <div style="font-size:12px;color:var(--fg-muted);line-height:1.6;">
+            Billed monthly to your card. Cancel anytime from your billing page. Processor Help is an independent advisory tool and not affiliated with any payment processor listed.
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:24px;">Payment Details</div>
+        <div class="field"><label>Cardholder name</label>
+          <input id="sub-name" placeholder="Full name on card" oninput="validateSub()" />
+        </div>
+        <div class="field"><label>Card number</label>
+          <input id="sub-card" placeholder="1234 5678 9012 3456" inputmode="numeric" oninput="formatSubCard(this); validateSub()" />
+        </div>
+        <div class="two-col">
+          <div class="field"><label>Expiry</label>
+            <input id="sub-expiry" placeholder="MM/YY" inputmode="numeric" maxlength="5" oninput="formatSubExp(this); validateSub()" />
+          </div>
+          <div class="field"><label>CVC</label>
+            <input id="sub-cvc" placeholder="123" inputmode="numeric" maxlength="4" oninput="this.value = this.value.replace(/\\D/g,''); validateSub()" />
+          </div>
+        </div>
+        <button id="btn-sub" class="btn-primary" disabled onclick="processSubscription()" style="width:100%;justify-content:center;margin-top:16px;padding:18px 32px;">
+          🔒 Subscribe for $29/month
+        </button>
+        <div style="margin-top:16px;text-align:center;font-size:11px;color:var(--fg-dim);line-height:1.6;">
+          By subscribing you agree to the Processor Help Terms of Service.<br>
+          All transactions are encrypted and secure.
+        </div>
+        <div style="margin-top:24px;text-align:center;">
+          <a onclick="go('dashboard')" style="color:var(--fg-muted);font-size:13px;cursor:pointer;text-decoration:none;">← Not ready yet? Back to dashboard</a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function formatSubCard(el) {
+  let v = el.value.replace(/\s/g, '').replace(/\D/g, '');
+  v = v.slice(0, 16);
+  el.value = v.replace(/(.{4})/g, '$1 ').trim();
+}
+function formatSubExp(el) {
+  let v = el.value.replace(/\D/g, '');
+  if (v.length >= 3) el.value = v.slice(0,2) + '/' + v.slice(2,4);
+  else el.value = v;
+}
+function validateSub() {
+  const name = document.getElementById('sub-name').value;
+  const card = document.getElementById('sub-card').value.replace(/\s/g,'');
+  const exp = document.getElementById('sub-expiry').value;
+  const cvc = document.getElementById('sub-cvc').value;
+  const valid = name.length > 1 && card.length >= 15 && exp.length >= 4 && cvc.length >= 3;
+  document.getElementById('btn-sub').disabled = !valid;
+}
+function processSubscription() {
+  const content = document.getElementById('subscribe-content');
+  content.innerHTML = `
+    <div class="fade-up" style="text-align:center;padding:80px 0;">
+      <div class="spinner" style="width:64px;height:64px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;margin:0 auto 32px;"></div>
+      <h2 class="display" style="font-size:32px;font-weight:400;margin-bottom:12px;">Activating subscription…</h2>
+      <p style="color:var(--fg-muted);font-size:15px;">Do not close this window.</p>
+    </div>
+  `;
+  setTimeout(() => {
+    const now = Date.now();
+    const next = now + 30 * 24 * 60 * 60 * 1000;
+    currentUser.subscribed = true;
+    currentUser.subscriptionStartDate = now;
+    currentUser.subscriptionNextBilling = next;
+    currentUser.paymentMethod = 'Card ending ' + document.getElementById('sub-card').value.replace(/\s/g,'').slice(-4);
+    saveCurrentUser(currentUser);
+    content.innerHTML = `
+      <div class="fade-up" style="text-align:center;padding:80px 0;">
+        <div style="width:72px;height:72px;background:var(--approved-bg);border:2px solid var(--approved);border-radius:50%;margin:0 auto 32px;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--approved);">✓</div>
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--approved);margin-bottom:12px;">Subscription Active</div>
+        <h2 class="display" style="font-size:36px;font-weight:400;margin-bottom:12px;">You're all set.</h2>
+        <p style="color:var(--fg-muted);font-size:15px;margin-bottom:32px;">Your $29/mo subscription is active. Let's run your first report.</p>
+        <button class="btn-primary" onclick="go('application')">Run first report →</button>
+      </div>
+    `;
+  }, 1800);
+}
+
+// =============== SETTINGS RENDER ===============
+function renderSettings() {
+  const u = currentUser;
+  if (!u) { go('signin'); return; }
+  document.getElementById('settings-content').innerHTML = `
+    <div class="fade-up">
+      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Settings</div>
+      <h1 class="display" style="font-size:40px;font-weight:400;margin-bottom:48px;">Account settings.</h1>
+
+      <div style="border:1px solid var(--border);background:var(--bg-card);margin-bottom:32px;">
+        <div style="padding:24px 28px;border-bottom:1px solid var(--border);">
+          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px;">Business Name</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;">
+            <input id="settings-business" value="${u.business}" style="flex:1;" />
+            <button class="btn-ghost" onclick="updateBusiness()" style="padding:12px 20px;font-size:11px;flex-shrink:0;">Save</button>
+          </div>
+        </div>
+        <div style="padding:24px 28px;border-bottom:1px solid var(--border);">
+          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px;">Email</div>
+          <div style="font-size:15px;">${u.email}</div>
+          <div style="font-size:12px;color:var(--fg-muted);margin-top:4px;">Email cannot be changed. Contact support to update.</div>
+        </div>
+        <div style="padding:24px 28px;">
+          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px;">Password</div>
+          <button class="btn-ghost" onclick="changePasswordPrompt()" style="padding:12px 20px;font-size:11px;margin-top:8px;">Change password</button>
+        </div>
+      </div>
+
+      <div style="border:1px solid var(--denied);background:var(--denied-bg);padding:24px 28px;">
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--denied);margin-bottom:10px;">Danger Zone</div>
+        <div style="font-size:14px;color:var(--fg);margin-bottom:16px;">Permanently delete your account and all saved reports. This cannot be undone.</div>
+        <button onclick="deleteAccount()" style="background:var(--denied);color:#fff;border:none;padding:12px 24px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Delete account</button>
+      </div>
+    </div>
+  `;
+}
+
+function updateBusiness() {
+  const newName = document.getElementById('settings-business').value.trim();
+  if (newName.length < 2) return;
+  currentUser.business = newName;
+  saveCurrentUser(currentUser);
+  alert('Business name updated.');
+  renderSettings();
+}
+
+function changePasswordPrompt() {
+  const oldPw = prompt('Current password:');
+  if (!oldPw) return;
+  if (simpleHash(oldPw) !== currentUser.passwordHash) { alert('Incorrect current password.'); return; }
+  const newPw = prompt('New password (minimum 8 characters):');
+  if (!newPw || newPw.length < 8) { alert('Password must be at least 8 characters.'); return; }
+  currentUser.passwordHash = simpleHash(newPw);
+  saveCurrentUser(currentUser);
+  alert('Password updated.');
+}
+
+function deleteAccount() {
+  if (!confirm('Are you sure you want to permanently delete your account? This cannot be undone.')) return;
+  const users = loadUsers();
+  delete users[currentUser.email];
+  saveUsers(users);
+  saveSession(null);
+  currentUser = null;
+  go('landing');
+}
+
+// =============== BILLING RENDER ===============
+function renderBilling() {
+  const u = currentUser;
+  if (!u) { go('signin'); return; }
+  document.getElementById('billing-content').innerHTML = `
+    <div class="fade-up">
+      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Billing</div>
+      <h1 class="display" style="font-size:40px;font-weight:400;margin-bottom:48px;">Subscription & billing.</h1>
+
+      <div style="border:1px solid var(--border);background:var(--bg-card);margin-bottom:32px;">
+        <div style="padding:24px 28px;display:flex;justify-content:space-between;align-items:center;gap:16px;">
+          <div>
+            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px;">Current Plan</div>
+            <div class="display" style="font-size:22px;font-weight:500;">${u.subscribed ? 'Monthly Subscription' : 'No active subscription'}</div>
+            <div style="font-size:13px;color:var(--fg-muted);margin-top:4px;">${u.subscribed ? '$29/month · Unlimited reports' : 'Subscribe to run reports'}</div>
+          </div>
+          <div class="chip" style="background:${u.subscribed?'var(--approved-bg)':'var(--conditional-bg)'};color:${u.subscribed?'var(--approved)':'var(--conditional)'};">
+            ${u.subscribed ? '● Active' : '● Inactive'}
+          </div>
+        </div>
+      </div>
+
+      ${u.subscribed ? `
+        <div style="border:1px solid var(--border);background:var(--bg-card);margin-bottom:32px;">
+          <div style="padding:20px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">
+            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">Next Billing Date</div>
+            <div style="font-size:14px;font-weight:500;">${new Date(u.subscriptionNextBilling).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
+          </div>
+          <div style="padding:20px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">
+            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">Payment Method</div>
+            <div style="font-size:14px;font-weight:500;">${u.paymentMethod || '—'}</div>
+          </div>
+          <div style="padding:20px 28px;display:flex;justify-content:space-between;">
+            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">Subscription Start</div>
+            <div style="font-size:14px;font-weight:500;">${new Date(u.subscriptionStartDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--denied);background:var(--denied-bg);padding:24px 28px;">
+          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--denied);margin-bottom:10px;">Cancel Subscription</div>
+          <div style="font-size:14px;color:var(--fg);margin-bottom:16px;">You'll retain access until ${new Date(u.subscriptionNextBilling).toLocaleDateString()}. Your reports will remain in your account.</div>
+          <button onclick="cancelSub()" style="background:var(--denied);color:#fff;border:none;padding:12px 24px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Cancel subscription</button>
+        </div>
+      ` : `
+        <div style="padding:32px;background:var(--bg-card);border:1px solid var(--accent);text-align:center;">
+          <div class="display" style="font-size:24px;font-weight:500;margin-bottom:12px;">Activate your subscription</div>
+          <p style="color:var(--fg-muted);font-size:14px;margin-bottom:20px;">$29/month · Unlimited reports · Cancel anytime</p>
+          <button class="btn-primary" onclick="go('subscribe')">Subscribe now →</button>
+        </div>
+      `}
+    </div>
+  `;
+}
+
+function cancelSub() {
+  if (!confirm('Are you sure you want to cancel your subscription? You will retain access until your next billing date.')) return;
+  currentUser.subscribed = false;
+  saveCurrentUser(currentUser);
+  alert('Your subscription has been cancelled.');
+  renderBilling();
+}
+
+// =============== REPORTS HISTORY RENDER ===============
+function renderReportsHistory() {
+  const u = currentUser;
+  if (!u) { go('signin'); return; }
+  const reports = u.reports || [];
+  document.getElementById('reports-content').innerHTML = `
+    <div class="fade-up">
+      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Report History</div>
+      <h1 class="display" style="font-size:40px;font-weight:400;margin-bottom:16px;">Your underwriting reports.</h1>
+      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:48px;">${reports.length} report${reports.length!==1?'s':''} · All saved to your account</p>
+
+      ${reports.length === 0 ? `
+        <div style="padding:64px 32px;text-align:center;border:1px dashed var(--border-strong);background:var(--bg-card);">
+          <div class="display" style="font-size:24px;font-weight:500;margin-bottom:12px;color:var(--fg-muted);">No reports yet.</div>
+          <p style="color:var(--fg-muted);font-size:14px;margin-bottom:24px;">Run your first underwriting report to see how all 21 payment processors evaluate your business.</p>
+          <button class="btn-primary" onclick="go('application')">Run first report →</button>
+        </div>
+      ` : `
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          ${reports.slice().reverse().map((r, revIdx) => {
+            const i = reports.length - 1 - revIdx;
+            return `
+              <div onclick="viewPastReport(${i})" style="border:1px solid var(--border);background:var(--bg-card);padding:24px 32px;cursor:pointer;display:grid;grid-template-columns:60px 1fr auto auto;gap:24px;align-items:center;">
+                <div class="mono display" style="font-size:24px;color:var(--fg-dim);">${String(i+1).padStart(2,'0')}</div>
+                <div>
+                  <div style="font-size:15px;font-weight:500;margin-bottom:4px;">${r.merchant.businessName || u.business}</div>
+                  <div style="font-size:12px;color:var(--fg-muted);">${new Date(r.createdAt).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})} · ${r.merchant.industry ? INDUSTRY_RISK[r.merchant.industry]?.label : ''}</div>
+                </div>
+                <div style="display:flex;gap:12px;">
+                  <div class="chip" style="background:var(--approved-bg);color:var(--approved);">✓ ${r.approvedCount}</div>
+                  <div class="chip" style="background:var(--conditional-bg);color:var(--conditional);">⚠ ${r.conditionalCount}</div>
+                  <div class="chip" style="background:var(--denied-bg);color:var(--denied);">✕ ${r.deniedCount}</div>
+                </div>
+                <div style="color:var(--fg-muted);">→</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        <div style="margin-top:32px;text-align:center;">
+          <button class="btn-primary" onclick="go('application')">Run new report →</button>
+        </div>
+      `}
+    </div>
+  `;
+}
+
+function viewPastReport(index) {
+  const report = currentUser.reports[index];
+  if (!report) return;
+  merchant = { ...report.merchant };
+  go('results');
+}
+
 // =============== INIT ===============
 renderProcessorsGrid();
+
+// Load session on page load
+currentUser = getCurrentUser();
+if (currentUser) {
+  // Logged in user — if they land on public pages, that's fine. If they came back to the app, start on dashboard.
+  // For UX, we still show landing if they're there, but add a Dashboard link visible in nav.
+  // Actually simplest: if session is live and they're on landing, keep them there but they'll see Dashboard option.
+  // Just render whatever view is active — but ensure account UI is set up.
+  if (currentView === 'landing') {
+    // Update landing nav to show Dashboard/Logout options
+    const navRight = document.getElementById('landing-nav-right');
+    if (navRight) {
+      navRight.innerHTML = `
+        <a onclick="go('how-it-works')" style="color:var(--fg-muted);font-size:14px;text-decoration:none;cursor:pointer;">How It Works</a>
+        <a onclick="go('dashboard')" style="color:var(--fg-muted);font-size:14px;text-decoration:none;cursor:pointer;">Dashboard</a>
+        <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">${currentUser.subscribed ? 'Run New Report' : 'Activate Account'} →</button>
+      `;
+    }
+  }
+}
 </script>
 </body>
 </html>
