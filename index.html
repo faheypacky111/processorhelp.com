@@ -107,13 +107,152 @@
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 
+  /* ============ TABLET (1024px and down) ============ */
+  @media (max-width: 1024px) {
+    nav { padding: 20px 32px; }
+    section { padding-left: 32px !important; padding-right: 32px !important; }
+    main { padding-left: 32px !important; padding-right: 32px !important; }
+    header { padding-left: 32px !important; padding-right: 32px !important; }
+    footer { padding-left: 32px !important; padding-right: 32px !important; }
+  }
+
+  /* ============ MOBILE (768px and down) ============ */
   @media (max-width: 768px) {
-    nav { padding: 20px 24px; flex-wrap: wrap; gap: 16px; }
-    .two-col { grid-template-columns: 1fr; }
-    section { padding-left: 24px !important; padding-right: 24px !important; }
-    main { padding-left: 24px !important; padding-right: 24px !important; }
-    header { padding-left: 24px !important; padding-right: 24px !important; }
-    footer { padding-left: 24px !important; padding-right: 24px !important; }
+    /* Navigation */
+    nav { padding: 16px 20px; flex-wrap: wrap; gap: 12px; }
+    nav a { font-size: 13px; }
+    nav > div:first-child span { font-size: 18px !important; }
+    nav > div:last-child { gap: 12px !important; flex-wrap: wrap; justify-content: flex-end; }
+
+    /* Headers (dashboard, settings, billing, reports) */
+    header { padding: 16px 20px !important; flex-wrap: wrap; gap: 12px; }
+    header > div:last-child { gap: 12px !important; flex-wrap: wrap; }
+    header a { font-size: 12px !important; }
+
+    /* Sections / main containers */
+    section { padding: 48px 20px !important; }
+    main { padding: 32px 20px !important; }
+    footer { padding-left: 20px !important; padding-right: 20px !important; }
+
+    /* Convert ALL multi-column grids to single column */
+    .two-col { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+    /* Hero stats 4-col -> 2-col on mobile */
+    section > div[style*="repeat(4,1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
+
+    /* All 3-col and 4-col processor grids -> 1 column on mobile */
+    #processors-grid,
+    #full-processors-grid { grid-template-columns: 1fr !important; }
+
+    /* Dashboard 3-col stats -> stack on mobile */
+    #dashboard-content div[style*="repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
+
+    /* Dashboard 2-col actions -> stack */
+    #dashboard-content div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+    /* Subscribe/paywall checkout 2-col -> stack */
+    #subscribe-content div[style*="1fr 1fr"],
+    #paywall-content div[style*="1fr 1fr"] { grid-template-columns: 1fr !important; gap: 32px !important; }
+
+    /* About Us "Who We Serve" and "Principles" 2-col -> stack */
+    section div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; gap: 24px !important; }
+
+    /* Problem section "01 · Who We Serve" 1fr 2fr -> stack */
+    section div[style*="1fr 2fr"] { grid-template-columns: 1fr !important; gap: 24px !important; }
+
+    /* Footer 4-col -> stack */
+    footer > div:first-child[style*="2fr 1fr 1fr 1fr"] { grid-template-columns: 1fr !important; gap: 32px !important; }
+    footer > div:last-child { flex-direction: column !important; gap: 8px; text-align: center; }
+
+    /* Typography scale-down */
+    h1.display { font-size: clamp(32px, 9vw, 56px) !important; }
+    h2.display { font-size: clamp(26px, 6vw, 36px) !important; }
+    h3.display { font-size: clamp(20px, 5vw, 26px) !important; }
+
+    /* Form fields */
+    .field { margin-bottom: 20px; }
+    input, select, textarea { font-size: 16px; padding: 12px 14px; } /* 16px prevents iOS zoom */
+
+    /* Buttons */
+    .btn-primary, .btn-ghost { padding: 14px 24px; font-size: 12px; }
+
+    /* Progress bar in application form */
+    #progress-bar { flex-wrap: wrap; gap: 12px !important; }
+    .progress-step { flex: 0 0 calc(50% - 8px); font-size: 11px; }
+
+    /* Application form footer nav */
+    #view-application footer { max-width: 100% !important; padding: 16px 20px !important; }
+
+    /* Results page processor rows - 6-col grid -> mobile-friendly stacked layout */
+    #results-list > div > div[style*="grid-template-columns:60px 1fr 180px 140px 120px 40px"],
+    #results-list > div > div[style*="60px 1fr 180px 140px 40px"] {
+      grid-template-columns: 40px 1fr 40px !important;
+      gap: 12px !important;
+    }
+    #results-list > div > div > *:nth-child(3),
+    #results-list > div > div > *:nth-child(4) {
+      display: none !important;
+    }
+
+    /* Results expanded detail - 2fr 1fr -> stack */
+    #results-list div[style*="grid-template-columns:2fr 1fr"] {
+      grid-template-columns: 1fr !important;
+      gap: 24px !important;
+    }
+
+    /* Results summary cards */
+    #results-header div[style*="repeat(3,1fr)"] {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* How It Works step numbers + content (80px 1fr) -> stack */
+    div[style*="grid-template-columns:80px 1fr"] {
+      grid-template-columns: 1fr !important;
+      gap: 16px !important;
+    }
+
+    /* Review page data rows */
+    #form-content > div > div[style*="display:flex;justify-content:space-between"] {
+      padding: 12px 16px !important;
+    }
+
+    /* Report history rows - collapse columns */
+    #reports-content div[style*="grid-template-columns:60px 1fr auto auto"] {
+      grid-template-columns: 40px 1fr !important;
+      gap: 12px !important;
+    }
+    #reports-content div[style*="60px 1fr auto auto"] > div:nth-child(3),
+    #reports-content div[style*="60px 1fr auto auto"] > div:nth-child(4) {
+      display: none !important;
+    }
+
+    /* Subscribe/dashboard banner horizontal -> stack */
+    #dashboard-content > div > div[style*="justify-content:space-between"][style*="gap:32px"] {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+    }
+  }
+
+  /* ============ SMALL MOBILE (480px and down) ============ */
+  @media (max-width: 480px) {
+    nav { padding: 12px 16px; }
+    section { padding: 40px 16px !important; }
+    main { padding: 24px 16px !important; }
+    header { padding: 12px 16px !important; }
+    footer { padding-left: 16px !important; padding-right: 16px !important; }
+
+    /* Hero stats 4-col -> 1 column for tiny phones */
+    section > div[style*="repeat(4,1fr)"] { grid-template-columns: 1fr !important; }
+
+    /* Even smaller typography */
+    h1.display { font-size: clamp(28px, 8vw, 40px) !important; }
+
+    /* Hide some nav items on tiny screens */
+    nav > div:last-child a { display: none; }
+    nav > div:last-child a:last-of-type { display: inline; } /* Keep only the last link visible */
+
+    /* Header nav - simplify to just logout button */
+    header > div:last-child a:not(:first-child):not(:last-child) { display: none; }
   }
 </style>
 </head>
