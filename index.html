@@ -157,6 +157,8 @@
     main { padding-left: 32px !important; padding-right: 32px !important; }
     header { padding-left: 32px !important; padding-right: 32px !important; }
     footer { padding-left: 32px !important; padding-right: 32px !important; }
+    /* Footer 5-col -> 2-col on tablet */
+    footer > div.footer-top { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
   }
 
   /* ============ MOBILE (768px and down) ============ */
@@ -203,7 +205,9 @@
     /* Problem section "01 · Who We Serve" 1fr 2fr -> stack */
     section div[style*="1fr 2fr"] { grid-template-columns: 1fr !important; gap: 24px !important; }
 
-    /* Footer 4-col -> stack */
+    /* Footer 5-col -> stack cleanly on mobile */
+    footer > div.footer-top[style*="1.8fr 1fr 1fr 1fr 1.2fr"],
+    footer > div:first-child[style*="1.8fr 1fr 1fr 1fr 1.2fr"] { grid-template-columns: 1fr !important; gap: 32px !important; }
     footer > div:first-child[style*="2fr 1fr 1fr 1fr"] { grid-template-columns: 1fr !important; gap: 32px !important; }
     footer > div:last-child { flex-direction: column !important; gap: 8px; text-align: center; }
 
@@ -402,16 +406,17 @@
   </section>
 
   <footer style="border-top:1px solid var(--border);padding:64px 48px 32px;">
-    <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;">
+    <!-- Top section: Brand + Links -->
+    <div class="footer-top" style="max-width:1400px;margin:0 auto 48px;display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr 1.2fr;gap:40px;">
       <div>
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-    
           <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
         </div>
-        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;max-width:360px;">
+        <p style="color:var(--fg-muted);font-size:13px;line-height:1.6;max-width:340px;">
           A payment processing solutions company. We help businesses navigate payment processor approvals — from first-time solopreneurs to enterprise operators managing complex processor portfolios.
         </p>
       </div>
+
       <div>
         <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px;">Product</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
@@ -420,44 +425,51 @@
           <a onclick="go('how-it-works')" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">How It Works</a>
         </div>
       </div>
+
       <div>
         <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px;">Company</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
           <a onclick="go('about')" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">About Us</a>
+          <a onclick="go('faq')" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">FAQ</a>
         </div>
       </div>
+
       <div>
-        <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px;">Resources</div>
+        <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px;">Legal</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
-          <a onclick="go('faq')" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">FAQ</a>
           <a onclick="go('privacy')" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">Privacy Policy</a>
           <a onclick="go('tos')" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">Terms of Service</a>
+          <a onclick="go('cookies')" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">Cookie Policy</a>
+          <a onclick="go('dmca')" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">DMCA Policy</a>
+          <a onclick="go('accessibility')" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">Accessibility</a>
+          <a onclick="go('ccpa')" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">Do Not Sell My Info</a>
         </div>
       </div>
-        <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin:24px 0 12px;">Contact</div>
-        <div style="font-size:13px;color:var(--fg-muted);line-height:1.8;">
-          <div><a href="mailto:support@processorhelp.com" style="color:var(--fg);text-decoration:none;">support@processorhelp.com</a></div>
-          <div><a href="mailto:legal@processorhelp.com" style="color:var(--fg);text-decoration:none;">legal@processorhelp.com</a></div>
-          <div><a href="mailto:privacy@processorhelp.com" style="color:var(--fg);text-decoration:none;">privacy@processorhelp.com</a></div>
+
+      <div>
+        <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px;">Contact</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+          <a href="mailto:support@processorhelp.com" style="color:var(--fg);text-decoration:none;">support@processorhelp.com</a>
+          <a href="mailto:legal@processorhelp.com" style="color:var(--fg);text-decoration:none;">legal@processorhelp.com</a>
+          <a href="mailto:privacy@processorhelp.com" style="color:var(--fg);text-decoration:none;">privacy@processorhelp.com</a>
         </div>
       </div>
     </div>
 
-    <div style="border-top:1px solid var(--border);padding-top:24px;margin-top:24px;">
-      <div style="font-size:11px;color:var(--fg-dim);line-height:1.7;max-width:960px;margin-bottom:16px;">
-        <strong style="color:var(--fg-muted);">Trademark Notice:</strong> Stripe, PayPal, Adyen, Checkout.com, Mollie, PaymentCloud, PayKings, Worldline, Worldpay, Authorize.Net, Elavon, Shopify Payments, Durango Merchant Services, Flutterwave, Phoenix Technologies, Pay.com, SoarPay, WooPayments, HubSpot Payments, HighRiskPay.com, Easy Pay Direct, Total Processing, NMI, EmerchantPay, Nomupay, Square, QuickPay, Visa, Mastercard, and all other third-party names, logos, and trademarks referenced on this site are the property of their respective owners. Their use here is solely for informational and comparative purposes under the principle of nominative fair use. No endorsement, affiliation, sponsorship, or partnership is implied or should be inferred.
+    <!-- Middle section: Disclaimers -->
+    <div style="max-width:1400px;margin:0 auto;border-top:1px solid var(--border);padding-top:24px;">
+      <div style="font-size:11px;color:var(--fg-dim);line-height:1.7;margin-bottom:14px;">
+        <strong style="color:var(--fg-muted);">Trademark Notice:</strong> All third-party payment processor names, logos, and trademarks referenced on this site (including but not limited to Stripe, PayPal, Adyen, Checkout.com, Mollie, PaymentCloud, PayKings, Worldline, Worldpay, Authorize.Net, Elavon, Shopify Payments, Durango, Flutterwave, Phoenix Technologies, Pay.com, SoarPay, WooPayments, HubSpot Payments, HighRiskPay.com, Easy Pay Direct, Total Processing, NMI, EmerchantPay, Nomupay, Square, QuickPay, Visa, and Mastercard) are the property of their respective owners. Their use here is solely for informational and comparative purposes under the principle of nominative fair use. No endorsement, affiliation, sponsorship, or partnership is implied or should be inferred.
       </div>
-      <div style="font-size:11px;color:var(--fg-dim);line-height:1.7;margin-bottom:16px;">
+      <div style="font-size:11px;color:var(--fg-dim);line-height:1.7;margin-bottom:20px;">
         <strong style="color:var(--fg-muted);">Disclaimer:</strong> Processor Help provides informational guidance only. Nothing on this site constitutes financial, legal, tax, accounting, regulatory, or professional advice. All approval predictions are non-binding estimates. Each payment processor makes final underwriting decisions independently. Consult qualified professionals for specific business guidance.
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;color:var(--fg-dim);font-size:12px;flex-wrap:wrap;gap:16px;">
-        <div class="mono">© 2026 PROCESSOR HELP · A PAYMENT PROCESSING SOLUTIONS COMPANY · BUILT IN MILWAUKEE</div>
-        <div style="display:flex;gap:16px;">
-          <a onclick="go('accessibility')" style="color:var(--fg-muted);font-size:11px;cursor:pointer;text-decoration:none;">Accessibility</a>
-          <a onclick="go('ccpa')" style="color:var(--fg-muted);font-size:11px;cursor:pointer;text-decoration:none;">Do Not Sell My Info</a>
-          <a onclick="go('cookies')" style="color:var(--fg-muted);font-size:11px;cursor:pointer;text-decoration:none;">Cookie Policy</a>
-          <a onclick="go('dmca')" style="color:var(--fg-muted);font-size:11px;cursor:pointer;text-decoration:none;">DMCA</a>
-        </div>
+    </div>
+
+    <!-- Bottom section: Copyright -->
+    <div style="max-width:1400px;margin:0 auto;border-top:1px solid var(--border);padding-top:20px;">
+      <div class="mono" style="color:var(--fg-dim);font-size:11px;letter-spacing:0.08em;">
+        © 2026 PROCESSOR HELP · A PAYMENT PROCESSING SOLUTIONS COMPANY · BUILT IN MILWAUKEE
       </div>
     </div>
   </footer>
