@@ -308,6 +308,19 @@
 </head>
 <body class="grain">
 
+<!-- =============== EARLY ACCESS NOTICE =============== -->
+<div id="early-access-banner" style="position:relative;z-index:90;background:var(--bg-elevated);border-bottom:1px solid var(--border-strong);padding:10px 32px;display:none;">
+  <div style="max-width:1400px;margin:0 auto;display:flex;justify-content:center;align-items:center;gap:16px;font-size:12px;color:var(--fg-muted);flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);"></span>
+      <strong style="color:var(--fg);">Early Access</strong>
+      <span>·</span>
+      <span>Processor Help is in early release. We're improving rapidly based on user feedback.</span>
+    </div>
+    <button onclick="dismissEarlyAccess()" style="background:none;border:none;color:var(--fg-muted);cursor:pointer;font-size:16px;line-height:1;padding:4px 8px;">×</button>
+  </div>
+</div>
+
 <!-- =============== COOKIE CONSENT BANNER =============== -->
 <div id="cookie-banner" style="position:fixed;bottom:0;left:0;right:0;z-index:1000;background:var(--bg-card);border-top:1px solid var(--border-strong);padding:20px 32px;box-shadow:0 -4px 20px rgba(0,0,0,0.08);display:none;">
   <div style="max-width:1400px;margin:0 auto;display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
@@ -513,7 +526,16 @@
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:48px;font-size:13px;color:var(--fg-muted);max-width:600px;margin-left:auto;margin-right:auto;line-height:1.7;">
+    <div style="margin-top:48px;max-width:900px;margin-left:auto;margin-right:auto;padding:24px 28px;background:var(--bg-elevated);border:1px solid var(--border);">
+      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Refund & Cancellation Policy</div>
+      <div style="font-size:13px;color:var(--fg-muted);line-height:1.7;">
+        <strong style="color:var(--fg);">Cancel anytime.</strong> Cancel your subscription from your billing dashboard in two clicks — no phone calls, no retention pitches, no hoops. You retain full access through the end of your current billing period.
+        <br><br>
+        <strong style="color:var(--fg);">Refund eligibility:</strong> All subscription fees are final. Refunds are issued only when (a) a technical failure prevents service delivery, or (b) you were charged after a verified cancellation. Submit refund requests to <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a> within 7 days. Read full terms in our <a onclick="go('tos')" style="color:var(--accent);cursor:pointer;text-decoration:underline;">Terms of Service</a>.
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:32px;font-size:13px;color:var(--fg-muted);max-width:600px;margin-left:auto;margin-right:auto;line-height:1.7;">
       Have questions about pricing? Read our <a onclick="go('faq')" style="color:var(--accent);cursor:pointer;text-decoration:underline;">FAQ</a> or email <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a>.
     </div>
   </section>
@@ -862,7 +884,30 @@
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4. Information Sharing</h2>
     <p><strong style="color:var(--fg);">We do not sell your personal information.</strong> We do not share your business profile with payment processors. When you click "Apply" on any processor in your report, you are redirected to that processor's own website, where you apply directly. Processor Help does not submit applications on your behalf.</p>
-    <p style="margin-top:16px;">We may share information with: our payment processor for transaction processing, email delivery services to send your report, and legal authorities if required by law.</p>
+    <p style="margin-top:16px;">We may share information with our service providers as described in Section 4a below, and with legal authorities if required by law.</p>
+
+    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4a. Third-Party Service Providers</h2>
+    <p>We use carefully selected third-party services to operate Processor Help. These providers receive only the data necessary to perform their function, are bound by data protection agreements, and may not use your information for their own purposes.</p>
+    <ul style="margin-top:16px;padding-left:24px;">
+      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Stripe, Inc.</strong> — Payment processing for your $29/month subscription. Stripe receives your name, email, billing address, and payment card details. Stripe is PCI-DSS Level 1 certified. Their <a href="https://stripe.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
+      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">GitHub, Inc.</strong> — Hosts our website infrastructure. May log basic technical information (IP address, browser type, request timestamps).</li>
+      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Email service providers</strong> — Used to deliver transactional emails (password resets, receipts, account notifications). We will update this Policy when we select a specific provider.</li>
+      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Analytics providers (with your consent)</strong> — Used to understand usage patterns and improve the service. Active only if you accept analytics cookies in our cookie banner.</li>
+    </ul>
+    <p style="margin-top:16px;">We do not sell, rent, or trade your personal information to any third party. We do not share your data with payment processors listed in our underwriting engine — when you click "Apply at [Processor]," you are redirected to their website to apply directly.</p>
+
+    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4b. Data Breach Notification</h2>
+    <p>In the event of a confirmed data breach affecting your personal information, we will:</p>
+    <ul style="margin-top:12px;padding-left:24px;">
+      <li style="margin-bottom:8px;">Notify affected users via email within <strong style="color:var(--fg);">72 hours</strong> of confirming the breach (in line with GDPR requirements)</li>
+      <li style="margin-bottom:8px;">Provide details about the nature of the breach, the data potentially affected, and the steps we are taking</li>
+      <li style="margin-bottom:8px;">Offer guidance on protective steps you can take</li>
+      <li style="margin-bottom:8px;">Notify applicable regulatory authorities as required by federal and state law (including all 50 US state breach notification laws)</li>
+      <li style="margin-bottom:8px;">Cooperate fully with investigations and provide identity protection resources where appropriate</li>
+    </ul>
+
+    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4c. Free Account Data Practices</h2>
+    <p>Free accounts (users who have signed up but not subscribed) are subject to the same privacy protections as paid accounts. We collect only the information you provide (business name, email, password) and store it securely. Free accounts that remain inactive for 12 consecutive months may be archived; we will email you 30 days before any data removal.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">5. Data Retention</h2>
     <p>We retain your application data for 12 months to allow you to re-access your report and to improve our underwriting engine. You may request deletion at any time by contacting us. Payment records are retained per applicable financial and tax regulations.</p>
@@ -937,11 +982,40 @@
       <li style="margin-bottom:8px;">Be authorized to submit business information on behalf of your company</li>
     </ul>
 
-    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">6. Payment and Refunds</h2>
-    <p>The $29 subscription fee is charged monthly to your card on file and grants unlimited access to underwriting reports during the active billing period. Cancel anytime from your billing page — you will retain access until the end of your paid period. Refunds are issued only in cases of technical failure preventing service. Request refunds at support@processorhelp.com within 7 days.</p>
+    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">6. Payment, Subscription & Refunds</h2>
+    <p><strong style="color:var(--fg);">Subscription billing.</strong> The $29 monthly subscription fee is automatically charged to your card on file each month and grants unlimited access to underwriting reports during the active billing period. The subscription continues until you cancel.</p>
+    <p style="margin-top:12px;"><strong style="color:var(--fg);">Cancellation.</strong> You may cancel your subscription at any time from your Billing page. Cancellation is effective immediately — no phone calls, no retention pressure, no waiting periods. You retain full access until the end of your current paid billing period (e.g., if you cancel on day 5 of a 30-day cycle, you keep access through day 30).</p>
+    <p style="margin-top:12px;"><strong style="color:var(--fg);">Refund policy.</strong> All subscription fees are final upon charge. Refunds are issued in two specific situations:</p>
+    <ul style="margin-top:8px;padding-left:24px;">
+      <li style="margin-bottom:8px;">A verified technical failure prevents service delivery (the engine is broken, your account is inaccessible, etc.)</li>
+      <li style="margin-bottom:8px;">You were erroneously charged after a verified cancellation</li>
+    </ul>
+    <p style="margin-top:12px;">Submit refund requests to <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a> within 7 days of the charge. We aim to respond within 2 business days. We do not provide prorated refunds for unused portions of a billing cycle.</p>
+    <p style="margin-top:12px;"><strong style="color:var(--fg);">Failed payments.</strong> If a recurring payment fails, we will attempt to charge again over the following 7 days. If payment is not received, your subscription will be paused until you update your payment method.</p>
+    <p style="margin-top:12px;"><strong style="color:var(--fg);">Price changes.</strong> Existing subscribers will not see price increases on their current plan. If we introduce new pricing tiers in the future, existing customers will be grandfathered at their current rate. We will provide at least 30 days notice of any price changes that would affect your subscription.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">7. Intellectual Property</h2>
     <p>All content, code, design, underwriting algorithms, and brand assets on Processor Help are owned by us. You may not copy, reproduce, redistribute, or create derivative works without written permission.</p>
+
+    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">7a. Age Restriction</h2>
+    <p>You must be at least <strong style="color:var(--fg);">18 years of age</strong> to create an account or use Processor Help. By creating an account, you represent and warrant that you are 18 or older and authorized to enter into agreements on behalf of any business you represent. Processor Help is not intended for use by minors and we do not knowingly collect personal information from individuals under 18.</p>
+
+    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">7b. Service Availability</h2>
+    <p>Processor Help is provided on an "as available" basis. We do not guarantee uninterrupted access. The service may be temporarily unavailable due to scheduled maintenance, technical failures, force majeure, or other circumstances outside our control.</p>
+    <p style="margin-top:12px;">We may modify, suspend, or discontinue any aspect of the service at any time, with or without notice. We may also restrict access in certain geographic regions due to legal or regulatory requirements. We are not liable for any losses arising from service unavailability or modification.</p>
+
+    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">7c. Early Access / Pre-Production Notice</h2>
+    <p>Processor Help is currently in early access. While we have built the service with care and intend it for production use, certain features may be subject to refinement based on user feedback. We commit to:</p>
+    <ul style="margin-top:12px;padding-left:24px;">
+      <li style="margin-bottom:8px;">Maintaining the integrity and security of your data</li>
+      <li style="margin-bottom:8px;">Honoring all subscription commitments and refund policies</li>
+      <li style="margin-bottom:8px;">Notifying you of any material changes to features or service</li>
+      <li style="margin-bottom:8px;">Providing 30+ days notice before any service discontinuation</li>
+    </ul>
+
+    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">7d. Email Communications</h2>
+    <p><strong style="color:var(--fg);">Transactional emails (always sent):</strong> account confirmations, password resets, payment receipts, subscription notifications, security alerts, service announcements, and policy updates. These are required for account operation and cannot be opted out of while you maintain an account.</p>
+    <p style="margin-top:12px;"><strong style="color:var(--fg);">Marketing emails (opt-in only):</strong> product updates, industry insights, payment processor news, and promotional content. These require your explicit consent at signup or in your settings. You can unsubscribe at any time using the link in any marketing email or by emailing <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a>.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">8. Disclaimers</h2>
     <p>The service is provided "as is" without warranties of any kind, express or implied. We do not warrant that results will be accurate, complete, or reflective of any processor's current underwriting policies.</p>
@@ -1063,6 +1137,16 @@
       <li style="margin-bottom:8px;">Responsive design that works on mobile, tablet, and desktop</li>
       <li style="margin-bottom:8px;">Text sizing that respects browser zoom settings</li>
       <li style="margin-bottom:8px;">Form fields with proper labels and validation feedback</li>
+    </ul>
+
+    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">3a. Tools You Can Use Today</h2>
+    <p>Modern browsers and operating systems include powerful accessibility tools. Processor Help is built to work with these:</p>
+    <ul style="margin-top:12px;padding-left:24px;">
+      <li style="margin-bottom:10px;"><strong style="color:var(--fg);">Browser zoom:</strong> Press Ctrl+ (Cmd+ on Mac) to enlarge text. Our layout adapts up to 200% zoom without breaking.</li>
+      <li style="margin-bottom:10px;"><strong style="color:var(--fg);">Screen readers:</strong> NVDA (free, Windows), JAWS (Windows), VoiceOver (built into Mac/iOS), TalkBack (Android), and ChromeVox all work with our semantic HTML structure.</li>
+      <li style="margin-bottom:10px;"><strong style="color:var(--fg);">High contrast mode:</strong> Windows High Contrast and macOS Increase Contrast both work with our site.</li>
+      <li style="margin-bottom:10px;"><strong style="color:var(--fg);">Keyboard navigation:</strong> Tab through interactive elements, use Enter/Space to activate buttons, and use Esc to close dialogs.</li>
+      <li style="margin-bottom:10px;"><strong style="color:var(--fg);">Reading mode:</strong> Most browsers offer a built-in reader view that strips formatting for clearer reading.</li>
     </ul>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4. Areas of Active Improvement</h2>
@@ -1262,13 +1346,25 @@
         <input id="signup-password" type="password" placeholder="At least 8 characters" oninput="validateSignup()" />
       </div>
       <div id="signup-error" style="display:none;padding:14px;background:var(--denied-bg);border:1px solid var(--denied);color:var(--denied);font-size:13px;margin-bottom:16px;"></div>
+
+      <div style="margin:24px 0;display:flex;flex-direction:column;gap:14px;">
+        <label style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--fg);line-height:1.5;cursor:pointer;">
+          <input type="checkbox" id="signup-age" oninput="validateSignup()" style="width:18px;height:18px;margin-top:2px;flex-shrink:0;cursor:pointer;accent-color:var(--accent);" />
+          <span><strong style="color:var(--fg);">I confirm I am at least 18 years old</strong> and authorized to enter into agreements on behalf of any business I represent.</span>
+        </label>
+        <label style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--fg-muted);line-height:1.5;cursor:pointer;">
+          <input type="checkbox" id="signup-marketing" style="width:18px;height:18px;margin-top:2px;flex-shrink:0;cursor:pointer;accent-color:var(--accent);" />
+          <span>Send me product updates, payment processor industry insights, and tips for navigating processor approvals. <em style="color:var(--fg-dim);">(Optional — you'll always receive transactional emails like receipts and password resets regardless.)</em></span>
+        </label>
+      </div>
+
       <button id="btn-signup" class="btn-primary" disabled onclick="handleSignup()" style="width:100%;justify-content:center;padding:18px 32px;margin-top:8px;">Create account →</button>
       <div style="text-align:center;margin-top:24px;font-size:13px;color:var(--fg-muted);">
         Already have an account? <a onclick="go('signin')" style="color:var(--accent);cursor:pointer;text-decoration:none;">Sign in</a>
       </div>
       <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--fg-dim);line-height:1.6;">
         By creating an account, you agree to the<br>
-        <a onclick="go('tos')" style="color:var(--fg-muted);cursor:pointer;text-decoration:underline;">Terms of Service</a> and <a onclick="go('privacy')" style="color:var(--fg-muted);cursor:pointer;text-decoration:underline;">Privacy Policy</a>.
+        <a onclick="go('tos')" style="color:var(--fg-muted);cursor:pointer;text-decoration:underline;">Terms of Service</a>, <a onclick="go('privacy')" style="color:var(--fg-muted);cursor:pointer;text-decoration:underline;">Privacy Policy</a>, and <a onclick="go('cookies')" style="color:var(--fg-muted);cursor:pointer;text-decoration:underline;">Cookie Policy</a>.
       </div>
     </div>
   </main>
@@ -2111,7 +2207,8 @@ function validateSignup() {
   const b = document.getElementById('signup-business').value.trim();
   const e = document.getElementById('signup-email').value.trim();
   const p = document.getElementById('signup-password').value;
-  const valid = b.length >= 2 && e.includes('@') && e.includes('.') && p.length >= 8;
+  const ageOk = document.getElementById('signup-age').checked;
+  const valid = b.length >= 2 && e.includes('@') && e.includes('.') && p.length >= 8 && ageOk;
   document.getElementById('btn-signup').disabled = !valid;
 }
 
@@ -2133,6 +2230,9 @@ function handleSignup() {
     business,
     passwordHash: simpleHash(password),
     createdAt: Date.now(),
+    ageConfirmed: true,
+    marketingConsent: document.getElementById('signup-marketing').checked,
+    consentTimestamp: Date.now(),
     subscribed: false,
     subscriptionStartDate: null,
     subscriptionNextBilling: null,
@@ -2962,7 +3062,11 @@ function renderSubscribe() {
           <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--fg);line-height:1.6;">
             <span style="color:var(--accent);font-weight:600;flex-shrink:0;">ⓘ</span>
             <div>
-              <strong style="color:var(--fg);">Recurring subscription disclosure:</strong> By subscribing, you authorize Processor Help to charge your card <strong>$29.00 USD every month</strong> starting today. Your subscription will automatically renew each month until you cancel. You can cancel anytime from your Billing page. No refunds for partial months — you'll retain access through the end of your current billing period.
+              <strong style="color:var(--fg);">Recurring subscription disclosure:</strong> By clicking Subscribe, you authorize Processor Help to automatically charge your payment method <strong>$29.00 USD every month</strong> starting today and on the same date each month thereafter. Your subscription will continue and renew automatically until you cancel.
+              <br><br>
+              <strong style="color:var(--fg);">Easy cancellation:</strong> Cancel anytime in 2 clicks from your Billing dashboard — no phone calls, no retention pressure, no hoops. Cancellation is effective immediately and you retain full access through your current paid period. (NY GBL §527-a, CA BPC §17602, IL 815 ILCS 605 compliant.)
+              <br><br>
+              <strong style="color:var(--fg);">No partial-month refunds:</strong> If you cancel mid-cycle, you retain access until the end of your current billing period. No prorated refunds.
             </div>
           </div>
         </div>
@@ -3231,6 +3335,22 @@ function dismissCookies() {
         const banner = document.getElementById('cookie-banner');
         if (banner) banner.style.display = 'block';
       }, 1200);
+    }
+  } catch(e) {}
+})();
+
+// ============ EARLY ACCESS BANNER ============
+function dismissEarlyAccess() {
+  localStorage.setItem('ph_early_dismissed', '1');
+  const banner = document.getElementById('early-access-banner');
+  if (banner) banner.style.display = 'none';
+}
+(function initEarlyAccess() {
+  try {
+    const dismissed = localStorage.getItem('ph_early_dismissed');
+    if (!dismissed) {
+      const banner = document.getElementById('early-access-banner');
+      if (banner) banner.style.display = 'block';
     }
   } catch(e) {}
 })();
