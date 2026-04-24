@@ -51,6 +51,49 @@
   .spinner { animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* ============ STAT ANIMATIONS ============ */
+  .stat-cell {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .stats-row.animate .stat-cell { opacity: 1; transform: translateY(0); }
+  .stats-row.animate .stat-cell:nth-child(1) { transition-delay: 0ms; }
+  .stats-row.animate .stat-cell:nth-child(2) { transition-delay: 120ms; }
+  .stats-row.animate .stat-cell:nth-child(3) { transition-delay: 240ms; }
+  .stats-row.animate .stat-cell:nth-child(4) { transition-delay: 360ms; }
+
+  .stat-number {
+    font-variant-numeric: tabular-nums;
+    transition: color 0.3s ease;
+  }
+
+  .stat-live {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .stat-live::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: var(--approved);
+    border-radius: 50%;
+    animation: live-pulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes live-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(47, 107, 47, 0.6);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 0 10px rgba(47, 107, 47, 0);
+      transform: scale(1.15);
+    }
+  }
+
   input, select, textarea {
     background: var(--bg-elevated); border: 1px solid var(--border);
     color: var(--fg); padding: 14px 16px; border-radius: 2px;
@@ -264,9 +307,10 @@
     <div style="display:flex;align-items:center;gap:12px;">
       <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
     </div>
-    <div style="display:flex;gap:32px;align-items:center;">
+    <div style="display:flex;gap:32px;align-items:center;" id="landing-nav-right">
       <a onclick="go('how-it-works')">How It Works</a>
-      <button class="btn-primary" onclick="go('application')" style="padding:10px 20px;font-size:12px;">Apply →</button>
+      <a onclick="go('signin')">Sign In</a>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Get Started →</button>
     </div>
   </nav>
 
@@ -291,21 +335,21 @@
       <button class="btn-ghost" onclick="document.getElementById('processors-section').scrollIntoView({behavior:'smooth'})">View payment processors</button>
     </div>
 
-    <div class="fade-up" style="margin-top:96px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);animation-delay:0.4s;">
-      <div style="padding:32px 24px;border-right:1px solid var(--border);">
-        <div class="display" style="font-size:48px;font-weight:500;line-height:1;">27</div>
+    <div class="fade-up stats-row" style="margin-top:96px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);animation-delay:0.4s;">
+      <div class="stat-cell" style="padding:32px 24px;border-right:1px solid var(--border);">
+        <div class="display stat-number" data-target="27" data-format="number" style="font-size:48px;font-weight:500;line-height:1;">0</div>
         <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:12px;">Integrated Payment Processors</div>
       </div>
-      <div style="padding:32px 24px;border-right:1px solid var(--border);">
-        <div class="display" style="font-size:48px;font-weight:500;line-height:1;">~90s</div>
+      <div class="stat-cell" style="padding:32px 24px;border-right:1px solid var(--border);">
+        <div class="display stat-number" data-target="90" data-format="seconds" style="font-size:48px;font-weight:500;line-height:1;">~0s</div>
         <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:12px;">Average Application</div>
       </div>
-      <div style="padding:32px 24px;border-right:1px solid var(--border);">
-        <div class="display" style="font-size:48px;font-weight:500;line-height:1;">Live</div>
+      <div class="stat-cell" style="padding:32px 24px;border-right:1px solid var(--border);">
+        <div class="display stat-number stat-live" data-format="text" style="font-size:48px;font-weight:500;line-height:1;">Live</div>
         <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:12px;">Decision Engine</div>
       </div>
-      <div style="padding:32px 24px;">
-        <div class="display" style="font-size:48px;font-weight:500;line-height:1;">$29</div>
+      <div class="stat-cell" style="padding:32px 24px;">
+        <div class="display stat-number" data-target="29" data-format="dollar" style="font-size:48px;font-weight:500;line-height:1;">$0</div>
         <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:12px;">Per Month · Unlimited Reports</div>
       </div>
     </div>
@@ -392,7 +436,8 @@
     </div>
     <div style="display:flex;gap:32px;align-items:center;">
       <a onclick="go('how-it-works')" style="color:var(--accent);">How It Works</a>
-      <button class="btn-primary" onclick="go('application')" style="padding:10px 20px;font-size:12px;">Apply →</button>
+      <a onclick="go('signin')">Sign In</a>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Get Started →</button>
     </div>
   </nav>
 
@@ -464,7 +509,8 @@
     </div>
     <div style="display:flex;gap:32px;align-items:center;">
       <a onclick="go('how-it-works')">How It Works</a>
-      <button class="btn-primary" onclick="go('application')" style="padding:10px 20px;font-size:12px;">Apply →</button>
+      <a onclick="go('signin')">Sign In</a>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Get Started →</button>
     </div>
   </nav>
 
@@ -553,7 +599,8 @@
     </div>
     <div style="display:flex;gap:32px;align-items:center;">
       <a onclick="go('how-it-works')">How It Works</a>
-      <button class="btn-primary" onclick="go('application')" style="padding:10px 20px;font-size:12px;">Apply →</button>
+      <a onclick="go('signin')">Sign In</a>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Get Started →</button>
     </div>
   </nav>
 
@@ -584,7 +631,8 @@
     </div>
     <div style="display:flex;gap:32px;align-items:center;">
       <a onclick="go('how-it-works')">How It Works</a>
-      <button class="btn-primary" onclick="go('application')" style="padding:10px 20px;font-size:12px;">Apply →</button>
+      <a onclick="go('signin')">Sign In</a>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Get Started →</button>
     </div>
   </nav>
 
@@ -608,7 +656,8 @@
     </div>
     <div style="display:flex;gap:32px;align-items:center;">
       <a onclick="go('how-it-works')">How It Works</a>
-      <button class="btn-primary" onclick="go('application')" style="padding:10px 20px;font-size:12px;">Apply →</button>
+      <a onclick="go('signin')">Sign In</a>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Get Started →</button>
     </div>
   </nav>
 
@@ -674,7 +723,8 @@
     </div>
     <div style="display:flex;gap:32px;align-items:center;">
       <a onclick="go('how-it-works')">How It Works</a>
-      <button class="btn-primary" onclick="go('application')" style="padding:10px 20px;font-size:12px;">Apply →</button>
+      <a onclick="go('signin')">Sign In</a>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Get Started →</button>
     </div>
   </nav>
 
@@ -2706,6 +2756,52 @@ function viewPastReport(index) {
 
 // =============== INIT ===============
 renderProcessorsGrid();
+
+// ============ STAT COUNTER ANIMATION ============
+function animateStatNumber(el) {
+  const target = parseInt(el.dataset.target, 10);
+  const format = el.dataset.format;
+  if (!target && format !== 'text') return;
+  const duration = 1400;
+  const startTime = performance.now();
+
+  function formatValue(val) {
+    const v = Math.round(val);
+    if (format === 'dollar') return '$' + v;
+    if (format === 'seconds') return '~' + v + 's';
+    return v.toString();
+  }
+
+  function tick(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease-out cubic for premium feel
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = target * eased;
+    el.textContent = formatValue(current);
+    if (progress < 1) requestAnimationFrame(tick);
+    else el.textContent = formatValue(target);
+  }
+  requestAnimationFrame(tick);
+}
+
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const row = entry.target;
+      row.classList.add('animate');
+      // Stagger the count-up to match cell entry delays
+      const nums = row.querySelectorAll('.stat-number');
+      nums.forEach((n, i) => {
+        if (n.dataset.format === 'text') return; // "Live" stays as-is
+        setTimeout(() => animateStatNumber(n), i * 120 + 300);
+      });
+      statsObserver.unobserve(row);
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row));
 
 // Load session on page load
 currentUser = getCurrentUser();
