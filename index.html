@@ -3010,6 +3010,10 @@ function validateSub() {
   document.getElementById('btn-sub').disabled = !valid;
 }
 function processSubscription() {
+  // Capture form values BEFORE we wipe the HTML to show the spinner
+  const cardEl = document.getElementById('sub-card');
+  const cardLast4 = cardEl ? cardEl.value.replace(/\s/g, '').slice(-4) : '';
+
   const content = document.getElementById('subscribe-content');
   content.innerHTML = `
     <div class="fade-up" style="text-align:center;padding:80px 0;">
@@ -3019,22 +3023,35 @@ function processSubscription() {
     </div>
   `;
   setTimeout(() => {
-    const now = Date.now();
-    const next = now + 30 * 24 * 60 * 60 * 1000;
-    currentUser.subscribed = true;
-    currentUser.subscriptionStartDate = now;
-    currentUser.subscriptionNextBilling = next;
-    currentUser.paymentMethod = 'Card ending ' + document.getElementById('sub-card').value.replace(/\s/g,'').slice(-4);
-    saveCurrentUser(currentUser);
-    content.innerHTML = `
-      <div class="fade-up" style="text-align:center;padding:80px 0;">
-        <div style="width:72px;height:72px;background:var(--approved-bg);border:2px solid var(--approved);border-radius:50%;margin:0 auto 32px;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--approved);">✓</div>
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--approved);margin-bottom:12px;">Subscription Active</div>
-        <h2 class="display" style="font-size:36px;font-weight:400;margin-bottom:12px;">You're all set.</h2>
-        <p style="color:var(--fg-muted);font-size:15px;margin-bottom:32px;">Your $29/mo subscription is active. Let's run your first report.</p>
-        <button class="btn-primary" onclick="go('application')">Run first report →</button>
-      </div>
-    `;
+    try {
+      const now = Date.now();
+      const next = now + 30 * 24 * 60 * 60 * 1000;
+      currentUser.subscribed = true;
+      currentUser.subscriptionStartDate = now;
+      currentUser.subscriptionNextBilling = next;
+      currentUser.paymentMethod = cardLast4 ? 'Card ending ' + cardLast4 : 'Card on file';
+      saveCurrentUser(currentUser);
+      content.innerHTML = `
+        <div class="fade-up" style="text-align:center;padding:80px 0;">
+          <div style="width:72px;height:72px;background:var(--approved-bg);border:2px solid var(--approved);border-radius:50%;margin:0 auto 32px;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--approved);">✓</div>
+          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--approved);margin-bottom:12px;">Subscription Active</div>
+          <h2 class="display" style="font-size:36px;font-weight:400;margin-bottom:12px;">You're all set.</h2>
+          <p style="color:var(--fg-muted);font-size:15px;margin-bottom:32px;">Your $29/mo subscription is active. Let's run your first report.</p>
+          <button class="btn-primary" onclick="go('application')">Run first report →</button>
+        </div>
+      `;
+    } catch (err) {
+      console.error('Subscription activation failed:', err);
+      content.innerHTML = `
+        <div class="fade-up" style="text-align:center;padding:80px 0;">
+          <div style="width:72px;height:72px;background:var(--denied-bg);border:2px solid var(--denied);border-radius:50%;margin:0 auto 32px;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--denied);">!</div>
+          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--denied);margin-bottom:12px;">Activation Error</div>
+          <h2 class="display" style="font-size:32px;font-weight:400;margin-bottom:12px;">Something went wrong.</h2>
+          <p style="color:var(--fg-muted);font-size:15px;margin-bottom:32px;">Please try again or contact support@processorhelp.com.</p>
+          <button class="btn-ghost" onclick="renderSubscribe()">Try again</button>
+        </div>
+      `;
+    }
   }, 1800);
 }
 
