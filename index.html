@@ -108,6 +108,31 @@
   .mono { font-family: 'JetBrains Mono', monospace; }
   .hidden { display: none !important; }
 
+  /* Billing toggle labels - stable width, no font-weight thrash */
+  .billing-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    transition: color 0.2s ease;
+    /* Reserve space for bold without font-weight changes */
+    font-weight: 500;
+    display: inline-block;
+  }
+  .billing-label[data-active="true"] {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  /* Stabilize price/note display - tabular numbers prevent digit-width shifts */
+  .starter-price, .growth-price, .enterprise-price,
+  .starter-period, .growth-period, .enterprise-period {
+    font-variant-numeric: tabular-nums;
+  }
+  .starter-billing-note, .growth-billing-note, .enterprise-billing-note {
+    min-height: 1.5em;
+  }
+
   .grain::before {
     content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 100;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
@@ -494,7 +519,7 @@
       <div>
         <div class="display" style="font-size:48px;font-weight:400;color:var(--accent);line-height:1;margin-bottom:20px;">02</div>
         <h3 class="display" style="font-size:22px;font-weight:500;margin-bottom:12px;">Subscribe.</h3>
-        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;">$29/month unlocks unlimited reports across all 30 payment processors. Cancel anytime.</p>
+        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;">Subscribe to unlock unlimited reports across all 30 payment processors. Plans starting at $29/month. Cancel anytime.</p>
       </div>
       <div>
         <div class="display" style="font-size:48px;font-weight:400;color:var(--accent);line-height:1;margin-bottom:20px;">03</div>
@@ -522,13 +547,15 @@
     </div>
 
     <!-- Billing toggle -->
-    <div style="display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:48px;">
-      <span id="billing-monthly-label" class="mono" style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);font-weight:600;">Monthly</span>
-      <button id="billing-toggle" onclick="toggleBilling()" style="position:relative;width:56px;height:28px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:14px;cursor:pointer;padding:0;transition:background 0.2s ease;" aria-label="Toggle billing period">
-        <span id="billing-toggle-dot" style="position:absolute;top:2px;left:2px;width:22px;height:22px;background:var(--accent);border-radius:50%;transition:transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);"></span>
+    <div style="display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:48px;flex-wrap:wrap;">
+      <span id="billing-monthly-label" class="billing-label" data-active="true" style="min-width:64px;text-align:right;">Monthly</span>
+      <button id="billing-toggle" onclick="toggleBilling()" style="position:relative;width:56px;height:28px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:14px;cursor:pointer;padding:0;transition:background-color 0.2s ease, border-color 0.2s ease;flex-shrink:0;" aria-label="Toggle billing period">
+        <span id="billing-toggle-dot" style="position:absolute;top:2px;left:2px;width:22px;height:22px;background:var(--accent);border-radius:50%;transition:transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);will-change:transform;"></span>
       </button>
-      <span id="billing-annual-label" class="mono" style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-muted);">Annual</span>
-      <span id="billing-savings-chip" style="display:none;font-size:11px;font-weight:600;background:var(--approved-bg);color:var(--approved);padding:4px 10px;border-radius:12px;letter-spacing:0.05em;">Save 2 months</span>
+      <div style="display:flex;align-items:center;gap:10px;min-width:180px;">
+        <span id="billing-annual-label" class="billing-label" data-active="false">Annual</span>
+        <span id="billing-savings-chip" style="font-size:11px;font-weight:600;background:var(--approved-bg);color:var(--approved);padding:4px 10px;border-radius:12px;letter-spacing:0.05em;opacity:0;transition:opacity 0.25s ease;pointer-events:none;">Save 2 months</span>
+      </div>
     </div>
 
     <div class="pricing-grid" style="display:grid;grid-template-columns:repeat(4, 1fr);gap:16px;max-width:1400px;margin:0 auto;">
@@ -836,7 +863,7 @@
         <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: April 23, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
-      <strong style="color:var(--fg);">Plain-language summary:</strong> We collect the business information you provide to generate your underwriting report. We charge $29/month for subscription access to unlimited reports. We don't sell your data. We don't share it with payment processors without your action. You're always in control.
+      <strong style="color:var(--fg);">Plain-language summary:</strong> We collect the business information you provide to generate your underwriting report. We charge a monthly or annual subscription fee for access to unlimited reports. We don't sell your data. We don't share it with payment processors without your action. You're always in control.
     </p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:40px;">1. Who We Are</h2>
@@ -851,7 +878,7 @@
     <p>We use the information you provide to:</p>
     <ul style="margin-top:12px;padding-left:24px;">
       <li style="margin-bottom:8px;">Generate your personalized underwriting report across our 30 payment processors</li>
-      <li style="margin-bottom:8px;">Process your $29/month subscription payment</li>
+      <li style="margin-bottom:8px;">Process your subscription payment</li>
       <li style="margin-bottom:8px;">Save your reports to your account for unlimited re-access</li>
       <li style="margin-bottom:8px;">Improve our underwriting algorithms through aggregated, anonymized analysis</li>
       <li style="margin-bottom:8px;">Respond to customer support inquiries</li>
@@ -864,7 +891,7 @@
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4a. Third-Party Service Providers</h2>
     <p>We use carefully selected third-party services to operate Processor Help. These providers receive only the data necessary to perform their function, are bound by data protection agreements, and may not use your information for their own purposes.</p>
     <ul style="margin-top:16px;padding-left:24px;">
-      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Stripe, Inc.</strong> — Payment processing for your $29/month subscription. Stripe receives your name, email, billing address, and payment card details. Stripe is PCI-DSS Level 1 certified. Their <a href="https://stripe.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
+      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Stripe, Inc.</strong> — Payment processing for your subscription. Stripe receives your name, email, billing address, and payment card details. Stripe is PCI-DSS Level 1 certified. Their <a href="https://stripe.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">GitHub, Inc.</strong> — Hosts our website infrastructure. May log basic technical information (IP address, browser type, request timestamps).</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Email service providers</strong> — Used to deliver transactional emails (password resets, receipts, account notifications). We will update this Policy when we select a specific provider.</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Analytics providers (with your consent)</strong> — Used to understand usage patterns and improve the service. Active only if you accept analytics cookies in our cookie banner.</li>
@@ -909,7 +936,7 @@
         <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: April 23, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
-      <strong style="color:var(--fg);">Plain-language summary:</strong> Processor Help is an advisory tool, not a payment processor or broker. We charge $29/month for subscription access to unlimited reports showing approval likelihood across 30 payment processors. Results are informational — processors make their own final decisions. Don't misrepresent your business on the form.
+      <strong style="color:var(--fg);">Plain-language summary:</strong> Processor Help is an advisory tool, not a payment processor or broker. We charge a subscription fee (monthly or annual, varies by plan) for access to unlimited reports showing approval likelihood across 30 payment processors. Results are informational — processors make their own final decisions. Don't misrepresent your business on the form.
     </p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:40px;">1. Acceptance of Terms</h2>
@@ -926,7 +953,7 @@
     </ul>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">3. The Service</h2>
-    <p>For a $29/month subscription fee, we provide you with unlimited underwriting reports showing likely approval, conditional approval, or denial outcomes across 30 payment processors based on the business information you provide and our proprietary underwriting logic modeled on publicly available processor criteria. Cancel anytime.</p>
+    <p>For a monthly or annual subscription fee (varies by plan), we provide you with unlimited underwriting reports showing likely approval, conditional approval, or denial outcomes across 30 payment processors based on the business information you provide and our proprietary underwriting logic modeled on publicly available processor criteria. Cancel anytime.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4. No Guarantee of Approval</h2>
     <p><strong style="color:var(--fg);">Our reports are predictive, not binding.</strong> Each payment processor performs its own independent underwriting using criteria, data sources, and policies that change over time. A "Likely Approved" result is not a guarantee. A "Likely Denied" result is not final — you may still apply. Approval decisions rest solely with each payment processor.</p>
@@ -1227,7 +1254,7 @@
     <div class="fade-up">
       <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Create Account</div>
       <h1 class="display" style="font-size:42px;font-weight:400;margin-bottom:12px;letter-spacing:-0.02em;">Start your<br>underwriting journey.</h1>
-      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:40px;">Free account. Subscribe for $29/month to unlock unlimited payment processor underwriting reports.</p>
+      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:40px;">Free account. Subscribe to unlock unlimited payment processor underwriting reports — plans starting at $29/month.</p>
       <div class="field"><label>Business name</label>
         <input id="signup-business" placeholder="Acme Commerce LLC" oninput="validateSignup()" />
       </div>
@@ -2144,13 +2171,27 @@ function simpleHash(str) {
 function loadUsers() {
   try { return JSON.parse(localStorage.getItem('ph_users') || '{}'); } catch(e) { return {}; }
 }
-function saveUsers(u) { localStorage.setItem('ph_users', JSON.stringify(u)); }
+function saveUsers(u) {
+  try {
+    localStorage.setItem('ph_users', JSON.stringify(u));
+    return true;
+  } catch(e) {
+    console.error('Failed to save users:', e);
+    return false;
+  }
+}
 function loadSession() {
   try { return JSON.parse(localStorage.getItem('ph_session') || 'null'); } catch(e) { return null; }
 }
 function saveSession(email) {
-  if (email) localStorage.setItem('ph_session', JSON.stringify({ email, at: Date.now() }));
-  else localStorage.removeItem('ph_session');
+  try {
+    if (email) localStorage.setItem('ph_session', JSON.stringify({ email, at: Date.now() }));
+    else localStorage.removeItem('ph_session');
+    return true;
+  } catch(e) {
+    console.error('Failed to save session:', e);
+    return false;
+  }
 }
 
 function getCurrentUser() {
@@ -2173,7 +2214,11 @@ function validateSignup() {
   const e = document.getElementById('signup-email').value.trim();
   const p = document.getElementById('signup-password').value;
   const ageOk = document.getElementById('signup-age').checked;
-  const valid = b.length >= 2 && e.includes('@') && e.includes('.') && p.length >= 8 && ageOk;
+  // Better email regex: must have something@something.something with no spaces
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  // Business name: at least 2 chars, max 100, no excessive whitespace
+  const businessValid = b.length >= 2 && b.length <= 100;
+  const valid = businessValid && emailValid && p.length >= 8 && ageOk;
   document.getElementById('btn-signup').disabled = !valid;
 }
 
@@ -2182,6 +2227,23 @@ function handleSignup() {
   const email = document.getElementById('signup-email').value.trim().toLowerCase();
   const password = document.getElementById('signup-password').value;
   const errorEl = document.getElementById('signup-error');
+
+  // Re-validate at submit
+  if (business.length < 2 || business.length > 100) {
+    errorEl.textContent = 'Business name must be between 2 and 100 characters.';
+    errorEl.style.display = 'block';
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errorEl.textContent = 'Please enter a valid email address.';
+    errorEl.style.display = 'block';
+    return;
+  }
+  if (password.length < 8) {
+    errorEl.textContent = 'Password must be at least 8 characters.';
+    errorEl.style.display = 'block';
+    return;
+  }
 
   const users = loadUsers();
   if (users[email]) {
@@ -2207,7 +2269,11 @@ function handleSignup() {
   };
 
   users[email] = newUser;
-  saveUsers(users);
+  if (!saveUsers(users)) {
+    errorEl.textContent = 'Unable to create account. Please check that your browser allows local storage.';
+    errorEl.style.display = 'block';
+    return;
+  }
   saveSession(email);
   currentUser = newUser;
   errorEl.style.display = 'none';
@@ -2388,16 +2454,15 @@ function updateBillingDisplay() {
   const annualLabel = document.getElementById('billing-annual-label');
   const savingsChip = document.getElementById('billing-savings-chip');
 
+  // Toggle dot - smooth transform
   if (dot) dot.style.transform = isAnnual ? 'translateX(28px)' : 'translateX(0)';
-  if (monthlyLabel) {
-    monthlyLabel.style.color = isAnnual ? 'var(--fg-muted)' : 'var(--accent)';
-    monthlyLabel.style.fontWeight = isAnnual ? '400' : '600';
-  }
-  if (annualLabel) {
-    annualLabel.style.color = isAnnual ? 'var(--accent)' : 'var(--fg-muted)';
-    annualLabel.style.fontWeight = isAnnual ? '600' : '400';
-  }
-  if (savingsChip) savingsChip.style.display = isAnnual ? 'inline-block' : 'none';
+
+  // Toggle active state via data attribute (CSS handles styling)
+  if (monthlyLabel) monthlyLabel.setAttribute('data-active', String(!isAnnual));
+  if (annualLabel) annualLabel.setAttribute('data-active', String(isAnnual));
+
+  // Fade chip in/out instead of display toggle (no layout shift)
+  if (savingsChip) savingsChip.style.opacity = isAnnual ? '1' : '0';
 
   // Update each plan's price display
   ['starter', 'growth', 'enterprise'].forEach(planKey => {
@@ -2489,7 +2554,7 @@ function renderStep(step) {
     <p style="color:var(--fg-muted);font-size:16px;margin-bottom:48px;">Core entity information. This shapes which payment processors can work with you.</p>
 
     <div class="field"><label>Legal business name</label>
-      <input value="${merchant.businessName}" oninput="merchant.businessName = this.value" placeholder="Acme Commerce LLC" />
+      <input value="${escapeHtml(merchant.businessName)}" oninput="merchant.businessName = this.value" placeholder="Acme Commerce LLC" />
     </div>
 
     <div class="two-col">
@@ -2618,8 +2683,8 @@ function renderStep(step) {
       <div style="border:1px solid var(--border);background:var(--bg-card);">
         ${rows.map((r, i) => `
           <div style="display:flex;justify-content:space-between;padding:16px 24px;${i < rows.length-1 ? 'border-bottom:1px solid var(--border);' : ''}">
-            <div class="mono" style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-muted);">${r[0]}</div>
-            <div style="font-size:14px;font-weight:500;">${r[1]}</div>
+            <div class="mono" style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-muted);">${escapeHtml(r[0])}</div>
+            <div style="font-size:14px;font-weight:500;">${escapeHtml(r[1])}</div>
           </div>
         `).join('')}
       </div>
@@ -2677,7 +2742,7 @@ function renderPaywall() {
           <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
             <div>
               <div style="font-size:15px;font-weight:500;">Processor Help Underwriting Report</div>
-              <div style="font-size:12px;color:var(--fg-muted);margin-top:4px;">${merchant.businessName || 'Your business'} · One-time access</div>
+              <div style="font-size:12px;color:var(--fg-muted);margin-top:4px;">${escapeHtml(merchant.businessName || 'Your business')} · One-time access</div>
             </div>
             <div class="display" style="font-size:28px;font-weight:500;">$10.00</div>
           </div>
@@ -2821,7 +2886,7 @@ function renderResults() {
       Underwriting Decision · ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
     </div>
     <h1 class="fade-up display" style="font-size:clamp(36px, 5vw, 56px);line-height:1.05;font-weight:400;margin-bottom:24px;animation-delay:0.1s;">
-      Your results, <span style="font-style:italic;color:var(--accent);">${merchant.businessName || 'merchant'}</span>.
+      Your results, <span style="font-style:italic;color:var(--accent);">${escapeHtml(merchant.businessName || 'merchant')}</span>.
     </h1>
     <p class="fade-up" style="font-size:18px;color:var(--fg-muted);max-width:700px;margin-bottom:48px;animation-delay:0.2s;">
       Based on your profile, here's how each of our thirty payment processors evaluated your application. Ranked by approval confidence.
@@ -2925,8 +2990,8 @@ const FAQ_ITEMS = [
     a: 'No. Processor Help is a payment processing solutions company — we help businesses navigate payment processor approvals. We show you which of our 30 payment processors are most likely to approve your business based on your profile. We do not process payments, hold merchant accounts, or act as a broker. Each payment processor makes its own final underwriting decision.'
   },
   {
-    q: 'Why does it cost $29/month?',
-    a: 'The $29/month subscription covers unlimited access to our underwriting engine across all 30 payment processors. You can run reports as often as your business evolves — new volume tier, new vertical, new country, post-shutdown — without additional fees. Cancel anytime from your billing page.'
+    q: 'How much does Processor Help cost?',
+    a: 'We offer three subscription tiers based on your business stage: Starter at $29/month for solopreneurs, Growth at $99/month for scaling brands ($50K-$500K monthly volume), and Enterprise at $499/month for high-volume operators ($500K+ monthly volume). All tiers include unlimited reports across all 30 payment processors. Annual plans available with 2 months free. Cancel anytime from your billing page.'
   },
   {
     q: 'How accurate are your approval predictions?',
@@ -2938,7 +3003,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Do you earn commissions from payment processors?',
-    a: 'No. Processor Help earns revenue exclusively from the $29/month subscription fee paid by users. We do not accept referral commissions, kickbacks, or residuals from any payment processor on our platform. This independence is why we can tell you the truth about which processors will deny you.'
+    a: 'No. Processor Help earns revenue exclusively from subscription fees paid by users. We do not accept referral commissions, kickbacks, or residuals from any payment processor on our platform. This independence is why we can tell you the truth about which processors will deny you.'
   },
   {
     q: 'What if I have prior processor terminations or MATCH list status?',
@@ -3027,7 +3092,7 @@ function renderDashboard() {
     <div class="fade-up">
       <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Dashboard</div>
       <h1 class="display" style="font-size:48px;font-weight:400;margin-bottom:12px;letter-spacing:-0.02em;">
-        Welcome, <span style="font-style:italic;color:var(--accent);">${u.business}</span>.
+        Welcome, <span style="font-style:italic;color:var(--accent);">${escapeHtml(u.business)}</span>.
       </h1>
       <p style="color:var(--fg-muted);font-size:17px;margin-bottom:48px;">
         ${u.subscribed ? 'Your subscription is active. Run unlimited underwriting reports anytime.' : 'Subscribe to unlock unlimited underwriting reports across 30 payment processors.'}
@@ -3080,7 +3145,7 @@ function renderDashboard() {
           <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px;">Latest Report</div>
           <div onclick="viewPastReport(${u.reports.length - 1})" style="padding:24px 32px;border:1px solid var(--border);background:var(--bg-card);display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
             <div>
-              <div style="font-size:15px;font-weight:500;margin-bottom:4px;">${latestReport.merchant.businessName || u.business}</div>
+              <div style="font-size:15px;font-weight:500;margin-bottom:4px;">${escapeHtml(latestReport.merchant.businessName || u.business)}</div>
               <div style="font-size:12px;color:var(--fg-muted);">${new Date(latestReport.createdAt).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})} · ${latestReport.approvedCount} approved · ${latestReport.conditionalCount} conditional · ${latestReport.deniedCount} denied</div>
             </div>
             <div style="color:var(--fg-muted);">→</div>
@@ -3176,7 +3241,7 @@ function renderSubscribe() {
           <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
             <div>
               <div style="font-size:15px;font-weight:500;">${plan.name} — ${plan.label}</div>
-              <div style="font-size:12px;color:var(--fg-muted);margin-top:4px;">${u.business} · ${billingLabel} subscription</div>
+              <div style="font-size:12px;color:var(--fg-muted);margin-top:4px;">${escapeHtml(u.business)} · ${billingLabel} subscription</div>
             </div>
             <div style="text-align:right;">
               <div class="display" style="font-size:28px;font-weight:500;">$${displayPrice}</div>
@@ -3361,7 +3426,7 @@ function renderSettings() {
         </div>
         <div style="padding:24px 28px;border-bottom:1px solid var(--border);">
           <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px;">Email</div>
-          <div style="font-size:15px;">${u.email}</div>
+          <div style="font-size:15px;">${escapeHtml(u.email)}</div>
           <div style="font-size:12px;color:var(--fg-muted);margin-top:4px;">Email cannot be changed. Contact <a href="mailto:support@processorhelp.com" style="color:var(--accent);">support@processorhelp.com</a> to update.</div>
         </div>
         <div style="padding:24px 28px;border-bottom:1px solid var(--border);">
@@ -3570,7 +3635,7 @@ function deleteAccountFlow() {
     '• Your business profile\n' +
     `• ${(currentUser.reports || []).length} saved underwriting report${(currentUser.reports||[]).length === 1 ? '' : 's'}\n` +
     '• All consent records and email preferences\n' +
-    (currentUser.subscribed ? '• Your active $29/month subscription will be cancelled immediately\n' : '') +
+    (currentUser.subscribed ? `• Your active ${PLANS[currentUser.subscriptionPlan]?.name || ''} subscription will be cancelled immediately\n` : '') +
     '\nThis action CANNOT BE UNDONE.\n\n' +
     'Continue?'
   );
@@ -3785,7 +3850,7 @@ function renderReportsHistory() {
               <div onclick="viewPastReport(${i})" style="border:1px solid var(--border);background:var(--bg-card);padding:24px 32px;cursor:pointer;display:grid;grid-template-columns:60px 1fr auto auto;gap:24px;align-items:center;">
                 <div class="mono display" style="font-size:24px;color:var(--fg-dim);">${String(i+1).padStart(2,'0')}</div>
                 <div>
-                  <div style="font-size:15px;font-weight:500;margin-bottom:4px;">${r.merchant.businessName || u.business}</div>
+                  <div style="font-size:15px;font-weight:500;margin-bottom:4px;">${escapeHtml(r.merchant.businessName || u.business)}</div>
                   <div style="font-size:12px;color:var(--fg-muted);">${new Date(r.createdAt).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})} · ${r.merchant.industry ? INDUSTRY_RISK[r.merchant.industry]?.label : ''}</div>
                 </div>
                 <div style="display:flex;gap:12px;">
