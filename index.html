@@ -40,14 +40,14 @@
     --denied-bg: #f5e4e0;
   }
   [data-theme="dark"] {
-    --bg: #000000;
-    --bg-card: #000000;
-    --bg-elevated: #0f0f0f;
+    --bg: #0a0a0a;
+    --bg-card: #0a0a0a;
+    --bg-elevated: #161616;
     --fg: #ffffff;
     --fg-muted: #a8a8a8;
     --fg-dim: #6b6b6b;
-    --border: #1f1f1f;
-    --border-strong: #3a3a3a;
+    --border: #2a2a2a;
+    --border-strong: #4a4a4a;
     --accent: #d4a559;
     --accent-dim: #b08538;
     --approved: #6b9c6b;
@@ -100,10 +100,9 @@
     transform: rotate(-20deg);
     fill: var(--fg);
   }
-  /* Adjust grain overlay opacity for dark mode */
+  /* Adjust grain overlay opacity for dark mode - very subtle */
   [data-theme="dark"] body.grain::before {
-    opacity: 0.6;
-  }
+    opacity: 0.02;
   }
   .display { font-family: 'Fraunces', serif; letter-spacing: -0.02em; }
   .mono { font-family: 'JetBrains Mono', monospace; }
