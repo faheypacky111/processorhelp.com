@@ -4,19 +4,32 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Processor Help — Payment Processing Solutions Company</title>
+<script>
+// Apply theme immediately to prevent flash of wrong theme
+(function() {
+  try {
+    const saved = localStorage.getItem('ph_theme');
+    if (saved === 'dark' || saved === 'light') {
+      document.documentElement.setAttribute('data-theme', saved);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  } catch(e) {}
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #faf8f3;
+    --bg: #ffffff;
     --bg-card: #ffffff;
-    --bg-elevated: #f2efe7;
-    --fg: #1a1815;
-    --fg-muted: #6b6558;
-    --fg-dim: #a39d8f;
-    --border: #e5e1d6;
-    --border-strong: #c9c3b3;
+    --bg-elevated: #f5f5f5;
+    --fg: #0a0a0a;
+    --fg-muted: #6b6b6b;
+    --fg-dim: #a8a8a8;
+    --border: #e5e5e5;
+    --border-strong: #c4c4c4;
     --accent: #a67c2e;
     --accent-dim: #7a5a1f;
     --approved: #2f6b2f;
@@ -26,6 +39,24 @@
     --denied: #a03a3a;
     --denied-bg: #f5e4e0;
   }
+  [data-theme="dark"] {
+    --bg: #000000;
+    --bg-card: #000000;
+    --bg-elevated: #0f0f0f;
+    --fg: #ffffff;
+    --fg-muted: #a8a8a8;
+    --fg-dim: #6b6b6b;
+    --border: #1f1f1f;
+    --border-strong: #3a3a3a;
+    --accent: #d4a559;
+    --accent-dim: #b08538;
+    --approved: #6b9c6b;
+    --approved-bg: #0f1c0f;
+    --conditional: #d4a559;
+    --conditional-bg: #1c1810;
+    --denied: #c25a5a;
+    --denied-bg: #1c0f0f;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Inter', sans-serif;
@@ -33,6 +64,46 @@
     color: var(--fg);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  body, body * {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+  /* Theme toggle button - moon only */
+  .theme-toggle {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--fg);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.3s ease;
+  }
+  .theme-toggle:hover {
+    background: var(--bg-elevated);
+    border-color: var(--accent);
+  }
+  .theme-toggle svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  /* Moon rotates when toggling */
+  [data-theme="dark"] .theme-toggle svg {
+    transform: rotate(-20deg);
+    fill: var(--fg);
+  }
+  /* Adjust grain overlay opacity for dark mode */
+  [data-theme="dark"] body.grain::before {
+    opacity: 0.6;
+  }
   }
   .display { font-family: 'Fraunces', serif; letter-spacing: -0.02em; }
   .mono { font-family: 'JetBrains Mono', monospace; }
@@ -337,6 +408,7 @@
       <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
     </div>
     <div style="display:flex;gap:32px;align-items:center;" id="landing-nav-right">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
       <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start For Free →</button>
     </div>
@@ -649,6 +721,7 @@
       <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
     </div>
     <div style="display:flex;gap:32px;align-items:center;">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
       <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start For Free →</button>
     </div>
@@ -680,6 +753,7 @@
       <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
     </div>
     <div style="display:flex;gap:32px;align-items:center;">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
       <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start For Free →</button>
     </div>
@@ -705,6 +779,7 @@
     </div>
     <div style="display:flex;gap:32px;align-items:center;">
       <a onclick="document.getElementById('pricing-section')?.scrollIntoView({behavior:'smooth'}) || go('landing')">Pricing</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
       <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start For Free →</button>
     </div>
@@ -1166,6 +1241,7 @@
       <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
     </div>
     <div style="display:flex;gap:32px;align-items:center;">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signup')" style="color:var(--accent);">Sign Up</a>
     </div>
   </nav>
@@ -1199,7 +1275,9 @@
       <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
     </div>
     <div style="display:flex;gap:32px;align-items:center;">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signup')" style="color:var(--accent);">Sign Up</a>
     </div>
   </nav>
@@ -1238,6 +1316,7 @@
       <a onclick="go('settings')" style="color:var(--fg);font-size:13px;cursor:pointer;">Settings</a>
       <div style="width:1px;height:20px;background:var(--border);"></div>
       <div id="user-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;cursor:pointer;" onclick="go('settings')"></div>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <button class="btn-ghost" onclick="handleLogout()" style="padding:8px 16px;font-size:11px;">Log out</button>
     </div>
   </header>
@@ -1252,7 +1331,8 @@
     <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('dashboard')">
       <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
     </div>
-    <div style="display:flex;align-items:center;gap:8px;color:var(--fg-muted);font-size:12px;">
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <div style="display:flex;align-items:center;gap:8px;color:var(--fg-muted);font-size:12px;">
       🔒 <span class="mono" style="letter-spacing:0.1em;text-transform:uppercase;">Secure Checkout</span>
     </div>
   </header>
@@ -1272,6 +1352,7 @@
       <a onclick="go('reports')" style="color:var(--fg);font-size:13px;cursor:pointer;">Reports</a>
       <a onclick="go('billing')" style="color:var(--fg);font-size:13px;cursor:pointer;">Billing</a>
       <a onclick="go('settings')" style="color:var(--accent);font-size:13px;cursor:pointer;">Settings</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <button class="btn-ghost" onclick="handleLogout()" style="padding:8px 16px;font-size:11px;">Log out</button>
     </div>
   </header>
@@ -1291,6 +1372,7 @@
       <a onclick="go('reports')" style="color:var(--fg);font-size:13px;cursor:pointer;">Reports</a>
       <a onclick="go('billing')" style="color:var(--accent);font-size:13px;cursor:pointer;">Billing</a>
       <a onclick="go('settings')" style="color:var(--fg);font-size:13px;cursor:pointer;">Settings</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <button class="btn-ghost" onclick="handleLogout()" style="padding:8px 16px;font-size:11px;">Log out</button>
     </div>
   </header>
@@ -1310,6 +1392,7 @@
       <a onclick="go('reports')" style="color:var(--accent);font-size:13px;cursor:pointer;">Reports</a>
       <a onclick="go('billing')" style="color:var(--fg);font-size:13px;cursor:pointer;">Billing</a>
       <a onclick="go('settings')" style="color:var(--fg);font-size:13px;cursor:pointer;">Settings</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <button class="btn-ghost" onclick="handleLogout()" style="padding:8px 16px;font-size:11px;">Log out</button>
     </div>
   </header>
@@ -1343,7 +1426,8 @@
 <div id="view-paywall" class="hidden">
   <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
     <button id="paywall-back" onclick="go('application')" style="background:none;border:none;color:var(--fg-muted);cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13px;font-family:Inter;">← Back to application</button>
-    <div style="display:flex;align-items:center;gap:8px;color:var(--fg-muted);font-size:12px;">
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <div style="display:flex;align-items:center;gap:8px;color:var(--fg-muted);font-size:12px;">
       🔒 <span class="mono" style="letter-spacing:0.1em;text-transform:uppercase;">Secure Checkout</span>
     </div>
   </header>
@@ -3467,6 +3551,27 @@ function viewPastReport(index) {
 
 // =============== INIT ===============
 renderProcessorsGrid();
+
+// ============ THEME TOGGLE ============
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('ph_theme', next); } catch(e) {}
+}
+// Init theme on load
+(function initTheme() {
+  try {
+    const saved = localStorage.getItem('ph_theme');
+    if (saved === 'dark' || saved === 'light') {
+      document.documentElement.setAttribute('data-theme', saved);
+    } else {
+      // Auto-detect system preference on first visit
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  } catch(e) {}
+})();
 
 // ============ COOKIE CONSENT ============
 function handleCookies(choice) {
