@@ -229,6 +229,8 @@
     footer { padding-left: 32px !important; padding-right: 32px !important; }
     /* Footer 5-col -> 2-col on tablet */
     footer > div.footer-top { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
+    /* Pricing 4-col -> 2-col on tablet */
+    .pricing-grid { grid-template-columns: 1fr 1fr !important; gap: 16px !important; }
   }
 
   /* ============ MOBILE (768px and down) ============ */
@@ -275,7 +277,7 @@
     /* Problem section "01 · Who We Serve" 1fr 2fr -> stack */
     section div[style*="1fr 2fr"] { grid-template-columns: 1fr !important; gap: 24px !important; }
 
-    /* Pricing grid 2-col -> stack on mobile */
+    /* Pricing grid 4-col -> stack on mobile */
     .pricing-grid { grid-template-columns: 1fr !important; }
 
     /* Legal page 2-col layout -> stack on mobile */
@@ -509,122 +511,150 @@
 
   <!-- =============== PRICING SECTION =============== -->
   <section id="pricing-section" style="padding:120px 48px 80px;max-width:1400px;margin:0 auto;border-top:1px solid var(--border);">
-    <div style="text-align:center;margin-bottom:64px;">
+    <div style="text-align:center;margin-bottom:40px;">
       <div class="mono" style="display:inline-block;padding:6px 14px;border:1px solid var(--border-strong);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:24px;">Pricing</div>
       <h2 class="display" style="font-size:clamp(40px, 5vw, 64px);line-height:1.05;font-weight:400;margin-bottom:20px;">
-        Simple, <span style="font-style:italic;color:var(--accent);">honest</span> pricing.
+        Built for <span style="font-style:italic;color:var(--accent);">every</span> stage.
       </h2>
-      <p style="font-size:18px;color:var(--fg-muted);max-width:560px;margin:0 auto;line-height:1.5;">
-        Start free. Upgrade when you're ready to access the full underwriting engine. No hidden fees. Cancel anytime.
+      <p style="font-size:18px;color:var(--fg-muted);max-width:640px;margin:0 auto;line-height:1.5;">
+        From solopreneurs to enterprise. Pay only for what your business needs. No setup fees. Cancel anytime.
       </p>
     </div>
 
-    <div class="pricing-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:1100px;margin:0 auto;">
-      <!-- FREE TIER -->
-      <div style="border:1px solid var(--border);background:var(--bg-card);padding:48px;display:flex;flex-direction:column;">
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px;">Free Account</div>
-        <h3 class="display" style="font-size:36px;font-weight:500;margin-bottom:8px;">Explore</h3>
-        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;margin-bottom:32px;">Browse the platform and create your business profile — no payment required.</p>
-
-        <div style="margin-bottom:32px;">
-          <div style="display:flex;align-items:baseline;gap:8px;">
-            <span class="display" style="font-size:64px;font-weight:500;line-height:1;">$0</span>
-            <span style="font-size:18px;color:var(--fg-muted);">/forever</span>
-          </div>
-          <div style="font-size:13px;color:var(--fg-muted);margin-top:10px;">Account creation only. Reports require subscription.</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:40px;flex:1;">
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
-            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
-            <span>Free account creation</span>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
-            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
-            <span>Browse all 30 payment processors</span>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
-            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
-            <span>Save your business profile</span>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
-            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
-            <span>Access educational resources</span>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--fg-dim);">
-            <span style="color:var(--fg-dim);font-weight:700;flex-shrink:0;">✕</span>
-            <span>Underwriting reports (subscription required)</span>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--fg-dim);">
-            <span style="color:var(--fg-dim);font-weight:700;flex-shrink:0;">✕</span>
-            <span>Approval/denial decisioning across processors</span>
-          </div>
-        </div>
-
-        <button class="btn-ghost" onclick="go('signup')" style="width:100%;justify-content:center;">Create free account →</button>
-        <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--fg-dim);">No credit card required</div>
-      </div>
-
-      <!-- PRO TIER -->
-      <div style="border:2px solid var(--accent);background:var(--bg-card);padding:48px;display:flex;flex-direction:column;position:relative;">
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">Subscription</div>
-        <h3 class="display" style="font-size:36px;font-weight:500;margin-bottom:8px;">Full Access</h3>
-        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;margin-bottom:32px;">Unlimited underwriting reports across all 30 payment processors.</p>
-
-        <div style="margin-bottom:32px;">
-          <div style="display:flex;align-items:baseline;gap:8px;">
-            <span class="display" style="font-size:64px;font-weight:500;line-height:1;">$29</span>
-            <span style="font-size:18px;color:var(--fg-muted);">/month</span>
-          </div>
-          <div style="font-size:13px;color:var(--fg-muted);margin-top:10px;">Billed monthly. Cancel anytime.</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:40px;flex:1;">
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
-            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
-            <span><strong style="color:var(--fg);">Unlimited</strong> underwriting reports</span>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
-            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
-            <span>Real-time approval/denial across all 30 processors</span>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
-            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
-            <span>Match scores and underwriting reasoning</span>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
-            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
-            <span>Direct apply links to every processor</span>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
-            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
-            <span>Full report history saved to your account</span>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
-            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
-            <span>Re-run reports anytime your business changes</span>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
-            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
-            <span>Priority email support</span>
-          </div>
-          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;">
-            <span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span>
-            <span>Cancel anytime — no commitments</span>
-          </div>
-        </div>
-
-        <button class="btn-primary" onclick="startCTA()" style="width:100%;justify-content:center;">Get full access →</button>
-        <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--fg-dim);">$29/month · Cancel anytime</div>
-      </div>
+    <!-- Billing toggle -->
+    <div style="display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:48px;">
+      <span id="billing-monthly-label" class="mono" style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);font-weight:600;">Monthly</span>
+      <button id="billing-toggle" onclick="toggleBilling()" style="position:relative;width:56px;height:28px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:14px;cursor:pointer;padding:0;transition:background 0.2s ease;" aria-label="Toggle billing period">
+        <span id="billing-toggle-dot" style="position:absolute;top:2px;left:2px;width:22px;height:22px;background:var(--accent);border-radius:50%;transition:transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);"></span>
+      </button>
+      <span id="billing-annual-label" class="mono" style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-muted);">Annual</span>
+      <span id="billing-savings-chip" style="display:none;font-size:11px;font-weight:600;background:var(--approved-bg);color:var(--approved);padding:4px 10px;border-radius:12px;letter-spacing:0.05em;">Save 2 months</span>
     </div>
 
+    <div class="pricing-grid" style="display:grid;grid-template-columns:repeat(4, 1fr);gap:16px;max-width:1400px;margin:0 auto;">
+
+      <!-- ============ FREE TIER ============ -->
+      <div style="border:1px solid var(--border);background:var(--bg-card);padding:32px 28px;display:flex;flex-direction:column;">
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:12px;">Free</div>
+        <h3 class="display" style="font-size:28px;font-weight:500;margin-bottom:6px;">Explore</h3>
+        <p style="color:var(--fg-muted);font-size:13px;line-height:1.5;margin-bottom:24px;min-height:40px;">Browse the platform. No payment required.</p>
+
+        <div style="margin-bottom:24px;min-height:80px;">
+          <div style="display:flex;align-items:baseline;gap:6px;">
+            <span class="display" style="font-size:48px;font-weight:500;line-height:1;">$0</span>
+            <span style="font-size:14px;color:var(--fg-muted);">/forever</span>
+          </div>
+          <div style="font-size:12px;color:var(--fg-muted);margin-top:8px;">Account creation only.</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;flex:1;font-size:13px;">
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Free account</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Browse all 30 processors</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Save business profile</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;color:var(--fg-dim);"><span style="color:var(--fg-dim);font-weight:700;flex-shrink:0;">✕</span><span>Underwriting reports</span></div>
+        </div>
+
+        <button class="btn-ghost" onclick="go('signup')" style="width:100%;justify-content:center;font-size:11px;padding:12px;">Create account →</button>
+        <div style="text-align:center;margin-top:10px;font-size:10px;color:var(--fg-dim);">No credit card required</div>
+      </div>
+
+      <!-- ============ STARTER TIER ============ -->
+      <div style="border:1px solid var(--border);background:var(--bg-card);padding:32px 28px;display:flex;flex-direction:column;">
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:12px;">Starter</div>
+        <h3 class="display" style="font-size:28px;font-weight:500;margin-bottom:6px;">Solopreneur</h3>
+        <p style="color:var(--fg-muted);font-size:13px;line-height:1.5;margin-bottom:24px;min-height:40px;">First-time founders and side projects. Get it right the first time.</p>
+
+        <div style="margin-bottom:24px;min-height:80px;">
+          <div style="display:flex;align-items:baseline;gap:6px;">
+            <span class="display starter-price" style="font-size:48px;font-weight:500;line-height:1;">$29</span>
+            <span class="starter-period" style="font-size:14px;color:var(--fg-muted);">/month</span>
+          </div>
+          <div class="starter-billing-note" style="font-size:12px;color:var(--fg-muted);margin-top:8px;">Billed monthly. Cancel anytime.</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;flex:1;font-size:13px;">
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:var(--fg);">Unlimited</strong> reports</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>All 30 processors evaluated</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Match scores & reasoning</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Direct apply links</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Report history</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Email support (48hr)</span></div>
+        </div>
+
+        <button class="btn-ghost" onclick="selectPlan('starter')" style="width:100%;justify-content:center;font-size:11px;padding:12px;">Choose Starter →</button>
+        <div style="text-align:center;margin-top:10px;font-size:10px;color:var(--fg-dim);">Best for solopreneurs</div>
+      </div>
+
+      <!-- ============ GROWTH TIER (RECOMMENDED) ============ -->
+      <div style="border:2px solid var(--accent);background:var(--bg-card);padding:32px 28px;display:flex;flex-direction:column;position:relative;box-shadow:0 4px 20px rgba(166,124,46,0.1);">
+        <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:9px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;padding:5px 12px;white-space:nowrap;">Most Popular</div>
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Growth</div>
+        <h3 class="display" style="font-size:28px;font-weight:500;margin-bottom:6px;">Scaling Brand</h3>
+        <p style="color:var(--fg-muted);font-size:13px;line-height:1.5;margin-bottom:24px;min-height:40px;">$50K-$500K monthly volume. Multi-MID strategy. Quarterly guidance.</p>
+
+        <div style="margin-bottom:24px;min-height:80px;">
+          <div style="display:flex;align-items:baseline;gap:6px;">
+            <span class="display growth-price" style="font-size:48px;font-weight:500;line-height:1;">$99</span>
+            <span class="growth-period" style="font-size:14px;color:var(--fg-muted);">/month</span>
+          </div>
+          <div class="growth-billing-note" style="font-size:12px;color:var(--fg-muted);margin-top:8px;">Billed monthly. Cancel anytime.</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;flex:1;font-size:13px;">
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:var(--fg);">Everything in Starter</strong></span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Multi-MID strategy guidance</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Quarterly check-in calls</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Priority support (24hr)</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Volume tier optimization</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Backup processor planning</span></div>
+        </div>
+
+        <button class="btn-primary" onclick="selectPlan('growth')" style="width:100%;justify-content:center;font-size:11px;padding:12px;">Choose Growth →</button>
+        <div style="text-align:center;margin-top:10px;font-size:10px;color:var(--fg-dim);">Best for scaling brands</div>
+      </div>
+
+      <!-- ============ ENTERPRISE TIER ============ -->
+      <div style="border:1px solid var(--border-strong);background:var(--bg-elevated);padding:32px 28px;display:flex;flex-direction:column;">
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg);margin-bottom:12px;">Enterprise</div>
+        <h3 class="display" style="font-size:28px;font-weight:500;margin-bottom:6px;">Operator</h3>
+        <p style="color:var(--fg-muted);font-size:13px;line-height:1.5;margin-bottom:24px;min-height:40px;">$500K+ monthly volume. Dedicated advisor. White-glove coverage.</p>
+
+        <div style="margin-bottom:24px;min-height:80px;">
+          <div style="display:flex;align-items:baseline;gap:6px;">
+            <span class="display enterprise-price" style="font-size:48px;font-weight:500;line-height:1;">$499</span>
+            <span class="enterprise-period" style="font-size:14px;color:var(--fg-muted);">/month</span>
+          </div>
+          <div class="enterprise-billing-note" style="font-size:12px;color:var(--fg-muted);margin-top:8px;">Billed monthly. Cancel anytime.</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;flex:1;font-size:13px;">
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:var(--fg);">Everything in Growth</strong></span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Dedicated payments advisor</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Custom underwriting deep-dives</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>High-risk specialist coordination</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Monthly strategy calls</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Premium support (4hr)</span></div>
+        </div>
+
+        <button class="btn-ghost" onclick="selectPlan('enterprise')" style="width:100%;justify-content:center;font-size:11px;padding:12px;">Choose Enterprise →</button>
+        <div style="text-align:center;margin-top:10px;font-size:10px;color:var(--fg-dim);">Best for $500K+ operators</div>
+      </div>
+
+    </div>
+
+    <!-- Custom / Contact -->
+    <div style="margin-top:32px;text-align:center;padding:24px;border:1px dashed var(--border-strong);background:transparent;max-width:900px;margin-left:auto;margin-right:auto;">
+      <span style="color:var(--fg-muted);font-size:13px;">Need a custom solution? Multi-entity, white-label, or API access?</span>
+      <a href="mailto:support@processorhelp.com?subject=Custom%20Plan%20Inquiry" style="color:var(--accent);text-decoration:underline;font-size:13px;font-weight:500;margin-left:8px;cursor:pointer;">Contact us →</a>
+    </div>
+
+    <!-- Refund Policy -->
     <div style="margin-top:48px;max-width:900px;margin-left:auto;margin-right:auto;padding:24px 28px;background:var(--bg-elevated);border:1px solid var(--border);">
       <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Refund & Cancellation Policy</div>
       <div style="font-size:13px;color:var(--fg-muted);line-height:1.7;">
         <strong style="color:var(--fg);">Cancel anytime.</strong> Cancel your subscription from your billing dashboard in two clicks — no phone calls, no retention pitches, no hoops. You retain full access through the end of your current billing period.
         <br><br>
-        <strong style="color:var(--fg);">Refund eligibility:</strong> All subscription fees are final. Refunds are issued only when (a) a technical failure prevents service delivery, or (b) you were charged after a verified cancellation. Submit refund requests to <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a> within 7 days. Read full terms in our <a onclick="go('tos')" style="color:var(--accent);cursor:pointer;text-decoration:underline;">Terms of Service</a>.
+        <strong style="color:var(--fg);">Refund eligibility:</strong> Subscription fees are final. Refunds are issued only when (a) a technical failure prevents service delivery, or (b) you were charged after a verified cancellation. Annual plans receive a prorated refund within 14 days of purchase. Submit refund requests to <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a> within 7 days. Read full terms in our <a onclick="go('tos')" style="color:var(--accent);cursor:pointer;text-decoration:underline;">Terms of Service</a>.
       </div>
     </div>
 
@@ -2315,6 +2345,91 @@ function goPricing() {
   }
 }
 
+// =============== PLAN DATA ===============
+const PLANS = {
+  starter: {
+    id: 'starter',
+    name: 'Starter',
+    label: 'Solopreneur',
+    monthly: 29,
+    annual: 290,  // 2 months free
+    annualMonthly: 24,  // shows as $24/mo when annual
+  },
+  growth: {
+    id: 'growth',
+    name: 'Growth',
+    label: 'Scaling Brand',
+    monthly: 99,
+    annual: 990,  // 2 months free
+    annualMonthly: 82,
+  },
+  enterprise: {
+    id: 'enterprise',
+    name: 'Enterprise',
+    label: 'Operator',
+    monthly: 499,
+    annual: 4990,  // 2 months free
+    annualMonthly: 415,
+  },
+};
+
+let billingPeriod = 'monthly';  // 'monthly' or 'annual'
+let selectedPlanId = 'growth';  // default selection for checkout
+
+function toggleBilling() {
+  billingPeriod = billingPeriod === 'monthly' ? 'annual' : 'monthly';
+  updateBillingDisplay();
+}
+
+function updateBillingDisplay() {
+  const isAnnual = billingPeriod === 'annual';
+  const dot = document.getElementById('billing-toggle-dot');
+  const monthlyLabel = document.getElementById('billing-monthly-label');
+  const annualLabel = document.getElementById('billing-annual-label');
+  const savingsChip = document.getElementById('billing-savings-chip');
+
+  if (dot) dot.style.transform = isAnnual ? 'translateX(28px)' : 'translateX(0)';
+  if (monthlyLabel) {
+    monthlyLabel.style.color = isAnnual ? 'var(--fg-muted)' : 'var(--accent)';
+    monthlyLabel.style.fontWeight = isAnnual ? '400' : '600';
+  }
+  if (annualLabel) {
+    annualLabel.style.color = isAnnual ? 'var(--accent)' : 'var(--fg-muted)';
+    annualLabel.style.fontWeight = isAnnual ? '600' : '400';
+  }
+  if (savingsChip) savingsChip.style.display = isAnnual ? 'inline-block' : 'none';
+
+  // Update each plan's price display
+  ['starter', 'growth', 'enterprise'].forEach(planKey => {
+    const plan = PLANS[planKey];
+    const priceEl = document.querySelector('.' + planKey + '-price');
+    const periodEl = document.querySelector('.' + planKey + '-period');
+    const noteEl = document.querySelector('.' + planKey + '-billing-note');
+    if (priceEl) priceEl.textContent = '$' + (isAnnual ? plan.annualMonthly : plan.monthly);
+    if (periodEl) periodEl.textContent = '/month';
+    if (noteEl) noteEl.textContent = isAnnual
+      ? `Billed $${plan.annual}/year. Save $${(plan.monthly * 12) - plan.annual}.`
+      : 'Billed monthly. Cancel anytime.';
+  });
+}
+
+function selectPlan(planId) {
+  selectedPlanId = planId;
+  if (currentUser) {
+    if (currentUser.subscribed) {
+      // Already subscribed - go to billing to change plan
+      alert('You already have an active subscription. To change plans, go to your Billing page.');
+      go('billing');
+    } else {
+      go('subscribe');
+    }
+  } else {
+    // Not logged in - send to signup, which will route to subscribe after
+    sessionStorage.setItem('ph_pending_plan', JSON.stringify({ planId, billingPeriod }));
+    go('signup');
+  }
+}
+
 // =============== LANDING RENDER ===============
 function renderProcessorsGrid() {
   const grid = document.getElementById('processors-grid');
@@ -2922,8 +3037,8 @@ function renderDashboard() {
         <div style="padding:32px;background:var(--bg-card);border:1px solid var(--accent);margin-bottom:48px;display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;">
           <div>
             <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Subscription Required</div>
-            <div class="display" style="font-size:26px;font-weight:500;margin-bottom:6px;">Activate your account for $29/month.</div>
-            <div style="font-size:14px;color:var(--fg-muted);">Unlimited reports · All 30 payment processors · Cancel anytime</div>
+            <div class="display" style="font-size:26px;font-weight:500;margin-bottom:6px;">Choose your plan to get started.</div>
+            <div style="font-size:14px;color:var(--fg-muted);">Starter $29 · Growth $99 · Enterprise $499 · Cancel anytime</div>
           </div>
           <button class="btn-primary" onclick="go('subscribe')" style="flex-shrink:0;">Subscribe now →</button>
         </div>
@@ -2936,8 +3051,8 @@ function renderDashboard() {
         </div>
         <div style="background:var(--bg-card);padding:28px;">
           <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Subscription</div>
-          <div class="display" style="font-size:20px;font-weight:500;line-height:1.2;color:${u.subscribed ? 'var(--approved)' : 'var(--conditional)'};">${u.subscribed ? 'Active' : 'Inactive'}</div>
-          <div style="font-size:12px;color:var(--fg-muted);margin-top:6px;">${u.subscribed ? '$29/mo · Next: ' + new Date(u.subscriptionNextBilling).toLocaleDateString() : 'Subscribe to run reports'}</div>
+          <div class="display" style="font-size:20px;font-weight:500;line-height:1.2;color:${u.subscribed ? 'var(--approved)' : 'var(--conditional)'};">${u.subscribed ? (PLANS[u.subscriptionPlan]?.name || 'Active') : 'Inactive'}</div>
+          <div style="font-size:12px;color:var(--fg-muted);margin-top:6px;">${u.subscribed ? `$${u.subscriptionAmount}/${u.subscriptionBillingPeriod === 'annual' ? 'yr' : 'mo'} · Next: ` + new Date(u.subscriptionNextBilling).toLocaleDateString() : 'Subscribe to run reports'}</div>
         </div>
         <div style="background:var(--bg-card);padding:28px;">
           <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Member Since</div>
@@ -2979,35 +3094,98 @@ function renderDashboard() {
 // =============== SUBSCRIBE RENDER ===============
 function renderSubscribe() {
   const u = currentUser;
+  if (!u) { go('signin'); return; }
+
+  // Restore pending plan from signup flow if present
+  try {
+    const pending = sessionStorage.getItem('ph_pending_plan');
+    if (pending) {
+      const parsed = JSON.parse(pending);
+      if (parsed.planId) selectedPlanId = parsed.planId;
+      if (parsed.billingPeriod) billingPeriod = parsed.billingPeriod;
+      sessionStorage.removeItem('ph_pending_plan');
+    }
+  } catch(e) {}
+
+  const plan = PLANS[selectedPlanId];
+  const isAnnual = billingPeriod === 'annual';
+  const displayPrice = isAnnual ? plan.annualMonthly : plan.monthly;
+  const billedAmount = isAnnual ? plan.annual : plan.monthly;
+  const billingLabel = isAnnual ? 'Annual' : 'Monthly';
+  const periodNote = isAnnual ? `Billed $${plan.annual} once per year` : 'Billed monthly';
+
+  // Plan-specific features (mapped to what each tier includes)
+  const features = {
+    starter: [
+      'Unlimited underwriting reports across all 30 payment processors',
+      'Real-time approval, conditional, and denial decisions',
+      'Match scores and underwriting reasoning',
+      'Direct apply links to every processor',
+      'Full report history saved to your account',
+      'Email support (48-hour response)',
+    ],
+    growth: [
+      'Everything in Starter, plus:',
+      'Multi-MID strategy guidance',
+      'Quarterly check-in calls with our team',
+      'Volume tier optimization',
+      'Backup processor planning',
+      'Priority support (24-hour response)',
+    ],
+    enterprise: [
+      'Everything in Growth, plus:',
+      'Dedicated payments advisor',
+      'Custom underwriting deep-dives',
+      'High-risk specialist coordination',
+      'Monthly strategy calls',
+      'Premium support (4-hour response)',
+    ],
+  };
+
   const content = document.getElementById('subscribe-content');
   content.innerHTML = `
     <div class="fade-up" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;" id="subscribe-checkout">
       <div>
         <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Activate Subscription</div>
-        <h2 class="display" style="font-size:40px;font-weight:400;margin-bottom:32px;">
+        <h2 class="display" style="font-size:40px;font-weight:400;margin-bottom:24px;">
           Unlock your <span style="font-style:italic;color:var(--accent);">underwriting engine.</span>
         </h2>
-        <div style="border:1px solid var(--border);background:var(--bg-card);margin-bottom:32px;">
+
+        <!-- Plan switcher -->
+        <div style="margin-bottom:24px;">
+          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Selected Plan</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            ${['starter', 'growth', 'enterprise'].map(p => `
+              <button onclick="switchPlan('${p}')" style="padding:10px 16px;border:1px solid ${selectedPlanId === p ? 'var(--accent)' : 'var(--border)'};background:${selectedPlanId === p ? 'var(--bg-elevated)' : 'var(--bg-card)'};color:${selectedPlanId === p ? 'var(--accent)' : 'var(--fg)'};font-size:12px;font-weight:${selectedPlanId === p ? '600' : '400'};cursor:pointer;text-transform:capitalize;">${PLANS[p].name}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Billing period switcher -->
+        <div style="margin-bottom:32px;">
+          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Billing Period</div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="switchBilling('monthly')" style="flex:1;padding:12px 16px;border:1px solid ${!isAnnual ? 'var(--accent)' : 'var(--border)'};background:${!isAnnual ? 'var(--bg-elevated)' : 'var(--bg-card)'};color:${!isAnnual ? 'var(--accent)' : 'var(--fg)'};font-size:12px;font-weight:${!isAnnual ? '600' : '400'};cursor:pointer;">Monthly</button>
+            <button onclick="switchBilling('annual')" style="flex:1;padding:12px 16px;border:1px solid ${isAnnual ? 'var(--accent)' : 'var(--border)'};background:${isAnnual ? 'var(--bg-elevated)' : 'var(--bg-card)'};color:${isAnnual ? 'var(--accent)' : 'var(--fg)'};font-size:12px;font-weight:${isAnnual ? '600' : '400'};cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+              Annual <span style="font-size:10px;background:var(--approved-bg);color:var(--approved);padding:2px 6px;border-radius:8px;font-weight:600;">Save 2 mo</span>
+            </button>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--border);background:var(--bg-card);margin-bottom:24px;">
           <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
             <div>
-              <div style="font-size:15px;font-weight:500;">Processor Help — Monthly Subscription</div>
-              <div style="font-size:12px;color:var(--fg-muted);margin-top:4px;">${u.business} · Recurring monthly</div>
+              <div style="font-size:15px;font-weight:500;">${plan.name} — ${plan.label}</div>
+              <div style="font-size:12px;color:var(--fg-muted);margin-top:4px;">${u.business} · ${billingLabel} subscription</div>
             </div>
             <div style="text-align:right;">
-              <div class="display" style="font-size:28px;font-weight:500;">$29</div>
+              <div class="display" style="font-size:28px;font-weight:500;">$${displayPrice}</div>
               <div style="font-size:11px;color:var(--fg-muted);">per month</div>
             </div>
           </div>
           <div style="padding:20px 24px;">
             <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:14px;">What's included</div>
-            ${[
-              'Unlimited underwriting reports across all 30 payment processors',
-              'Real-time approval, conditional, and denial decisions',
-              'Full match score and underwriting reasoning per processor',
-              'Unlimited report history saved to your account',
-              'Update business profile anytime — rerun reports free',
-              'Cancel anytime · No long-term contracts',
-            ].map(item => `
+            ${features[selectedPlanId].map(item => `
               <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:13px;line-height:1.5;">
                 <span style="color:var(--approved);font-weight:700;">✓</span>
                 <span>${item}</span>
@@ -3015,14 +3193,18 @@ function renderSubscribe() {
             `).join('')}
           </div>
           <div style="padding:16px 24px;border-top:1px solid var(--border);background:var(--bg-elevated);display:flex;justify-content:space-between;align-items:center;">
-            <div class="mono" style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;">Total Due Today</div>
-            <div class="display" style="font-size:28px;font-weight:600;color:var(--accent);">$29.00</div>
+            <div>
+              <div class="mono" style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;">Total Due Today</div>
+              <div style="font-size:11px;color:var(--fg-muted);margin-top:2px;">${periodNote}</div>
+            </div>
+            <div class="display" style="font-size:28px;font-weight:600;color:var(--accent);">$${billedAmount}.00</div>
           </div>
         </div>
+
         <div style="display:flex;gap:12px;align-items:flex-start;padding:16px;background:var(--bg-elevated);border:1px solid var(--border);">
           <span style="color:var(--fg-muted);">🛡️</span>
           <div style="font-size:12px;color:var(--fg-muted);line-height:1.6;">
-            Billed monthly to your card. Cancel anytime from your billing page. Processor Help is an independent advisory tool and not affiliated with any payment processor listed.
+            Billed ${isAnnual ? 'annually' : 'monthly'} to your card. Cancel anytime from your billing page. Processor Help is an independent advisory tool and not affiliated with any payment processor listed.
           </div>
         </div>
       </div>
@@ -3046,16 +3228,16 @@ function renderSubscribe() {
           <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--fg);line-height:1.6;">
             <span style="color:var(--accent);font-weight:600;flex-shrink:0;">ⓘ</span>
             <div>
-              <strong style="color:var(--fg);">Recurring subscription disclosure:</strong> By clicking Subscribe, you authorize Processor Help to automatically charge your payment method <strong>$29.00 USD every month</strong> starting today and on the same date each month thereafter. Your subscription will continue and renew automatically until you cancel.
+              <strong style="color:var(--fg);">Recurring subscription disclosure:</strong> By clicking Subscribe, you authorize Processor Help to automatically charge your payment method <strong>$${billedAmount}.00 USD every ${isAnnual ? 'year' : 'month'}</strong> starting today. Your subscription will continue and renew automatically until you cancel.
               <br><br>
               <strong style="color:var(--fg);">Easy cancellation:</strong> Cancel anytime in 2 clicks from your Billing dashboard — no phone calls, no retention pressure, no hoops. Cancellation is effective immediately and you retain full access through your current paid period. (NY GBL §527-a, CA BPC §17602, IL 815 ILCS 605 compliant.)
               <br><br>
-              <strong style="color:var(--fg);">No partial-month refunds:</strong> If you cancel mid-cycle, you retain access until the end of your current billing period. No prorated refunds.
+              <strong style="color:var(--fg);">${isAnnual ? 'Annual refund window:' : 'No partial-month refunds:'}</strong> ${isAnnual ? 'Annual plans are eligible for a prorated refund within 14 days of purchase.' : 'If you cancel mid-cycle, you retain access until the end of your current billing period. No prorated refunds.'}
             </div>
           </div>
         </div>
         <button id="btn-sub" class="btn-primary" disabled onclick="processSubscription()" style="width:100%;justify-content:center;margin-top:16px;padding:18px 32px;">
-          🔒 Subscribe for $29/month
+          🔒 Subscribe for $${billedAmount}/${isAnnual ? 'year' : 'month'}
         </button>
         <div style="margin-top:16px;text-align:center;font-size:11px;color:var(--fg-dim);line-height:1.6;">
           By subscribing you agree to the Processor Help <a onclick="go('tos')" style="color:var(--fg-muted);cursor:pointer;text-decoration:underline;">Terms of Service</a> and <a onclick="go('privacy')" style="color:var(--fg-muted);cursor:pointer;text-decoration:underline;">Privacy Policy</a>.<br>
@@ -3067,6 +3249,16 @@ function renderSubscribe() {
       </div>
     </div>
   `;
+}
+
+function switchPlan(planId) {
+  selectedPlanId = planId;
+  renderSubscribe();
+}
+
+function switchBilling(period) {
+  billingPeriod = period;
+  renderSubscribe();
 }
 
 function formatSubCard(el) {
@@ -3092,6 +3284,11 @@ function processSubscription() {
   const cardEl = document.getElementById('sub-card');
   const cardLast4 = cardEl ? cardEl.value.replace(/\s/g, '').slice(-4) : '';
 
+  // Capture plan details
+  const plan = PLANS[selectedPlanId];
+  const isAnnual = billingPeriod === 'annual';
+  const billedAmount = isAnnual ? plan.annual : plan.monthly;
+
   const content = document.getElementById('subscribe-content');
   content.innerHTML = `
     <div class="fade-up" style="text-align:center;padding:80px 0;">
@@ -3103,18 +3300,27 @@ function processSubscription() {
   setTimeout(() => {
     try {
       const now = Date.now();
-      const next = now + 30 * 24 * 60 * 60 * 1000;
+      // Annual = 1 year cycle, Monthly = 30 days
+      const cycleDays = isAnnual ? 365 : 30;
+      const next = now + cycleDays * 24 * 60 * 60 * 1000;
+
       currentUser.subscribed = true;
+      currentUser.subscriptionPlan = selectedPlanId;
+      currentUser.subscriptionPlanName = plan.name;
+      currentUser.subscriptionBillingPeriod = billingPeriod;
+      currentUser.subscriptionAmount = billedAmount;
       currentUser.subscriptionStartDate = now;
       currentUser.subscriptionNextBilling = next;
       currentUser.paymentMethod = cardLast4 ? 'Card ending ' + cardLast4 : 'Card on file';
       saveCurrentUser(currentUser);
+
+      const periodText = isAnnual ? 'year' : 'month';
       content.innerHTML = `
         <div class="fade-up" style="text-align:center;padding:80px 0;">
           <div style="width:72px;height:72px;background:var(--approved-bg);border:2px solid var(--approved);border-radius:50%;margin:0 auto 32px;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--approved);">✓</div>
           <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--approved);margin-bottom:12px;">Subscription Active</div>
           <h2 class="display" style="font-size:36px;font-weight:400;margin-bottom:12px;">You're all set.</h2>
-          <p style="color:var(--fg-muted);font-size:15px;margin-bottom:32px;">Your $29/mo subscription is active. Let's run your first report.</p>
+          <p style="color:var(--fg-muted);font-size:15px;margin-bottom:32px;">Your <strong style="color:var(--fg);">${plan.name}</strong> plan is active at <strong style="color:var(--fg);">$${billedAmount}/${periodText}</strong>. Let's run your first report.</p>
           <button class="btn-primary" onclick="go('application')">Run first report →</button>
         </div>
       `;
@@ -3437,6 +3643,15 @@ function deleteAccount() {
 function renderBilling() {
   const u = currentUser;
   if (!u) { go('signin'); return; }
+
+  // Get current plan info
+  const userPlanId = u.subscriptionPlan || 'starter';
+  const userPlan = PLANS[userPlanId] || PLANS.starter;
+  const userIsAnnual = u.subscriptionBillingPeriod === 'annual';
+  const userAmount = u.subscriptionAmount || (userIsAnnual ? userPlan.annual : userPlan.monthly);
+  const periodText = userIsAnnual ? 'year' : 'month';
+  const billingCycle = userIsAnnual ? 'Annual' : 'Monthly';
+
   document.getElementById('billing-content').innerHTML = `
     <div class="fade-up">
       <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Billing</div>
@@ -3446,8 +3661,8 @@ function renderBilling() {
         <div style="padding:24px 28px;display:flex;justify-content:space-between;align-items:center;gap:16px;">
           <div>
             <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px;">Current Plan</div>
-            <div class="display" style="font-size:22px;font-weight:500;">${u.subscribed ? 'Monthly Subscription' : 'No active subscription'}</div>
-            <div style="font-size:13px;color:var(--fg-muted);margin-top:4px;">${u.subscribed ? '$29/month · Unlimited reports' : 'Subscribe to run reports'}</div>
+            <div class="display" style="font-size:22px;font-weight:500;">${u.subscribed ? `${userPlan.name} — ${userPlan.label}` : 'No active subscription'}</div>
+            <div style="font-size:13px;color:var(--fg-muted);margin-top:4px;">${u.subscribed ? `$${userAmount}/${periodText} · ${billingCycle} billing` : 'Subscribe to run reports'}</div>
           </div>
           <div class="chip" style="background:${u.subscribed?'var(--approved-bg)':'var(--conditional-bg)'};color:${u.subscribed?'var(--approved)':'var(--conditional)'};">
             ${u.subscribed ? '● Active' : '● Inactive'}
@@ -3465,11 +3680,49 @@ function renderBilling() {
             <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">Payment Method</div>
             <div style="font-size:14px;font-weight:500;">${u.paymentMethod || '—'}</div>
           </div>
+          <div style="padding:20px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">
+            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">Billing Period</div>
+            <div style="font-size:14px;font-weight:500;">${billingCycle}</div>
+          </div>
           <div style="padding:20px 28px;display:flex;justify-content:space-between;">
             <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">Subscription Start</div>
             <div style="font-size:14px;font-weight:500;">${new Date(u.subscriptionStartDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
           </div>
         </div>
+
+        <!-- Plan upgrade/change options -->
+        ${userPlanId !== 'enterprise' ? `
+          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:14px;">Upgrade Plan</div>
+          <div style="display:grid;grid-template-columns:${userPlanId === 'starter' ? 'repeat(2,1fr)' : '1fr'};gap:16px;margin-bottom:32px;">
+            ${userPlanId === 'starter' ? `
+              <div style="padding:24px;border:1px solid var(--accent);background:var(--bg-card);">
+                <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Growth</div>
+                <div class="display" style="font-size:24px;font-weight:500;margin-bottom:6px;">Scaling Brand</div>
+                <div style="font-size:13px;color:var(--fg-muted);margin-bottom:16px;">Multi-MID strategy + quarterly calls</div>
+                <div style="font-size:18px;font-weight:600;margin-bottom:16px;">$99<span style="font-size:13px;color:var(--fg-muted);font-weight:400;">/month</span></div>
+                <button class="btn-primary" onclick="upgradePlan('growth')" style="width:100%;justify-content:center;font-size:11px;padding:12px;">Upgrade to Growth →</button>
+              </div>
+            ` : ''}
+            <div style="padding:24px;border:1px solid var(--border-strong);background:var(--bg-elevated);">
+              <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg);margin-bottom:8px;">Enterprise</div>
+              <div class="display" style="font-size:24px;font-weight:500;margin-bottom:6px;">Operator</div>
+              <div style="font-size:13px;color:var(--fg-muted);margin-bottom:16px;">Dedicated advisor + white-glove coverage</div>
+              <div style="font-size:18px;font-weight:600;margin-bottom:16px;">$499<span style="font-size:13px;color:var(--fg-muted);font-weight:400;">/month</span></div>
+              <button class="btn-ghost" onclick="upgradePlan('enterprise')" style="width:100%;justify-content:center;font-size:11px;padding:12px;">Upgrade to Enterprise →</button>
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- Switch billing period -->
+        ${!userIsAnnual ? `
+          <div style="padding:20px 28px;border:1px solid var(--accent);background:var(--bg-elevated);margin-bottom:32px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--fg);margin-bottom:4px;">Switch to annual billing</div>
+              <div style="font-size:13px;color:var(--fg-muted);">Save 2 months ($${(userPlan.monthly * 12) - userPlan.annual}/year) by paying annually.</div>
+            </div>
+            <button class="btn-primary" onclick="switchToAnnual()" style="padding:12px 20px;font-size:11px;flex-shrink:0;">Switch to annual →</button>
+          </div>
+        ` : ''}
 
         <div style="border:1px solid var(--denied);background:var(--denied-bg);padding:24px 28px;">
           <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--denied);margin-bottom:10px;">Cancel Subscription</div>
@@ -3479,12 +3732,24 @@ function renderBilling() {
       ` : `
         <div style="padding:32px;background:var(--bg-card);border:1px solid var(--accent);text-align:center;">
           <div class="display" style="font-size:24px;font-weight:500;margin-bottom:12px;">Activate your subscription</div>
-          <p style="color:var(--fg-muted);font-size:14px;margin-bottom:20px;">$29/month · Unlimited reports · Cancel anytime</p>
-          <button class="btn-primary" onclick="go('subscribe')">Subscribe now →</button>
+          <p style="color:var(--fg-muted);font-size:14px;margin-bottom:20px;">Choose from Starter, Growth, or Enterprise · Monthly or Annual · Cancel anytime</p>
+          <button class="btn-primary" onclick="go('subscribe')">View plans →</button>
         </div>
       `}
     </div>
   `;
+}
+
+function upgradePlan(newPlanId) {
+  if (!confirm(`Upgrade to ${PLANS[newPlanId].name} plan? You'll be charged the prorated difference for your current billing period.`)) return;
+  selectedPlanId = newPlanId;
+  go('subscribe');
+}
+
+function switchToAnnual() {
+  if (!confirm('Switch to annual billing? You\'ll save 2 months and be charged for the full year today.')) return;
+  billingPeriod = 'annual';
+  go('subscribe');
 }
 
 function cancelSub() {
