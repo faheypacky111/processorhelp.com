@@ -1538,7 +1538,17 @@
 // =============== SUPABASE CLIENT ===============
 const SUPABASE_URL = 'https://wfrjltxeeadehqcffrif.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmcmpsdHhlZWFkZWhxY2ZmcmlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDMzMjUsImV4cCI6MjA5Mjk3OTMyNX0.J6o5EBdbHGTuFqWaRfMG1lyP5Hh8q5BAzpMNwKW0xtk';
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Disable the navigator.locks-based auth lock — it can deadlock when a tab loses/regains focus
+// or in certain browser environments, causing signInWithPassword to hang indefinitely even
+// though the underlying HTTP request succeeded. Replacing with a no-op lock fixes it.
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    lock: async (name, acquireTimeout, fn) => fn(),
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  }
+});
 
 // =============== DATA ===============
 const INDUSTRY_RISK = {
