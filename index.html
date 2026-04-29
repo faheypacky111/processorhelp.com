@@ -2181,46 +2181,96 @@ const SUBSCRIPTION_REQUIRED_VIEWS = ['application','paywall','results'];
 
 async function hydrateCurrentUser(passedSession) {
   // Returns full currentUser-shaped object from Supabase, or null if not signed in.
-  // Optionally accepts a session object directly (from signInWithPassword response) to bypass
-  // a known issue where getSession() can hang indefinitely with stale localStorage tokens.
+  // Uses direct fetch instead of supabaseClient.from(...) because the JS client deadlocks.
   let session = passedSession;
+  let accessToken = window._authToken;
+
   if (!session) {
-    const { data } = await supabaseClient.auth.getSession();
-    session = data.session;
+    // Try to read session directly from localStorage where supabase-js stores it.
+    // Avoid getSession() because it can hang.
+    try {
+      const storageKey = Object.keys(localStorage).find(k => k.startsWith('sb-') && k.endsWith('-auth-token'));
+      if (storageKey) {
+        const stored = JSON.parse(localStorage.getItem(storageKey));
+        if (stored && stored.access_token) {
+          session = {
+            access_token: stored.access_token,
+            user: stored.user,
+          };
+          accessToken = stored.access_token;
+        }
+      }
+    } catch (e) {
+      console.warn('[HYDRATE] Could not read session from storage:', e.message);
+    }
+  } else if (session.access_token) {
+    accessToken = session.access_token;
   }
-  if (!session) return null;
+
+  if (!session || !session.user || !accessToken) return null;
 
   const userId = session.user.id;
   const email = session.user.email;
 
-  // Fetch profile, subscription, and reports in parallel.
-  // maybeSingle() returns null instead of erroring when no rows exist (e.g., new user without subscription yet).
-  const [profileRes, subRes, reportsRes] = await Promise.all([
-    supabaseClient.from('profiles').select('*').eq('id', userId).maybeSingle(),
-    supabaseClient.from('subscriptions').select('*').eq('user_id', userId).maybeSingle(),
-    supabaseClient.from('reports').select('*').eq('user_id', userId).order('created_at', { ascending: true }),
+  const withTimeout = (promise, ms, label) => Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out')), ms))
   ]);
 
-  if (profileRes.error) console.error('Profile fetch error:', profileRes.error);
-  if (subRes.error) console.error('Subscription fetch error:', subRes.error);
-  if (reportsRes.error) console.error('Reports fetch error:', reportsRes.error);
+  const directQuery = async (path) => {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${accessToken}`,
+        'Accept': 'application/json',
+      },
+    });
+    if (!r.ok) throw new Error(`Query ${path} returned ${r.status}`);
+    return r.json();
+  };
 
-  const profile = profileRes.data || {};
-  const sub = subRes.data || {};
-  const reports = (reportsRes.data || []).map(r => ({
-    id: r.id,
-    createdAt: new Date(r.created_at).getTime(),
-    merchant: r.business_data,
-    approvedCount: r.results?.approvedCount || 0,
-    conditionalCount: r.results?.conditionalCount || 0,
-    deniedCount: r.results?.deniedCount || 0,
-  }));
+  let profile = {};
+  let sub = {};
+  let reports = [];
+
+  try {
+    const rows = await withTimeout(directQuery(`profiles?id=eq.${userId}&select=*`), 6000, 'Profile fetch');
+    if (rows && rows.length) profile = rows[0];
+  } catch (e) {
+    console.warn('[HYDRATE] Profile fetch failed:', e.message);
+  }
+
+  try {
+    const rows = await withTimeout(directQuery(`subscriptions?user_id=eq.${userId}&select=*`), 6000, 'Subscription fetch');
+    if (rows && rows.length) sub = rows[0];
+  } catch (e) {
+    console.warn('[HYDRATE] Subscription fetch failed:', e.message);
+  }
+
+  try {
+    const rows = await withTimeout(directQuery(`reports?user_id=eq.${userId}&select=*&order=created_at.asc`), 6000, 'Reports fetch');
+    if (rows && rows.length) {
+      reports = rows.map(r => ({
+        id: r.id,
+        createdAt: new Date(r.created_at).getTime(),
+        merchant: r.business_data,
+        approvedCount: (r.results && r.results.approvedCount) || 0,
+        conditionalCount: (r.results && r.results.conditionalCount) || 0,
+        deniedCount: (r.results && r.results.deniedCount) || 0,
+      }));
+    }
+  } catch (e) {
+    console.warn('[HYDRATE] Reports fetch failed:', e.message);
+  }
+
+  // Make sure global token is set so subsequent operations (logout, persist) have it
+  if (!window._authToken) window._authToken = accessToken;
 
   return {
     id: userId,
     email: email,
     business: profile.business_name || '',
-    createdAt: new Date(profile.created_at || session.user.created_at).getTime(),
+    createdAt: new Date(profile.created_at || session.user.created_at || Date.now()).getTime(),
     ageConfirmed: profile.age_confirmed !== false,
     marketingConsent: profile.marketing_consent || false,
     consentTimestamp: profile.consent_timestamp ? new Date(profile.consent_timestamp).getTime() : null,
@@ -4659,14 +4709,26 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
 
 // React to auth changes (sign-in via magic link, password reset, sign-out from another tab, etc.)
 supabaseClient.auth.onAuthStateChange(async (event, session) => {
+  console.log('[AUTH STATE]', event);
   if (event === 'SIGNED_OUT') {
     currentUser = null;
+    window._authToken = null;
+    window._refreshToken = null;
     if (AUTH_REQUIRED_VIEWS.includes(currentView)) go('landing');
-  } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+  } else if (event === 'TOKEN_REFRESHED') {
+    // Just update the access token in place — do NOT re-hydrate currentUser.
+    // Re-hydrating would clobber any in-flight changes (e.g. just-completed subscription upgrade).
+    if (session && session.access_token) {
+      window._authToken = session.access_token;
+      if (session.refresh_token) window._refreshToken = session.refresh_token;
+    }
+  } else if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
     // Skip if handleSignin/handleSignup is currently handling hydration to avoid duplicate queries.
     if (window._signinInProgress) return;
-    // Pass session directly to avoid hung getSession() call
-    currentUser = await hydrateCurrentUser(session);
+    // Only hydrate if we don't already have a user (e.g. magic link sign-in from another tab)
+    if (!currentUser) {
+      currentUser = await hydrateCurrentUser(session);
+    }
   } else if (event === 'PASSWORD_RECOVERY') {
     const newPw = prompt('Enter your new password (minimum 8 characters):');
     if (newPw && newPw.length >= 8) {
