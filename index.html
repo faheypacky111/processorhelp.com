@@ -17,6 +17,8 @@
   } catch(e) {}
 })();
 </script>
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1533,6 +1535,11 @@
 </div>
 
 <script>
+// =============== SUPABASE CLIENT ===============
+const SUPABASE_URL = 'https://wfrjltxeeadehqcffrif.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmcmpsdHhlZWFkZWhxY2ZmcmlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDMzMjUsImV4cCI6MjA5Mjk3OTMyNX0.J6o5EBdbHGTuFqWaRfMG1lyP5Hh8q5BAzpMNwKW0xtk';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 // =============== DATA ===============
 const INDUSTRY_RISK = {
   'ecom-general': { tier: 'low', label: 'General E-commerce' },
@@ -2159,53 +2166,114 @@ const PUBLIC_VIEWS = ['landing','processors-list','faq','legal','signup','signin
 const AUTH_REQUIRED_VIEWS = ['dashboard','settings','billing','reports','subscribe','application','paywall','results'];
 const SUBSCRIPTION_REQUIRED_VIEWS = ['application','paywall','results'];
 
-// =============== AUTH STORAGE (localStorage) ===============
-function simpleHash(str) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) {
-    h = ((h << 5) - h) + str.charCodeAt(i);
-    h |= 0;
-  }
-  return 'h_' + Math.abs(h).toString(36);
-}
-function loadUsers() {
-  try { return JSON.parse(localStorage.getItem('ph_users') || '{}'); } catch(e) { return {}; }
-}
-function saveUsers(u) {
-  try {
-    localStorage.setItem('ph_users', JSON.stringify(u));
-    return true;
-  } catch(e) {
-    console.error('Failed to save users:', e);
-    return false;
-  }
-}
-function loadSession() {
-  try { return JSON.parse(localStorage.getItem('ph_session') || 'null'); } catch(e) { return null; }
-}
-function saveSession(email) {
-  try {
-    if (email) localStorage.setItem('ph_session', JSON.stringify({ email, at: Date.now() }));
-    else localStorage.removeItem('ph_session');
-    return true;
-  } catch(e) {
-    console.error('Failed to save session:', e);
-    return false;
-  }
-}
+// =============== AUTH STORAGE (Supabase) ===============
+// currentUser is the canonical in-memory user state, hydrated from Supabase.
+// Shape mirrors the legacy localStorage object so existing render code keeps working.
 
-function getCurrentUser() {
-  const session = loadSession();
+async function hydrateCurrentUser() {
+  // Returns full currentUser-shaped object from Supabase, or null if not signed in
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) return null;
-  const users = loadUsers();
-  return users[session.email] || null;
+
+  const userId = session.user.id;
+  const email = session.user.email;
+
+  // Fetch profile, subscription, and reports in parallel
+  const [profileRes, subRes, reportsRes] = await Promise.all([
+    supabaseClient.from('profiles').select('*').eq('id', userId).single(),
+    supabaseClient.from('subscriptions').select('*').eq('user_id', userId).single(),
+    supabaseClient.from('reports').select('*').eq('user_id', userId).order('created_at', { ascending: true }),
+  ]);
+
+  const profile = profileRes.data || {};
+  const sub = subRes.data || {};
+  const reports = (reportsRes.data || []).map(r => ({
+    id: r.id,
+    createdAt: new Date(r.created_at).getTime(),
+    merchant: r.business_data,
+    approvedCount: r.results?.approvedCount || 0,
+    conditionalCount: r.results?.conditionalCount || 0,
+    deniedCount: r.results?.deniedCount || 0,
+  }));
+
+  return {
+    id: userId,
+    email: email,
+    business: profile.business_name || '',
+    createdAt: new Date(profile.created_at || session.user.created_at).getTime(),
+    ageConfirmed: profile.age_confirmed !== false,
+    marketingConsent: profile.marketing_consent || false,
+    consentTimestamp: profile.consent_timestamp ? new Date(profile.consent_timestamp).getTime() : null,
+    consentHistory: profile.consent_history || [],
+    dataRequests: profile.data_requests || [],
+    subscribed: sub.status === 'active' || sub.status === 'trialing',
+    subscriptionStatus: sub.status || 'inactive',
+    subscriptionPlan: profile.subscription_plan || null,
+    subscriptionPlanName: profile.subscription_plan_name || null,
+    subscriptionBillingPeriod: profile.subscription_billing_period || null,
+    subscriptionAmount: profile.subscription_amount || null,
+    subscriptionStartDate: profile.subscription_start_date ? new Date(profile.subscription_start_date).getTime() : null,
+    subscriptionNextBilling: sub.current_period_end ? new Date(sub.current_period_end).getTime() : null,
+    paymentMethod: profile.payment_method || null,
+    savedProfile: profile.saved_profile || null,
+    reports: reports,
+  };
 }
 
-function saveCurrentUser(userData) {
-  const users = loadUsers();
-  users[userData.email] = userData;
-  saveUsers(users);
+async function persistProfileFields(fields) {
+  // Updates profile-level fields (business name, consent, payment method, plan info, etc.)
+  if (!currentUser) return false;
+  const { error } = await supabaseClient
+    .from('profiles')
+    .update(fields)
+    .eq('id', currentUser.id);
+  if (error) {
+    console.error('Failed to update profile:', error);
+    return false;
+  }
+  return true;
+}
+
+async function persistSubscriptionFields(fields) {
+  if (!currentUser) return false;
+  const { error } = await supabaseClient
+    .from('subscriptions')
+    .update(fields)
+    .eq('user_id', currentUser.id);
+  if (error) {
+    console.error('Failed to update subscription:', error);
+    return false;
+  }
+  return true;
+}
+
+// Backwards-compat shim: existing code calls saveCurrentUser(currentUser) after mutating fields.
+// We translate that into appropriate Supabase updates based on which fields look changed.
+async function saveCurrentUser(userData) {
   currentUser = userData;
+  // Persist all editable profile fields
+  await persistProfileFields({
+    business_name: userData.business,
+    marketing_consent: userData.marketingConsent || false,
+    consent_timestamp: userData.consentTimestamp ? new Date(userData.consentTimestamp).toISOString() : null,
+    consent_history: userData.consentHistory || [],
+    data_requests: userData.dataRequests || [],
+    subscription_plan: userData.subscriptionPlan || null,
+    subscription_plan_name: userData.subscriptionPlanName || null,
+    subscription_billing_period: userData.subscriptionBillingPeriod || null,
+    subscription_amount: userData.subscriptionAmount || null,
+    subscription_start_date: userData.subscriptionStartDate ? new Date(userData.subscriptionStartDate).toISOString() : null,
+    payment_method: userData.paymentMethod || null,
+    saved_profile: userData.savedProfile || null,
+    updated_at: new Date().toISOString(),
+  });
+  // Persist subscription status
+  await persistSubscriptionFields({
+    status: userData.subscribed ? 'active' : (userData.subscriptionStatus || 'inactive'),
+    current_period_end: userData.subscriptionNextBilling ? new Date(userData.subscriptionNextBilling).toISOString() : null,
+    updated_at: new Date().toISOString(),
+  });
+  return true;
 }
 
 // =============== AUTH HANDLERS ===============
@@ -2222,11 +2290,12 @@ function validateSignup() {
   document.getElementById('btn-signup').disabled = !valid;
 }
 
-function handleSignup() {
+async function handleSignup() {
   const business = document.getElementById('signup-business').value.trim();
   const email = document.getElementById('signup-email').value.trim().toLowerCase();
   const password = document.getElementById('signup-password').value;
   const errorEl = document.getElementById('signup-error');
+  const btn = document.getElementById('btn-signup');
 
   // Re-validate at submit
   if (business.length < 2 || business.length > 100) {
@@ -2245,39 +2314,76 @@ function handleSignup() {
     return;
   }
 
-  const users = loadUsers();
-  if (users[email]) {
-    errorEl.textContent = 'An account with this email already exists. Try signing in instead.';
-    errorEl.style.display = 'block';
-    return;
-  }
+  btn.disabled = true;
+  const originalLabel = btn.textContent;
+  btn.textContent = 'Creating account…';
 
-  const newUser = {
-    email,
-    business,
-    passwordHash: simpleHash(password),
-    createdAt: Date.now(),
-    ageConfirmed: true,
-    marketingConsent: document.getElementById('signup-marketing').checked,
-    consentTimestamp: Date.now(),
-    subscribed: false,
-    subscriptionStartDate: null,
-    subscriptionNextBilling: null,
-    paymentMethod: null,
-    reports: [],
-    savedProfile: { ...merchant, businessName: business },
-  };
+  try {
+    const marketingConsent = document.getElementById('signup-marketing').checked;
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: business,
+          business_name: business,
+        },
+        emailRedirectTo: window.location.origin,
+      },
+    });
 
-  users[email] = newUser;
-  if (!saveUsers(users)) {
-    errorEl.textContent = 'Unable to create account. Please check that your browser allows local storage.';
+    if (error) {
+      if (/already registered|already exists/i.test(error.message)) {
+        errorEl.textContent = 'An account with this email already exists. Try signing in instead.';
+      } else {
+        errorEl.textContent = error.message || 'Unable to create account. Please try again.';
+      }
+      errorEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      return;
+    }
+
+    // Persist business name + marketing consent on the auto-created profile
+    if (data.user) {
+      await supabaseClient
+        .from('profiles')
+        .update({
+          business_name: business,
+          full_name: business,
+          marketing_consent: marketingConsent,
+          consent_timestamp: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', data.user.id);
+    }
+
+    // If email confirmation is required, no session yet — show a confirmation screen
+    if (!data.session) {
+      errorEl.style.display = 'none';
+      document.getElementById('view-signup').innerHTML = `
+        <div class="container narrow" style="padding:80px 24px;text-align:center;">
+          <div style="width:72px;height:72px;background:var(--approved-bg);border:2px solid var(--approved);border-radius:50%;margin:0 auto 32px;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--approved);">✓</div>
+          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--approved);margin-bottom:12px;">Check your inbox</div>
+          <h1 class="display" style="font-size:36px;font-weight:400;margin-bottom:16px;">Confirm your email.</h1>
+          <p style="color:var(--fg-muted);font-size:15px;margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;">We sent a confirmation link to <strong style="color:var(--fg);">${email}</strong>. Click the link to activate your account, then return here to sign in.</p>
+          <button class="btn-ghost" onclick="go('signin')">Back to sign in</button>
+        </div>
+      `;
+      return;
+    }
+
+    // Session created immediately (email confirmation disabled in dev) — hydrate and route
+    currentUser = await hydrateCurrentUser();
+    errorEl.style.display = 'none';
+    go('dashboard');
+  } catch (err) {
+    console.error('Signup error:', err);
+    errorEl.textContent = 'Unable to create account. Please try again.';
     errorEl.style.display = 'block';
-    return;
+    btn.disabled = false;
+    btn.textContent = originalLabel;
   }
-  saveSession(email);
-  currentUser = newUser;
-  errorEl.style.display = 'none';
-  go('dashboard');
 }
 
 function validateSignin() {
@@ -2287,30 +2393,63 @@ function validateSignin() {
   document.getElementById('btn-signin').disabled = !valid;
 }
 
-function handleSignin() {
+async function handleSignin() {
   const email = document.getElementById('signin-email').value.trim().toLowerCase();
   const password = document.getElementById('signin-password').value;
   const errorEl = document.getElementById('signin-error');
-  const users = loadUsers();
-  const user = users[email];
-  if (!user || user.passwordHash !== simpleHash(password)) {
-    errorEl.textContent = 'Invalid email or password.';
+  const btn = document.getElementById('btn-signin');
+
+  btn.disabled = true;
+  const originalLabel = btn.textContent;
+  btn.textContent = 'Signing in…';
+
+  try {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) {
+      if (/email not confirmed/i.test(error.message)) {
+        errorEl.textContent = 'Please confirm your email first. Check your inbox for the confirmation link.';
+      } else {
+        errorEl.textContent = 'Invalid email or password.';
+      }
+      errorEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      return;
+    }
+
+    currentUser = await hydrateCurrentUser();
+    errorEl.style.display = 'none';
+    go('dashboard');
+  } catch (err) {
+    console.error('Signin error:', err);
+    errorEl.textContent = 'Unable to sign in. Please try again.';
     errorEl.style.display = 'block';
-    return;
+    btn.disabled = false;
+    btn.textContent = originalLabel;
   }
-  saveSession(email);
-  currentUser = user;
-  errorEl.style.display = 'none';
-  go('dashboard');
 }
 
-function handleLogout() {
-  saveSession(null);
+async function handleLogout() {
+  await supabaseClient.auth.signOut();
   currentUser = null;
   go('landing');
 }
 
-function handleForgot() {
+async function handleForgot() {
+  const emailInput = document.getElementById('forgot-email');
+  const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+
+  if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    try {
+      await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin,
+      });
+    } catch (err) {
+      console.error('Password reset error:', err);
+    }
+  }
+
+  // Always show the same confirmation regardless (don't leak whether email exists)
   document.getElementById('forgot-form').classList.add('hidden');
   document.getElementById('forgot-sent').classList.remove('hidden');
 }
@@ -2868,17 +3007,45 @@ function renderResults() {
 
   // Save new report to user's account (if logged in and this is a fresh run from application flow)
   if (currentUser && window._reportJustRan) {
-    currentUser.reports = currentUser.reports || [];
-    currentUser.reports.push({
+    const newReport = {
       createdAt: Date.now(),
       merchant: { ...merchant },
       approvedCount,
       conditionalCount,
       deniedCount,
-    });
+    };
+    currentUser.reports = currentUser.reports || [];
+    currentUser.reports.push(newReport);
     currentUser.savedProfile = { ...merchant };
-    saveCurrentUser(currentUser);
     window._reportJustRan = false;
+
+    // Persist to Supabase asynchronously
+    (async () => {
+      try {
+        const { data, error } = await supabaseClient.from('reports').insert({
+          user_id: currentUser.id,
+          business_data: newReport.merchant,
+          results: {
+            approvedCount,
+            conditionalCount,
+            deniedCount,
+          },
+        }).select().single();
+        if (error) {
+          console.error('Failed to save report:', error);
+        } else if (data) {
+          // Attach the DB id to the in-memory report so future operations can reference it
+          newReport.id = data.id;
+        }
+        // Persist the saved profile snapshot on the profile row
+        await persistProfileFields({
+          saved_profile: currentUser.savedProfile,
+          updated_at: new Date().toISOString(),
+        });
+      } catch (err) {
+        console.error('Report persist error:', err);
+      }
+    })();
   }
 
   document.getElementById('results-header').innerHTML = `
@@ -3362,7 +3529,7 @@ function processSubscription() {
       <p style="color:var(--fg-muted);font-size:15px;">Do not close this window.</p>
     </div>
   `;
-  setTimeout(() => {
+  setTimeout(async () => {
     try {
       const now = Date.now();
       // Annual = 1 year cycle, Monthly = 30 days
@@ -3370,6 +3537,7 @@ function processSubscription() {
       const next = now + cycleDays * 24 * 60 * 60 * 1000;
 
       currentUser.subscribed = true;
+      currentUser.subscriptionStatus = 'active';
       currentUser.subscriptionPlan = selectedPlanId;
       currentUser.subscriptionPlanName = plan.name;
       currentUser.subscriptionBillingPeriod = billingPeriod;
@@ -3377,7 +3545,7 @@ function processSubscription() {
       currentUser.subscriptionStartDate = now;
       currentUser.subscriptionNextBilling = next;
       currentUser.paymentMethod = cardLast4 ? 'Card ending ' + cardLast4 : 'Card on file';
-      saveCurrentUser(currentUser);
+      await saveCurrentUser(currentUser);
 
       const periodText = isAnnual ? 'year' : 'month';
       content.innerHTML = `
@@ -3522,7 +3690,7 @@ function escapeHtml(s) {
 }
 
 // ============ COMPLIANCE FUNCTIONS ============
-function toggleMarketingConsent() {
+async function toggleMarketingConsent() {
   const checked = document.getElementById('marketing-toggle').checked;
   currentUser.marketingConsent = checked;
   currentUser.consentTimestamp = Date.now();
@@ -3532,11 +3700,12 @@ function toggleMarketingConsent() {
     action: checked ? 'opt-in' : 'opt-out',
     timestamp: Date.now(),
   });
-  saveCurrentUser(currentUser);
+  await saveCurrentUser(currentUser);
   renderSettings();
 }
 
 function downloadUserData() {
+  return (async () => {
   const u = currentUser;
   const exportData = {
     _export_metadata: {
@@ -3621,12 +3790,16 @@ function downloadUserData() {
     timestamp: Date.now(),
     format: 'JSON',
   });
-  saveCurrentUser(currentUser);
+  await persistProfileFields({
+    data_requests: currentUser.dataRequests,
+    updated_at: new Date().toISOString(),
+  });
 
   alert(`Your data has been exported as "${fileName}". A copy of this request has been logged for compliance audit.`);
+  })();
 }
 
-function deleteAccountFlow() {
+async function deleteAccountFlow() {
   // Step 1: Initial confirmation
   const step1 = confirm(
     '⚠ DELETE ACCOUNT — STEP 1 of 3\n\n' +
@@ -3662,10 +3835,25 @@ function deleteAccountFlow() {
 
   // Execute deletion
   const deletedEmail = currentUser.email;
-  const users = loadUsers();
-  delete users[deletedEmail];
-  saveUsers(users);
-  saveSession(null);
+  const userId = currentUser.id;
+
+  try {
+    // Delete user-owned rows. Profile + subscriptions + reports cascade-delete from auth.users,
+    // but the auth.users row itself can only be deleted by the service_role (server-side / Stripe webhook).
+    // We delete the data rows we own here and sign the user out immediately. The auth.users row will be
+    // cleaned up by a backend job once Stripe webhooks are wired up.
+    await Promise.all([
+      supabaseClient.from('reports').delete().eq('user_id', userId),
+      supabaseClient.from('subscriptions').delete().eq('user_id', userId),
+      supabaseClient.from('profiles').delete().eq('id', userId),
+    ]);
+  } catch (err) {
+    console.error('Account deletion error:', err);
+    alert('There was a problem deleting your account. Please contact support@processorhelp.com.');
+    return;
+  }
+
+  await supabaseClient.auth.signOut();
   currentUser = null;
 
   // Confirmation screen
@@ -3679,23 +3867,35 @@ function deleteAccountFlow() {
   go('landing');
 }
 
-function updateBusiness() {
+async function updateBusiness() {
   const newName = document.getElementById('settings-business').value.trim();
   if (newName.length < 2) return;
   currentUser.business = newName;
-  saveCurrentUser(currentUser);
-  alert('Business name updated.');
-  renderSettings();
+  const ok = await persistProfileFields({
+    business_name: newName,
+    full_name: newName,
+    updated_at: new Date().toISOString(),
+  });
+  if (ok) {
+    alert('Business name updated.');
+    renderSettings();
+  } else {
+    alert('Unable to update business name. Please try again.');
+  }
 }
 
-function changePasswordPrompt() {
-  const oldPw = prompt('Current password:');
-  if (!oldPw) return;
-  if (simpleHash(oldPw) !== currentUser.passwordHash) { alert('Incorrect current password.'); return; }
-  const newPw = prompt('New password (minimum 8 characters):');
-  if (!newPw || newPw.length < 8) { alert('Password must be at least 8 characters.'); return; }
-  currentUser.passwordHash = simpleHash(newPw);
-  saveCurrentUser(currentUser);
+async function changePasswordPrompt() {
+  const newPw = prompt('Enter new password (minimum 8 characters):');
+  if (!newPw) return;
+  if (newPw.length < 8) { alert('Password must be at least 8 characters.'); return; }
+  const confirmPw = prompt('Confirm new password:');
+  if (newPw !== confirmPw) { alert('Passwords do not match.'); return; }
+
+  const { error } = await supabaseClient.auth.updateUser({ password: newPw });
+  if (error) {
+    alert('Unable to update password: ' + (error.message || 'unknown error'));
+    return;
+  }
   alert('Password updated.');
 }
 
@@ -3817,10 +4017,11 @@ function switchToAnnual() {
   go('subscribe');
 }
 
-function cancelSub() {
+async function cancelSub() {
   if (!confirm('Are you sure you want to cancel your subscription? You will retain access until your next billing date.')) return;
   currentUser.subscribed = false;
-  saveCurrentUser(currentUser);
+  currentUser.subscriptionStatus = 'canceled';
+  await saveCurrentUser(currentUser);
   alert('Your subscription has been cancelled.');
   renderBilling();
 }
@@ -3970,24 +4171,44 @@ const statsObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row));
 
-// Load session on page load
-currentUser = getCurrentUser();
-if (currentUser) {
-  // Logged in user — if they land on public pages, that's fine. If they came back to the app, start on dashboard.
-  // For UX, we still show landing if they're there, but add a Dashboard link visible in nav.
-  // Actually simplest: if session is live and they're on landing, keep them there but they'll see Dashboard option.
-  // Just render whatever view is active — but ensure account UI is set up.
-  if (currentView === 'landing') {
-    // Update landing nav to show Dashboard/Logout options
-    const navRight = document.getElementById('landing-nav-right');
-    if (navRight) {
-      navRight.innerHTML = `
-        <a onclick="go('dashboard')" style="color:var(--fg-muted);font-size:14px;text-decoration:none;cursor:pointer;">Dashboard</a>
-        <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">${currentUser.subscribed ? 'Run New Report' : 'Activate Account'} →</button>
-      `;
+// Load session on page load (async, since Supabase needs to fetch the session)
+(async function initAuth() {
+  currentUser = await hydrateCurrentUser();
+  if (currentUser) {
+    if (currentView === 'landing') {
+      // Update landing nav to show Dashboard/Logout options
+      const navRight = document.getElementById('landing-nav-right');
+      if (navRight) {
+        navRight.innerHTML = `
+          <a onclick="go('dashboard')" style="color:var(--fg-muted);font-size:14px;text-decoration:none;cursor:pointer;">Dashboard</a>
+          <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">${currentUser.subscribed ? 'Run New Report' : 'Activate Account'} →</button>
+        `;
+      }
+    }
+    // If user is on an auth-required view that's currently showing the signup gate, redirect them properly.
+    if (AUTH_REQUIRED_VIEWS.includes(currentView)) {
+      go(currentView);
     }
   }
-}
+})();
+
+// React to auth changes (sign-in via magic link, password reset, sign-out from another tab, etc.)
+supabaseClient.auth.onAuthStateChange(async (event, session) => {
+  if (event === 'SIGNED_OUT') {
+    currentUser = null;
+    if (AUTH_REQUIRED_VIEWS.includes(currentView)) go('landing');
+  } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+    currentUser = await hydrateCurrentUser();
+  } else if (event === 'PASSWORD_RECOVERY') {
+    // User clicked the password reset link in their email
+    const newPw = prompt('Enter your new password (minimum 8 characters):');
+    if (newPw && newPw.length >= 8) {
+      const { error } = await supabaseClient.auth.updateUser({ password: newPw });
+      if (error) alert('Unable to update password: ' + error.message);
+      else alert('Password updated. Please sign in with your new password.');
+    }
+  }
+});
 </script>
 </body>
 </html>
