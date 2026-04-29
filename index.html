@@ -2243,29 +2243,84 @@ async function hydrateCurrentUser(passedSession) {
 
 async function persistProfileFields(fields) {
   // Updates profile-level fields (business name, consent, payment method, plan info, etc.)
+  // Uses direct fetch with the stored access token because the Supabase JS client deadlocks.
   if (!currentUser) return false;
-  // Use upsert so missing profile row (if signup trigger didn't run) gets created
-  const { error } = await supabaseClient
-    .from('profiles')
-    .upsert({ id: currentUser.id, ...fields }, { onConflict: 'id' });
-  if (error) {
-    console.error('Failed to update profile:', error);
+  if (!window._authToken) {
+    console.error('[PERSIST PROFILE] No auth token available');
     return false;
   }
-  return true;
+
+  const withTimeout = (promise, ms, label) => Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out')), ms))
+  ]);
+
+  try {
+    const res = await withTimeout(
+      fetch(`${SUPABASE_URL}/rest/v1/profiles?on_conflict=id`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${window._authToken}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates,return=minimal',
+        },
+        body: JSON.stringify({ id: currentUser.id, ...fields }),
+      }),
+      6000,
+      'Profile upsert'
+    );
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => '');
+      console.error('[PERSIST PROFILE] Failed:', res.status, errBody);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('[PERSIST PROFILE] Error:', err.message);
+    return false;
+  }
 }
 
 async function persistSubscriptionFields(fields) {
+  // Updates subscription row. Uses direct fetch (Supabase JS client deadlocks).
+  // Uses upsert so a missing subscription row gets created on first subscribe.
   if (!currentUser) return false;
-  // Use upsert so a missing subscription row gets created on first subscribe
-  const { error } = await supabaseClient
-    .from('subscriptions')
-    .upsert({ user_id: currentUser.id, ...fields }, { onConflict: 'user_id' });
-  if (error) {
-    console.error('Failed to update subscription:', error);
+  if (!window._authToken) {
+    console.error('[PERSIST SUB] No auth token available');
     return false;
   }
-  return true;
+
+  const withTimeout = (promise, ms, label) => Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out')), ms))
+  ]);
+
+  try {
+    const res = await withTimeout(
+      fetch(`${SUPABASE_URL}/rest/v1/subscriptions?on_conflict=user_id`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${window._authToken}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates,return=minimal',
+        },
+        body: JSON.stringify({ user_id: currentUser.id, ...fields }),
+      }),
+      6000,
+      'Subscription upsert'
+    );
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => '');
+      console.error('[PERSIST SUB] Failed:', res.status, errBody);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('[PERSIST SUB] Error:', err.message);
+    return false;
+  }
 }
 
 // Backwards-compat shim: existing code calls saveCurrentUser(currentUser) after mutating fields.
