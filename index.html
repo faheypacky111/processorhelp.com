@@ -2179,11 +2179,17 @@ async function hydrateCurrentUser() {
   const email = session.user.email;
 
   // Fetch profile, subscription, and reports in parallel
+  // Use maybeSingle() instead of single() so 0 rows doesn't throw an error
   const [profileRes, subRes, reportsRes] = await Promise.all([
-    supabaseClient.from('profiles').select('*').eq('id', userId).single(),
-    supabaseClient.from('subscriptions').select('*').eq('user_id', userId).single(),
+    supabaseClient.from('profiles').select('*').eq('id', userId).maybeSingle(),
+    supabaseClient.from('subscriptions').select('*').eq('user_id', userId).maybeSingle(),
     supabaseClient.from('reports').select('*').eq('user_id', userId).order('created_at', { ascending: true }),
   ]);
+
+  // Log any errors so we can see them in the console without breaking the flow
+  if (profileRes.error) console.error('Profile fetch error:', profileRes.error);
+  if (subRes.error) console.error('Subscription fetch error:', subRes.error);
+  if (reportsRes.error) console.error('Reports fetch error:', reportsRes.error);
 
   const profile = profileRes.data || {};
   const sub = subRes.data || {};
@@ -2374,8 +2380,12 @@ async function handleSignup() {
     }
 
     // Session created immediately (email confirmation disabled in dev) — hydrate and route
-    currentUser = await hydrateCurrentUser();
+    if (!currentUser) {
+      currentUser = await hydrateCurrentUser();
+    }
     errorEl.style.display = 'none';
+    btn.disabled = false;
+    btn.textContent = originalLabel;
     go('dashboard');
   } catch (err) {
     console.error('Signup error:', err);
@@ -2417,8 +2427,16 @@ async function handleSignin() {
       return;
     }
 
-    currentUser = await hydrateCurrentUser();
+    // signInWithPassword triggers onAuthStateChange('SIGNED_IN') which calls hydrateCurrentUser().
+    // We only need to call hydrate ourselves if currentUser hasn't been set yet by the time we get here.
+    if (!currentUser) {
+      currentUser = await hydrateCurrentUser();
+    }
+
     errorEl.style.display = 'none';
+    // Always reset the button before navigating, so if user comes back via browser nav it's not stuck
+    btn.disabled = false;
+    btn.textContent = originalLabel;
     go('dashboard');
   } catch (err) {
     console.error('Signin error:', err);
@@ -4198,7 +4216,11 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
     currentUser = null;
     if (AUTH_REQUIRED_VIEWS.includes(currentView)) go('landing');
   } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
-    currentUser = await hydrateCurrentUser();
+    // Avoid duplicate hydration if handleSignin/handleSignup already populated currentUser.
+    // Token refresh and external sign-ins still need hydration.
+    if (event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED' || !currentUser) {
+      currentUser = await hydrateCurrentUser();
+    }
   } else if (event === 'PASSWORD_RECOVERY') {
     // User clicked the password reset link in their email
     const newPw = prompt('Enter your new password (minimum 8 characters):');
