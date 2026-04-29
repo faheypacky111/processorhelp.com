@@ -2170,9 +2170,15 @@ const SUBSCRIPTION_REQUIRED_VIEWS = ['application','paywall','results'];
 // currentUser is the canonical in-memory user state, hydrated from Supabase.
 // Shape mirrors the legacy localStorage object so existing render code keeps working.
 
-async function hydrateCurrentUser() {
-  // Returns full currentUser-shaped object from Supabase, or null if not signed in
-  const { data: { session } } = await supabaseClient.auth.getSession();
+async function hydrateCurrentUser(passedSession) {
+  // Returns full currentUser-shaped object from Supabase, or null if not signed in.
+  // Optionally accepts a session object directly (from signInWithPassword response) to bypass
+  // a known issue where getSession() can hang indefinitely with stale localStorage tokens.
+  let session = passedSession;
+  if (!session) {
+    const { data } = await supabaseClient.auth.getSession();
+    session = data.session;
+  }
   if (!session) return null;
 
   const userId = session.user.id;
@@ -2381,7 +2387,8 @@ async function handleSignup() {
 
     // Session created immediately (email confirmation disabled in dev) — hydrate and route
     window._signinInProgress = true;
-    currentUser = await hydrateCurrentUser();
+    // Pass session directly (avoids getSession() hang on stale localStorage tokens)
+    currentUser = await hydrateCurrentUser(data.session);
     window._signinInProgress = false;
     errorEl.style.display = 'none';
     btn.disabled = false;
@@ -2432,7 +2439,8 @@ async function handleSignin() {
 
     // Coordinate with onAuthStateChange listener: skip its hydration since we're handling it here
     window._signinInProgress = true;
-    currentUser = await hydrateCurrentUser();
+    // Pass session directly (avoids getSession() hang on stale localStorage tokens)
+    currentUser = await hydrateCurrentUser(data.session);
     window._signinInProgress = false;
 
     errorEl.style.display = 'none';
@@ -4262,7 +4270,8 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
   } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
     // Skip if handleSignin/handleSignup is currently handling hydration to avoid duplicate queries.
     if (window._signinInProgress) return;
-    currentUser = await hydrateCurrentUser();
+    // Pass session directly to avoid hung getSession() call
+    currentUser = await hydrateCurrentUser(session);
   } else if (event === 'PASSWORD_RECOVERY') {
     const newPw = prompt('Enter your new password (minimum 8 characters):');
     if (newPw && newPw.length >= 8) {
