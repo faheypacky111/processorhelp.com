@@ -2423,37 +2423,144 @@ async function handleSignin() {
   const originalLabel = btn.textContent;
   btn.textContent = 'Signing in…';
 
+  // Helper that races a promise against a timeout so nothing can hang forever
+  const withTimeout = (promise, ms, label) => Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out after ' + ms + 'ms')), ms))
+  ]);
+
+  // Always-runs reset (no matter what happens, button comes back)
+  const resetButton = () => {
+    btn.disabled = false;
+    btn.textContent = originalLabel;
+    window._signinInProgress = false;
+  };
+
   try {
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    console.log('[SIGNIN] Step 1: calling signInWithPassword...');
+    const { data, error } = await withTimeout(
+      supabaseClient.auth.signInWithPassword({ email, password }),
+      8000,
+      'Auth'
+    );
+    console.log('[SIGNIN] Step 1 done. Has session?', !!(data && data.session));
+
     if (error) {
+      console.log('[SIGNIN] Auth error:', error.message);
       if (/email not confirmed/i.test(error.message)) {
         errorEl.textContent = 'Please confirm your email first. Check your inbox for the confirmation link.';
       } else {
         errorEl.textContent = 'Invalid email or password.';
       }
       errorEl.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = originalLabel;
+      resetButton();
       return;
     }
 
-    // Coordinate with onAuthStateChange listener: skip its hydration since we're handling it here
-    window._signinInProgress = true;
-    // Pass session directly (avoids getSession() hang on stale localStorage tokens)
-    currentUser = await hydrateCurrentUser(data.session);
-    window._signinInProgress = false;
+    if (!data || !data.session) {
+      console.log('[SIGNIN] No session returned despite success');
+      errorEl.textContent = 'Sign-in succeeded but no session was created. Try again.';
+      errorEl.style.display = 'block';
+      resetButton();
+      return;
+    }
 
+    const session = data.session;
+    const userId = session.user.id;
+    const userEmail = session.user.email;
+    console.log('[SIGNIN] Step 2: have user', userId);
+
+    // Tell the auth listener to back off — we're handling this
+    window._signinInProgress = true;
+
+    // Run each query independently with its own timeout — no Promise.all.
+    // This way we know EXACTLY which one (if any) is hanging.
+    let profile = {};
+    let sub = {};
+    let reports = [];
+
+    try {
+      console.log('[SIGNIN] Step 3: querying profiles...');
+      const profileRes = await withTimeout(
+        supabaseClient.from('profiles').select('*').eq('id', userId).maybeSingle(),
+        6000,
+        'Profile query'
+      );
+      console.log('[SIGNIN] Step 3 done.', profileRes.error ? 'Error: ' + profileRes.error.message : 'OK');
+      if (profileRes.data) profile = profileRes.data;
+    } catch (e) {
+      console.warn('[SIGNIN] Profile query failed, continuing without it:', e.message);
+    }
+
+    try {
+      console.log('[SIGNIN] Step 4: querying subscriptions...');
+      const subRes = await withTimeout(
+        supabaseClient.from('subscriptions').select('*').eq('user_id', userId).maybeSingle(),
+        6000,
+        'Subscription query'
+      );
+      console.log('[SIGNIN] Step 4 done.', subRes.error ? 'Error: ' + subRes.error.message : 'OK');
+      if (subRes.data) sub = subRes.data;
+    } catch (e) {
+      console.warn('[SIGNIN] Subscription query failed, continuing without it:', e.message);
+    }
+
+    try {
+      console.log('[SIGNIN] Step 5: querying reports...');
+      const reportsRes = await withTimeout(
+        supabaseClient.from('reports').select('*').eq('user_id', userId).order('created_at', { ascending: true }),
+        6000,
+        'Reports query'
+      );
+      console.log('[SIGNIN] Step 5 done.', reportsRes.error ? 'Error: ' + reportsRes.error.message : 'OK; rows: ' + (reportsRes.data || []).length);
+      if (reportsRes.data) {
+        reports = reportsRes.data.map(r => ({
+          id: r.id,
+          createdAt: new Date(r.created_at).getTime(),
+          merchant: r.business_data,
+          approvedCount: (r.results && r.results.approvedCount) || 0,
+          conditionalCount: (r.results && r.results.conditionalCount) || 0,
+          deniedCount: (r.results && r.results.deniedCount) || 0,
+        }));
+      }
+    } catch (e) {
+      console.warn('[SIGNIN] Reports query failed, continuing without them:', e.message);
+    }
+
+    // Build currentUser from whatever we got. Even if all three queries failed, we still have auth and can sign in.
+    console.log('[SIGNIN] Step 6: building currentUser');
+    currentUser = {
+      id: userId,
+      email: userEmail,
+      business: profile.business_name || '',
+      createdAt: new Date(profile.created_at || session.user.created_at).getTime(),
+      ageConfirmed: profile.age_confirmed !== false,
+      marketingConsent: profile.marketing_consent || false,
+      consentTimestamp: profile.consent_timestamp ? new Date(profile.consent_timestamp).getTime() : null,
+      consentHistory: profile.consent_history || [],
+      dataRequests: profile.data_requests || [],
+      subscribed: sub.status === 'active' || sub.status === 'trialing',
+      subscriptionStatus: sub.status || 'inactive',
+      subscriptionPlan: profile.subscription_plan || null,
+      subscriptionPlanName: profile.subscription_plan_name || null,
+      subscriptionBillingPeriod: profile.subscription_billing_period || null,
+      subscriptionAmount: profile.subscription_amount || null,
+      subscriptionStartDate: profile.subscription_start_date ? new Date(profile.subscription_start_date).getTime() : null,
+      subscriptionNextBilling: sub.current_period_end ? new Date(sub.current_period_end).getTime() : null,
+      paymentMethod: profile.payment_method || null,
+      savedProfile: profile.saved_profile || null,
+      reports: reports,
+    };
+
+    console.log('[SIGNIN] Step 7: navigating to dashboard');
     errorEl.style.display = 'none';
-    btn.disabled = false;
-    btn.textContent = originalLabel;
+    resetButton();
     go('dashboard');
   } catch (err) {
-    console.error('Signin error:', err);
-    window._signinInProgress = false;
-    errorEl.textContent = 'Unable to sign in. Please try again.';
+    console.error('[SIGNIN] Caught error:', err);
+    errorEl.textContent = err.message || 'Unable to sign in. Please try again.';
     errorEl.style.display = 'block';
-    btn.disabled = false;
-    btn.textContent = originalLabel;
+    resetButton();
   }
 }
 
