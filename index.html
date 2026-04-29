@@ -2812,7 +2812,12 @@ function showLegalTab(tabId) {
 
 function resetAll() {
   currentStep = 0;
-  go('landing');
+  // Logged-in users go to dashboard; logged-out users go to landing
+  if (currentUser) {
+    go('dashboard');
+  } else {
+    go('landing');
+  }
 }
 
 function goPricing() {
@@ -3297,31 +3302,61 @@ function renderResults() {
     currentUser.savedProfile = { ...merchant };
     window._reportJustRan = false;
 
-    // Persist to Supabase asynchronously
+    // Persist to Supabase asynchronously via direct fetch (Supabase JS client deadlocks)
     (async () => {
       try {
-        const { data, error } = await supabaseClient.from('reports').insert({
-          user_id: currentUser.id,
-          business_data: newReport.merchant,
-          results: {
-            approvedCount,
-            conditionalCount,
-            deniedCount,
-          },
-        }).select().single();
-        if (error) {
-          console.error('Failed to save report:', error);
-        } else if (data) {
-          // Attach the DB id to the in-memory report so future operations can reference it
-          newReport.id = data.id;
+        if (!window._authToken) {
+          console.error('[REPORT SAVE] No auth token available');
+          return;
         }
-        // Persist the saved profile snapshot on the profile row
+
+        const withTimeout = (promise, ms, label) => Promise.race([
+          promise,
+          new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out')), ms))
+        ]);
+
+        const res = await withTimeout(
+          fetch(`${SUPABASE_URL}/rest/v1/reports`, {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${window._authToken}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation',
+            },
+            body: JSON.stringify({
+              user_id: currentUser.id,
+              business_data: newReport.merchant,
+              results: {
+                approvedCount,
+                conditionalCount,
+                deniedCount,
+              },
+            }),
+          }),
+          6000,
+          'Report insert'
+        );
+
+        if (!res.ok) {
+          const errBody = await res.text().catch(() => '');
+          console.error('[REPORT SAVE] Failed:', res.status, errBody);
+        } else {
+          const rows = await res.json().catch(() => []);
+          if (rows && rows.length && rows[0].id) {
+            // Attach the DB id to the in-memory report so future operations can reference it
+            newReport.id = rows[0].id;
+            console.log('[REPORT SAVE] Saved with id', rows[0].id);
+          }
+        }
+
+        // Persist the saved profile snapshot on the profile row (uses direct fetch via persistProfileFields)
         await persistProfileFields({
           saved_profile: currentUser.savedProfile,
           updated_at: new Date().toISOString(),
         });
       } catch (err) {
-        console.error('Report persist error:', err);
+        console.error('[REPORT SAVE] Error:', err);
       }
     })();
   }
