@@ -247,6 +247,33 @@
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 
+  /* ============ MOBILE HAMBURGER (hidden on desktop) ============ */
+  .hamburger {
+    display: none;
+    background: none;
+    border: 1px solid var(--border-strong);
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    padding: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .hamburger span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--fg);
+    transition: background-color 0.2s;
+  }
+  .hamburger:hover span { background: var(--accent); }
+
+  /* ============ GLOBAL WORD-BREAK (prevents long unbroken strings from overflowing on mobile) ============ */
+  body, h1, h2, h3, p, div, span, a, button { overflow-wrap: anywhere; }
+
   /* ============ TABLET (1024px and down) ============ */
   @media (max-width: 1024px) {
     nav { padding: 20px 32px; }
@@ -272,6 +299,43 @@
     header { padding: 16px 20px !important; flex-wrap: wrap; gap: 12px; }
     header > div:last-child { gap: 12px !important; flex-wrap: wrap; }
     header a { font-size: 12px !important; }
+
+    /* ============ MOBILE NAV: hamburger replaces inline app-nav ============ */
+    .hamburger { display: flex; }
+    .app-nav {
+      display: none !important;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      left: 0;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 0 !important;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-strong);
+      padding: 12px 20px 20px !important;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .app-nav.open { display: flex !important; }
+    .app-nav a {
+      padding: 14px 0 !important;
+      border-bottom: 1px solid var(--border) !important;
+      font-size: 15px !important;
+    }
+    .app-nav a:last-of-type { border-bottom: none !important; }
+    .app-nav .nav-divider { display: none !important; }
+    .app-nav #user-avatar { display: none !important; }
+    .app-nav .theme-toggle {
+      align-self: flex-start !important;
+      margin-top: 12px !important;
+    }
+    .app-nav button.btn-ghost {
+      width: 100% !important;
+      margin-top: 8px !important;
+      padding: 12px 16px !important;
+      justify-content: center !important;
+    }
 
     /* Sections / main containers */
     section { padding: 48px 20px !important; }
@@ -404,12 +468,12 @@
     /* Even smaller typography */
     h1.display { font-size: clamp(28px, 8vw, 40px) !important; }
 
-    /* Hide some nav items on tiny screens */
+    /* Hide some nav items on tiny screens (landing nav only — auth header uses hamburger) */
     nav > div:last-child a { display: none; }
     nav > div:last-child a:last-of-type { display: inline; } /* Keep only the last link visible */
 
-    /* Header nav - simplify to just logout button */
-    header > div:last-child a:not(:first-child):not(:last-child) { display: none; }
+    /* Cookie banner: tighter padding for tiny phones */
+    #cookie-banner { padding: 14px 16px !important; }
   }
 </style>
 </head>
@@ -1363,16 +1427,17 @@
 
 <!-- =============== DASHBOARD =============== -->
 <div id="view-dashboard" class="hidden">
-  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;">
     <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('dashboard')">
       <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
     </div>
-    <div style="display:flex;gap:24px;align-items:center;">
+    <button class="hamburger" onclick="toggleAppNav()" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    <div class="app-nav" style="display:flex;gap:24px;align-items:center;">
       <a onclick="go('dashboard')" style="color:var(--accent);font-size:13px;cursor:pointer;">Dashboard</a>
       <a onclick="go('reports')" style="color:var(--fg);font-size:13px;cursor:pointer;">Reports</a>
       <a onclick="go('billing')" style="color:var(--fg);font-size:13px;cursor:pointer;">Billing</a>
       <a onclick="go('settings')" style="color:var(--fg);font-size:13px;cursor:pointer;">Settings</a>
-      <div style="width:1px;height:20px;background:var(--border);"></div>
+      <div style="width:1px;height:20px;background:var(--border);" class="nav-divider"></div>
       <div id="user-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;cursor:pointer;" onclick="go('settings')"></div>
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <button class="btn-ghost" onclick="handleLogout()" style="padding:8px 16px;font-size:11px;">Log out</button>
@@ -1400,11 +1465,12 @@
 
 <!-- =============== SETTINGS =============== -->
 <div id="view-settings" class="hidden">
-  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;">
     <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('dashboard')">
       <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
     </div>
-    <div style="display:flex;gap:24px;align-items:center;">
+    <button class="hamburger" onclick="toggleAppNav()" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    <div class="app-nav" style="display:flex;gap:24px;align-items:center;">
       <a onclick="go('dashboard')" style="color:var(--fg);font-size:13px;cursor:pointer;">Dashboard</a>
       <a onclick="go('reports')" style="color:var(--fg);font-size:13px;cursor:pointer;">Reports</a>
       <a onclick="go('billing')" style="color:var(--fg);font-size:13px;cursor:pointer;">Billing</a>
@@ -1420,11 +1486,12 @@
 
 <!-- =============== BILLING =============== -->
 <div id="view-billing" class="hidden">
-  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;">
     <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('dashboard')">
       <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
     </div>
-    <div style="display:flex;gap:24px;align-items:center;">
+    <button class="hamburger" onclick="toggleAppNav()" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    <div class="app-nav" style="display:flex;gap:24px;align-items:center;">
       <a onclick="go('dashboard')" style="color:var(--fg);font-size:13px;cursor:pointer;">Dashboard</a>
       <a onclick="go('reports')" style="color:var(--fg);font-size:13px;cursor:pointer;">Reports</a>
       <a onclick="go('billing')" style="color:var(--accent);font-size:13px;cursor:pointer;">Billing</a>
@@ -1440,11 +1507,12 @@
 
 <!-- =============== REPORTS HISTORY =============== -->
 <div id="view-reports" class="hidden">
-  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;">
     <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('dashboard')">
       <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
     </div>
-    <div style="display:flex;gap:24px;align-items:center;">
+    <button class="hamburger" onclick="toggleAppNav()" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    <div class="app-nav" style="display:flex;gap:24px;align-items:center;">
       <a onclick="go('dashboard')" style="color:var(--fg);font-size:13px;cursor:pointer;">Dashboard</a>
       <a onclick="go('reports')" style="color:var(--accent);font-size:13px;cursor:pointer;">Reports</a>
       <a onclick="go('billing')" style="color:var(--fg);font-size:13px;cursor:pointer;">Billing</a>
@@ -2875,6 +2943,9 @@ function startCTA() {
 
 // =============== NAVIGATION ===============
 function go(view) {
+  // Auto-close any open mobile nav drawer
+  document.querySelectorAll('.app-nav.open').forEach(n => n.classList.remove('open'));
+
   // Legal page routing - all 6 legal docs redirect to unified legal view with tab
   const LEGAL_TABS = ['privacy','tos','cookies','accessibility','ccpa','dmca'];
   let legalTab = null;
@@ -4841,6 +4912,20 @@ function toggleTheme() {
   const next = current === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
   try { localStorage.setItem('ph_theme', next); } catch(e) {}
+}
+
+function toggleAppNav() {
+  // Toggle the mobile nav drawer in the currently-active view's header
+  const visibleView = document.querySelector('div[id^="view-"]:not(.hidden)');
+  if (!visibleView) return;
+  const nav = visibleView.querySelector('.app-nav');
+  if (!nav) return;
+  nav.classList.toggle('open');
+}
+
+function closeAppNavOnNav() {
+  // Auto-close any open nav when user navigates
+  document.querySelectorAll('.app-nav.open').forEach(n => n.classList.remove('open'));
 }
 // Init theme on load
 (function initTheme() {
