@@ -4478,16 +4478,16 @@ function renderBilling() {
 
         <!-- Plan change options - show all other plans (upgrade or downgrade) -->
         ${(() => {
-          const planOrder = ['starter', 'growth', 'enterprise'];
+          // Plan tier order from lowest to highest. 'explore' is the free tier (no PLANS entry — handled inline).
+          const planOrder = ['explore', 'starter', 'growth', 'enterprise'];
           const userIdx = planOrder.indexOf(userPlanId);
           const otherPlans = planOrder.filter(p => p !== userPlanId);
           if (otherPlans.length === 0) return '';
-          const cols = otherPlans.length === 2 ? 'repeat(2,1fr)' : '1fr';
+          const cols = otherPlans.length >= 3 ? 'repeat(3,1fr)' : (otherPlans.length === 2 ? 'repeat(2,1fr)' : '1fr');
           return `
             <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:14px;">Change Plan</div>
             <div style="display:grid;grid-template-columns:${cols};gap:16px;margin-bottom:32px;">
               ${otherPlans.map(planId => {
-                const p = PLANS[planId];
                 const idx = planOrder.indexOf(planId);
                 const isUpgrade = idx > userIdx;
                 const direction = isUpgrade ? 'Upgrade' : 'Downgrade';
@@ -4495,6 +4495,21 @@ function renderBilling() {
                 const buttonClass = isUpgrade ? 'btn-primary' : 'btn-ghost';
                 const cardBorder = isUpgrade ? 'var(--accent)' : 'var(--border-strong)';
                 const cardBg = isUpgrade ? 'var(--bg-card)' : 'var(--bg-elevated)';
+
+                // Special case: Explore is the free tier — not in PLANS, handled inline as cancellation
+                if (planId === 'explore') {
+                  return `
+                    <div style="padding:24px;border:1px solid ${cardBorder};background:${cardBg};">
+                      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:${accentColor};margin-bottom:8px;">Free</div>
+                      <div class="display" style="font-size:24px;font-weight:500;margin-bottom:6px;">Explore</div>
+                      <div style="font-size:13px;color:var(--fg-muted);margin-bottom:16px;">Browse only. No underwriting reports.</div>
+                      <div style="font-size:18px;font-weight:600;margin-bottom:16px;">$0<span style="font-size:13px;color:var(--fg-muted);font-weight:400;">/forever</span></div>
+                      <button class="${buttonClass}" onclick="downgradeToExplore()" style="width:100%;justify-content:center;font-size:11px;padding:12px;">Downgrade to Explore →</button>
+                    </div>
+                  `;
+                }
+
+                const p = PLANS[planId];
                 const description = planId === 'starter'
                   ? 'Single MID. For solopreneurs running tight.'
                   : planId === 'growth'
@@ -4569,6 +4584,20 @@ async function cancelSub() {
   await saveCurrentUser(currentUser);
   alert('Your subscription has been cancelled.');
   renderBilling();
+}
+
+async function downgradeToExplore() {
+  if (!confirm('Downgrade to the free Explore tier? Your subscription will end and you\'ll lose access to underwriting reports. You\'ll keep your account, business profile, and report history. You can reactivate anytime.')) return;
+  currentUser.subscribed = false;
+  currentUser.subscriptionStatus = 'canceled';
+  // Don't clear subscriptionPlanName - we want to remember what plan they had so reactivation can suggest it
+  const ok = await saveCurrentUser(currentUser);
+  if (ok) {
+    alert('You\'ve been downgraded to the free Explore tier. You can reactivate anytime from your dashboard.');
+    go('dashboard');
+  } else {
+    alert('There was a problem processing your downgrade. Please try again or contact support@processorhelp.com.');
+  }
 }
 
 // =============== REPORTS HISTORY RENDER ===============
