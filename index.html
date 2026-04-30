@@ -2173,7 +2173,9 @@ const STEPS = [
 
 const PUBLIC_VIEWS = ['landing','processors-list','faq','legal','signup','signin','forgot'];
 const AUTH_REQUIRED_VIEWS = ['dashboard','settings','billing','reports','subscribe','application','paywall','results'];
-const SUBSCRIPTION_REQUIRED_VIEWS = ['application','paywall','results'];
+// Subscription is only required for RUNNING new reports (application/paywall).
+// Viewing historical results is allowed on the free tier — they earned those reports while subscribed.
+const SUBSCRIPTION_REQUIRED_VIEWS = ['application','paywall'];
 
 // =============== AUTH STORAGE (Supabase) ===============
 // currentUser is the canonical in-memory user state, hydrated from Supabase.
