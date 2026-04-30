@@ -2376,8 +2376,11 @@ async function persistSubscriptionFields(fields) {
 // We translate that into appropriate Supabase updates based on which fields look changed.
 async function saveCurrentUser(userData) {
   currentUser = userData;
-  // Persist all editable profile fields
+  // Persist all editable profile fields.
+  // IMPORTANT: include `email` because the profiles table has a NOT NULL constraint on it.
+  // Postgres upsert validates the full row, so a missing required column causes 23502 errors.
   const profileOk = await persistProfileFields({
+    email: userData.email,
     business_name: userData.business,
     marketing_consent: userData.marketingConsent || false,
     consent_timestamp: userData.consentTimestamp ? new Date(userData.consentTimestamp).toISOString() : null,
