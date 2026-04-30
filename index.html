@@ -2448,25 +2448,45 @@ async function handleSignup() {
   const originalLabel = btn.textContent;
   btn.textContent = 'Creating account…';
 
+  const withTimeout = (promise, ms, label) => Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out')), ms))
+  ]);
+
   try {
     const marketingConsent = document.getElementById('signup-marketing').checked;
-    const { data, error } = await supabaseClient.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: business,
-          business_name: business,
-        },
-        emailRedirectTo: window.location.origin,
-      },
-    });
 
-    if (error) {
-      if (/already registered|already exists/i.test(error.message)) {
+    // SIGNUP via direct fetch — bypasses Supabase JS client which is known to deadlock
+    console.log('[SIGNUP] Step 1: posting to signup endpoint directly...');
+    const signupRes = await withTimeout(
+      fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          data: {
+            full_name: business,
+            business_name: business,
+          },
+          gotrue_meta_security: {},
+        }),
+      }),
+      8000,
+      'Signup'
+    );
+
+    if (!signupRes.ok) {
+      const errBody = await signupRes.json().catch(() => ({}));
+      const msg = errBody.msg || errBody.error_description || errBody.message || 'Unable to create account.';
+      console.log('[SIGNUP] Auth failed:', signupRes.status, errBody);
+      if (/already registered|already exists|user.*exists/i.test(msg)) {
         errorEl.textContent = 'An account with this email already exists. Try signing in instead.';
       } else {
-        errorEl.textContent = error.message || 'Unable to create account. Please try again.';
+        errorEl.textContent = msg;
       }
       errorEl.style.display = 'block';
       btn.disabled = false;
@@ -2474,40 +2494,82 @@ async function handleSignup() {
       return;
     }
 
-    // Persist business name + marketing consent on the profile (upsert in case auto-trigger didn't fire)
-    if (data.user) {
-      const { error: profileError } = await supabaseClient
-        .from('profiles')
-        .upsert({
-          id: data.user.id,
-          business_name: business,
-          full_name: business,
-          marketing_consent: marketingConsent,
-          consent_timestamp: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }, { onConflict: 'id' });
-      if (profileError) console.error('Profile creation error:', profileError);
+    const signupData = await signupRes.json();
+    console.log('[SIGNUP] Step 1 done. Has session?', !!signupData.access_token);
+
+    // Two possible response shapes:
+    // 1. Has access_token + user (session created — email confirmation OFF)
+    // 2. Has user but no access_token (confirmation email sent)
+
+    const userId = signupData.user?.id || signupData.id;
+    const accessToken = signupData.access_token;
+    const refreshToken = signupData.refresh_token;
+
+    // If we have an access token, persist profile fields immediately
+    if (accessToken && userId) {
+      window._authToken = accessToken;
+      window._refreshToken = refreshToken;
+
+      console.log('[SIGNUP] Step 2: writing profile via direct fetch');
+      try {
+        const profileRes = await withTimeout(
+          fetch(`${SUPABASE_URL}/rest/v1/profiles?on_conflict=id`, {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'resolution=merge-duplicates,return=minimal',
+            },
+            body: JSON.stringify({
+              id: userId,
+              email: email, // REQUIRED — profiles.email has NOT NULL constraint
+              business_name: business,
+              full_name: business,
+              marketing_consent: marketingConsent,
+              consent_timestamp: new Date().toISOString(),
+              age_confirmed: true,
+              updated_at: new Date().toISOString(),
+            }),
+          }),
+          6000,
+          'Profile create'
+        );
+        if (!profileRes.ok) {
+          const errBody = await profileRes.text().catch(() => '');
+          console.error('[SIGNUP] Profile create failed:', profileRes.status, errBody);
+          // Don't block signup on this — the row may have been auto-created by a trigger
+        } else {
+          console.log('[SIGNUP] Profile created');
+        }
+      } catch (e) {
+        console.error('[SIGNUP] Profile create error:', e.message);
+      }
     }
 
-    // If email confirmation is required, no session yet — show a confirmation screen
-    if (!data.session) {
+    // If no session was returned, email confirmation is required — show the confirmation screen
+    if (!accessToken) {
       errorEl.style.display = 'none';
       document.getElementById('view-signup').innerHTML = `
         <div class="container narrow" style="padding:80px 24px;text-align:center;">
           <div style="width:72px;height:72px;background:var(--approved-bg);border:2px solid var(--approved);border-radius:50%;margin:0 auto 32px;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--approved);">✓</div>
           <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--approved);margin-bottom:12px;">Check your inbox</div>
           <h1 class="display" style="font-size:36px;font-weight:400;margin-bottom:16px;">Confirm your email.</h1>
-          <p style="color:var(--fg-muted);font-size:15px;margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;">We sent a confirmation link to <strong style="color:var(--fg);">${email}</strong>. Click the link to activate your account, then return here to sign in.</p>
+          <p style="color:var(--fg-muted);font-size:15px;margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;">We sent a confirmation link to <strong style="color:var(--fg);">${escapeHtml(email)}</strong>. Click the link to activate your account, then return here to sign in.</p>
           <button class="btn-ghost" onclick="go('signin')">Back to sign in</button>
         </div>
       `;
       return;
     }
 
-    // Session created immediately (email confirmation disabled in dev) — hydrate and route
+    // Session created immediately (email confirmation disabled) — hydrate and route
     window._signinInProgress = true;
-    // Pass session directly (avoids getSession() hang on stale localStorage tokens)
-    currentUser = await hydrateCurrentUser(data.session);
+    const session = {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      user: signupData.user,
+    };
+    currentUser = await hydrateCurrentUser(session);
     window._signinInProgress = false;
     errorEl.style.display = 'none';
     btn.disabled = false;
@@ -2773,9 +2835,25 @@ async function handleForgot() {
 
   if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     try {
-      await supabaseClient.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin,
-      });
+      // Direct fetch to Supabase recovery endpoint — bypass broken JS client
+      const withTimeout = (promise, ms) => Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Recovery timed out')), ms))
+      ]);
+      await withTimeout(
+        fetch(`${SUPABASE_URL}/auth/v1/recover`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            redirect_to: window.location.origin,
+          }),
+        }),
+        6000
+      );
     } catch (err) {
       console.error('Password reset error:', err);
     }
@@ -3422,6 +3500,7 @@ function renderResults() {
 
         // Persist the saved profile snapshot on the profile row (uses direct fetch via persistProfileFields)
         await persistProfileFields({
+          email: currentUser.email, // REQUIRED — profiles.email has NOT NULL constraint
           saved_profile: currentUser.savedProfile,
           updated_at: new Date().toISOString(),
         });
@@ -4314,6 +4393,7 @@ function downloadUserData() {
     format: 'JSON',
   });
   await persistProfileFields({
+    email: currentUser.email, // REQUIRED — profiles.email has NOT NULL constraint
     data_requests: currentUser.dataRequests,
     updated_at: new Date().toISOString(),
   });
@@ -4360,24 +4440,71 @@ async function deleteAccountFlow() {
   const deletedEmail = currentUser.email;
   const userId = currentUser.id;
 
+  if (!window._authToken) {
+    alert('Session expired. Please sign in again to delete your account.');
+    return;
+  }
+
+  const withTimeout = (promise, ms, label) => Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out')), ms))
+  ]);
+
+  const directDelete = async (path) => {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${window._authToken}`,
+        'Prefer': 'return=minimal',
+      },
+    });
+    if (!r.ok) {
+      const errBody = await r.text().catch(() => '');
+      throw new Error(`Delete ${path} returned ${r.status}: ${errBody}`);
+    }
+    return true;
+  };
+
   try {
-    // Delete user-owned rows. Profile + subscriptions + reports cascade-delete from auth.users,
-    // but the auth.users row itself can only be deleted by the service_role (server-side / Stripe webhook).
-    // We delete the data rows we own here and sign the user out immediately. The auth.users row will be
-    // cleaned up by a backend job once Stripe webhooks are wired up.
+    // Delete user-owned rows. The auth.users row itself can only be deleted by service_role
+    // (server-side), and is cleaned up by a backend job once Stripe webhooks are wired up.
     await Promise.all([
-      supabaseClient.from('reports').delete().eq('user_id', userId),
-      supabaseClient.from('subscriptions').delete().eq('user_id', userId),
-      supabaseClient.from('profiles').delete().eq('id', userId),
+      withTimeout(directDelete(`reports?user_id=eq.${userId}`), 6000, 'Reports delete'),
+      withTimeout(directDelete(`subscriptions?user_id=eq.${userId}`), 6000, 'Subscriptions delete'),
+      withTimeout(directDelete(`profiles?id=eq.${userId}`), 6000, 'Profile delete'),
     ]);
+    console.log('[DELETE ACCOUNT] All user data deleted');
   } catch (err) {
     console.error('Account deletion error:', err);
     alert('There was a problem deleting your account. Please contact support@processorhelp.com.');
     return;
   }
 
-  await supabaseClient.auth.signOut();
+  // Server-side logout via direct fetch (bypass broken JS client)
+  try {
+    await withTimeout(
+      fetch(`${SUPABASE_URL}/auth/v1/logout`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${window._authToken}`,
+        },
+      }),
+      3000,
+      'Logout'
+    );
+  } catch (e) {
+    console.warn('[DELETE ACCOUNT] Logout request failed (non-blocking):', e.message);
+  }
+
+  // Clean up local state regardless
   currentUser = null;
+  window._authToken = null;
+  window._refreshToken = null;
+  try {
+    Object.keys(localStorage).filter(k => k.startsWith('sb-')).forEach(k => localStorage.removeItem(k));
+  } catch (e) {}
 
   // Confirmation screen
   alert(
@@ -4395,6 +4522,7 @@ async function updateBusiness() {
   if (newName.length < 2) return;
   currentUser.business = newName;
   const ok = await persistProfileFields({
+    email: currentUser.email, // REQUIRED — profiles.email has NOT NULL constraint
     business_name: newName,
     full_name: newName,
     updated_at: new Date().toISOString(),
@@ -4414,12 +4542,39 @@ async function changePasswordPrompt() {
   const confirmPw = prompt('Confirm new password:');
   if (newPw !== confirmPw) { alert('Passwords do not match.'); return; }
 
-  const { error } = await supabaseClient.auth.updateUser({ password: newPw });
-  if (error) {
-    alert('Unable to update password: ' + (error.message || 'unknown error'));
+  if (!window._authToken) {
+    alert('Session expired. Please sign in again.');
     return;
   }
-  alert('Password updated.');
+
+  try {
+    const withTimeout = (promise, ms) => Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Password update timed out')), ms))
+    ]);
+    const res = await withTimeout(
+      fetch(`${SUPABASE_URL}/auth/v1/user`, {
+        method: 'PUT',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${window._authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password: newPw }),
+      }),
+      6000
+    );
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      const msg = errBody.msg || errBody.error_description || errBody.message || 'unknown error';
+      alert('Unable to update password: ' + msg);
+      return;
+    }
+    alert('Password updated.');
+  } catch (err) {
+    console.error('Password change error:', err);
+    alert('Unable to update password. Please try again.');
+  }
 }
 
 function deleteAccount() {
@@ -4583,13 +4738,23 @@ async function cancelSub() {
   if (!confirm('Are you sure you want to cancel your subscription? You will retain access until your next billing date.')) return;
   currentUser.subscribed = false;
   currentUser.subscriptionStatus = 'canceled';
-  await saveCurrentUser(currentUser);
-  alert('Your subscription has been cancelled.');
-  renderBilling();
+  const ok = await saveCurrentUser(currentUser);
+  if (ok) {
+    alert('Your subscription has been cancelled.');
+    renderBilling();
+  } else {
+    // Revert in-memory state since the save failed
+    currentUser.subscribed = true;
+    currentUser.subscriptionStatus = 'active';
+    alert('There was a problem cancelling your subscription. Please try again or contact support@processorhelp.com.');
+  }
 }
 
 async function downgradeToExplore() {
   if (!confirm('Downgrade to the free Explore tier? Your subscription will end and you\'ll lose access to underwriting reports. You\'ll keep your account, business profile, and report history. You can reactivate anytime.')) return;
+  // Capture previous state in case we need to revert
+  const prevSubscribed = currentUser.subscribed;
+  const prevStatus = currentUser.subscriptionStatus;
   currentUser.subscribed = false;
   currentUser.subscriptionStatus = 'canceled';
   // Don't clear subscriptionPlanName - we want to remember what plan they had so reactivation can suggest it
@@ -4598,6 +4763,9 @@ async function downgradeToExplore() {
     alert('You\'ve been downgraded to the free Explore tier. You can reactivate anytime from your dashboard.');
     go('dashboard');
   } else {
+    // Revert in-memory state
+    currentUser.subscribed = prevSubscribed;
+    currentUser.subscriptionStatus = prevStatus;
     alert('There was a problem processing your downgrade. Please try again or contact support@processorhelp.com.');
   }
 }
@@ -4804,11 +4972,40 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
       currentUser = await hydrateCurrentUser(session);
     }
   } else if (event === 'PASSWORD_RECOVERY') {
+    // User clicked password recovery email link. Supabase has set a temporary session for them.
+    // Capture the access token from session so we can use direct fetch.
+    if (session && session.access_token) {
+      window._authToken = session.access_token;
+    }
     const newPw = prompt('Enter your new password (minimum 8 characters):');
-    if (newPw && newPw.length >= 8) {
-      const { error } = await supabaseClient.auth.updateUser({ password: newPw });
-      if (error) alert('Unable to update password: ' + error.message);
-      else alert('Password updated. Please sign in with your new password.');
+    if (newPw && newPw.length >= 8 && window._authToken) {
+      try {
+        const withTimeout = (promise, ms) => Promise.race([
+          promise,
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Password update timed out')), ms))
+        ]);
+        const res = await withTimeout(
+          fetch(`${SUPABASE_URL}/auth/v1/user`, {
+            method: 'PUT',
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${window._authToken}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ password: newPw }),
+          }),
+          6000
+        );
+        if (!res.ok) {
+          const errBody = await res.json().catch(() => ({}));
+          alert('Unable to update password: ' + (errBody.msg || errBody.message || 'unknown error'));
+        } else {
+          alert('Password updated. Please sign in with your new password.');
+        }
+      } catch (err) {
+        console.error('Password recovery error:', err);
+        alert('Unable to update password. Please try again.');
+      }
     }
   }
 });
