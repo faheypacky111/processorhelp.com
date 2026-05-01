@@ -65,6 +65,7 @@
     background: var(--bg);
     color: var(--fg);
     min-height: 100vh;
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
@@ -247,6 +248,44 @@
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 
+  /* ============ PROCESSOR STRIP (horizontal scroll) ============ */
+  .proc-strip-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 24px; }
+  .proc-strip-counter { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: var(--fg-muted); white-space: nowrap; text-transform: uppercase; }
+  .proc-strip-progress { flex: 1; height: 2px; background: var(--border); position: relative; overflow: hidden; }
+  .proc-strip-progress-bar { position: absolute; top: 0; left: 0; height: 100%; background: var(--accent); transition: width 0.2s ease, transform 0.2s ease; will-change: width, transform; }
+  .proc-strip-arrows { display: flex; gap: 8px; }
+  .proc-strip-arrow { width: 40px; height: 40px; border: 1px solid var(--border-strong); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--fg); transition: all 0.15s; font-family: 'Inter', sans-serif; font-size: 16px; }
+  .proc-strip-arrow:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .proc-strip-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+  .proc-strip-wrap { position: relative; margin: 0 -48px; padding: 0 48px; }
+  .proc-strip { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding-bottom: 12px; padding-right: 80px; -webkit-overflow-scrolling: touch; }
+  .proc-strip::-webkit-scrollbar { display: none; }
+  .proc-strip { scrollbar-width: none; -ms-overflow-style: none; }
+  .proc-card { flex: 0 0 280px; scroll-snap-align: start; padding: 24px; border: 1px solid var(--border); background: var(--bg-card); cursor: pointer; transition: border-color 0.15s ease, transform 0.15s ease; display: flex; flex-direction: column; min-height: 240px; }
+  .proc-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .proc-card-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--fg-dim); margin-bottom: 12px; }
+  .proc-card-cat { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; font-weight: 500; }
+  .proc-card-name { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; line-height: 1.05; margin-bottom: 12px; letter-spacing: -0.01em; color: var(--fg); }
+  .proc-card-desc { font-size: 13px; line-height: 1.55; color: var(--fg-muted); flex: 1; }
+  .proc-card-speed { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-dim); margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .proc-strip-fade { position: absolute; top: 0; right: 48px; bottom: 12px; width: 80px; pointer-events: none; background: linear-gradient(to right, transparent, var(--bg) 70%); }
+  .proc-strip-hint { margin-top: 16px; font-size: 12px; color: var(--fg-dim); display: flex; justify-content: space-between; align-items: center; }
+
+  /* Mobile: tighter strip, smaller cards */
+  @media (max-width: 1024px) {
+    .proc-strip-wrap { margin: 0 -32px; padding: 0 32px; }
+    .proc-strip-fade { right: 32px; }
+  }
+  @media (max-width: 768px) {
+    .proc-strip-wrap { margin: 0 -20px; padding: 0 20px; }
+    .proc-strip { padding-right: 40px; }
+    .proc-card { flex: 0 0 260px; padding: 20px; min-height: 220px; }
+    .proc-strip-fade { right: 20px; width: 40px; }
+    .proc-strip-controls { flex-wrap: wrap; gap: 12px; }
+    .proc-strip-progress { order: 3; flex-basis: 100%; }
+    .proc-strip-hint { flex-direction: column; gap: 8px; align-items: flex-start; }
+  }
+
   /* ============ MOBILE HAMBURGER (hidden on desktop) ============ */
   .hamburger {
     display: none;
@@ -316,6 +355,8 @@
       padding: 12px 20px 20px !important;
       z-index: 100;
       box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      max-height: calc(100vh - 70px);
+      overflow-y: auto;
     }
     .app-nav.open { display: flex !important; }
     .app-nav a {
@@ -348,12 +389,15 @@
     /* Hero stats 4-col -> 2-col on mobile */
     section > div[style*="repeat(4,1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
 
-    /* All 3-col and 4-col processor grids -> 1 column on mobile */
-    #processors-grid,
+    /* Full processor directory grid -> 1 column on mobile */
     #full-processors-grid { grid-template-columns: 1fr !important; }
 
     /* Dashboard 3-col stats -> stack on mobile */
     #dashboard-content div[style*="repeat(3,1fr)"] { grid-template-columns: 1fr !important; }
+
+    /* Billing change plan grid -> stack on mobile */
+    #billing-content div[style*="repeat(3,1fr)"],
+    #billing-content div[style*="repeat(2,1fr)"] { grid-template-columns: 1fr !important; gap: 12px !important; }
 
     /* Dashboard 2-col actions -> stack */
     #dashboard-content div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; gap: 16px !important; }
@@ -451,6 +495,7 @@
     #dashboard-content > div > div[style*="justify-content:space-between"][style*="gap:32px"] {
       flex-direction: column !important;
       align-items: flex-start !important;
+      padding: 24px !important;
     }
   }
 
@@ -474,6 +519,26 @@
 
     /* Cookie banner: tighter padding for tiny phones */
     #cookie-banner { padding: 14px 16px !important; }
+
+    /* Settings input + button row stacks vertically on tiny phones */
+    #settings-content div[style*="display:flex"][style*="justify-content:space-between"][style*="align-items:center"][style*="gap:16px"] {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    #settings-content div[style*="display:flex"][style*="justify-content:space-between"][style*="align-items:center"][style*="gap:16px"] button {
+      width: 100% !important;
+    }
+  }
+
+  /* ============ PRINT (legal pages, reports) ============ */
+  @media print {
+    nav, header, footer, .theme-toggle, .hamburger, #cookie-banner,
+    .proc-strip-controls, .proc-strip-arrows, .proc-strip-fade { display: none !important; }
+    body { background: #fff !important; color: #000 !important; }
+    .display, h1, h2, h3 { color: #000 !important; }
+    a { color: #000 !important; text-decoration: underline; }
+    .legal-layout { grid-template-columns: 1fr !important; }
+    .legal-layout aside { display: none !important; }
   }
 </style>
 </head>
@@ -487,8 +552,8 @@
       <span style="color:var(--fg-muted);">We use essential cookies to keep you signed in and remember your preferences. With your consent, we also use analytics cookies to improve our service. See our <a onclick="go('cookies');dismissCookies()" style="color:var(--accent);cursor:pointer;text-decoration:underline;">Cookie Policy</a> for details.</span>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button onclick="handleCookies('essential')" class="btn-ghost" style="padding:10px 18px;font-size:11px;">Essential Only</button>
-      <button onclick="handleCookies('all')" class="btn-primary" style="padding:10px 18px;font-size:11px;">Accept All</button>
+      <button onclick="handleCookies('essential')" class="btn-ghost" style="padding:12px 22px;font-size:11px;">Essential Only</button>
+      <button onclick="handleCookies('all')" class="btn-primary" style="padding:12px 22px;font-size:11px;">Accept All</button>
     </div>
   </div>
 </div>
@@ -568,7 +633,25 @@
   <section id="processors-section" style="padding:80px 48px;max-width:1400px;margin:0 auto;border-top:1px solid var(--border);">
     <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">02 · Integrated Payment Processors</div>
     <h2 class="display" style="font-size:42px;line-height:1.05;font-weight:400;margin-bottom:48px;max-width:800px;">From first-time solopreneurs to enterprise operators — every tier of payment processor in one application.</h2>
-    <div id="processors-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);"></div>
+
+    <div class="proc-strip-controls">
+      <div class="proc-strip-counter" id="proc-counter">Showing 1–3 of 30</div>
+      <div class="proc-strip-progress"><div class="proc-strip-progress-bar" id="proc-progress"></div></div>
+      <div class="proc-strip-arrows">
+        <button class="proc-strip-arrow" id="proc-prev" aria-label="Scroll left">←</button>
+        <button class="proc-strip-arrow" id="proc-next" aria-label="Scroll right">→</button>
+      </div>
+    </div>
+
+    <div class="proc-strip-wrap">
+      <div class="proc-strip" id="processors-grid"></div>
+      <div class="proc-strip-fade"></div>
+    </div>
+
+    <div class="proc-strip-hint">
+      <span>Drag, scroll, or use arrows to browse all 30 processors.</span>
+      <a onclick="startCTA()" style="color:var(--accent);cursor:pointer;font-weight:500;">Find your matches →</a>
+    </div>
   </section>
 
   <!-- =============== HOW IT WORKS (compact on landing) =============== -->
@@ -3133,14 +3216,62 @@ function selectPlan(planId) {
 // =============== LANDING RENDER ===============
 function renderProcessorsGrid() {
   const grid = document.getElementById('processors-grid');
+  if (!grid) return;
   grid.innerHTML = PROCESSORS.map((p, i) => `
-    <div style="background:var(--bg-card);padding:28px;min-height:180px;">
-      <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:16px;">${String(i+1).padStart(2,'0')}</div>
-      <div class="display" style="font-size:24px;font-weight:500;margin-bottom:8px;">${p.name}</div>
-      <div style="font-size:12px;color:var(--accent);margin-bottom:12px;font-weight:500;">${p.category}</div>
-      <div style="font-size:13px;color:var(--fg-muted);line-height:1.5;">${p.description}</div>
+    <div class="proc-card" onclick="startCTA()" role="button" tabindex="0">
+      <div class="proc-card-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="proc-card-cat">${escapeHtml(p.category)}</div>
+      <div class="proc-card-name">${escapeHtml(p.name)}</div>
+      <div class="proc-card-desc">${escapeHtml(p.description)}</div>
+      <div class="proc-card-speed">${escapeHtml(p.speed)} approval</div>
     </div>
   `).join('');
+
+  // Wire up scroll strip controls
+  const counter = document.getElementById('proc-counter');
+  const progress = document.getElementById('proc-progress');
+  const prevBtn = document.getElementById('proc-prev');
+  const nextBtn = document.getElementById('proc-next');
+  if (!counter || !progress || !prevBtn || !nextBtn) return;
+
+  function getCardStep() {
+    const firstCard = grid.querySelector('.proc-card');
+    if (!firstCard) return 296; // fallback (280 + 16 gap)
+    const rect = firstCard.getBoundingClientRect();
+    return rect.width + 16; // card width + gap
+  }
+
+  function updateMeta() {
+    const cardStep = getCardStep();
+    const visibleCount = Math.max(1, Math.floor(grid.clientWidth / cardStep));
+    const startIdx = Math.round(grid.scrollLeft / cardStep);
+    const endIdx = Math.min(startIdx + visibleCount, PROCESSORS.length);
+    counter.textContent = `Showing ${startIdx + 1}–${endIdx} of ${PROCESSORS.length}`;
+
+    const maxScroll = grid.scrollWidth - grid.clientWidth;
+    const visiblePct = (visibleCount / PROCESSORS.length) * 100;
+    progress.style.width = visiblePct + '%';
+    if (maxScroll > 0 && visiblePct < 100) {
+      const scrollPct = grid.scrollLeft / maxScroll;
+      progress.style.transform = `translateX(${(scrollPct * (100 - visiblePct) / visiblePct) * 100}%)`;
+    } else {
+      progress.style.transform = 'translateX(0)';
+    }
+
+    prevBtn.disabled = grid.scrollLeft <= 4;
+    nextBtn.disabled = grid.scrollLeft >= maxScroll - 4;
+  }
+
+  // Remove any prior listeners (in case render is called twice)
+  const newPrev = prevBtn.cloneNode(true); prevBtn.parentNode.replaceChild(newPrev, prevBtn);
+  const newNext = nextBtn.cloneNode(true); nextBtn.parentNode.replaceChild(newNext, nextBtn);
+  newPrev.addEventListener('click', () => { grid.scrollBy({ left: -getCardStep() * 2, behavior: 'smooth' }); });
+  newNext.addEventListener('click', () => { grid.scrollBy({ left: getCardStep() * 2, behavior: 'smooth' }); });
+  grid.addEventListener('scroll', updateMeta);
+  window.addEventListener('resize', updateMeta);
+
+  // Initial state
+  setTimeout(updateMeta, 50);
 }
 
 // =============== APPLICATION RENDER ===============
@@ -3771,11 +3902,11 @@ function renderFullProcessorsList() {
     <div style="background:var(--bg-card);padding:32px;min-height:220px;display:flex;flex-direction:column;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
         <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-dim);">${String(i+1).padStart(2,'0')}</div>
-        <div class="mono" style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);">${p.speed}</div>
+        <div class="mono" style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);">${escapeHtml(p.speed)}</div>
       </div>
-      <div class="display" style="font-size:26px;font-weight:500;margin-bottom:8px;">${p.name}</div>
-      <div style="font-size:12px;color:var(--accent);margin-bottom:16px;font-weight:500;">${p.category}</div>
-      <div style="font-size:13px;color:var(--fg-muted);line-height:1.6;flex:1;">${p.description}</div>
+      <div class="display" style="font-size:26px;font-weight:500;margin-bottom:8px;">${escapeHtml(p.name)}</div>
+      <div style="font-size:12px;color:var(--accent);margin-bottom:16px;font-weight:500;">${escapeHtml(p.category)}</div>
+      <div style="font-size:13px;color:var(--fg-muted);line-height:1.6;flex:1;">${escapeHtml(p.description)}</div>
     </div>
   `).join('');
 }
@@ -4350,7 +4481,7 @@ function renderSettings() {
           <br><br>
           You will receive an email confirming deletion. Some data may be retained briefly in encrypted backups for up to 30 days as required for security and fraud prevention, after which it will be permanently destroyed.
         </div>
-        <button onclick="deleteAccountFlow()" style="background:var(--denied);color:#fff;border:none;padding:12px 24px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Delete account permanently</button>
+        <button onclick="deleteAccountFlow()" style="background:var(--denied);color:#fff;border:none;padding:14px 26px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Delete account permanently</button>
       </div>
     </div>
   `;
