@@ -267,7 +267,10 @@
     animation: proc-marquee-scroll 120s linear infinite;
     will-change: transform;
   }
-  .proc-marquee:hover .proc-marquee-track { animation-play-state: paused; }
+  @media (hover: hover) {
+    .proc-marquee:hover .proc-marquee-track { animation-play-state: paused; }
+    .proc-marquee-item:hover { color: var(--accent); }
+  }
   .proc-marquee-item {
     flex-shrink: 0;
     padding: 0 48px;
@@ -281,7 +284,6 @@
     white-space: nowrap;
     user-select: none;
   }
-  .proc-marquee-item:hover { color: var(--accent); }
   @keyframes proc-marquee-scroll {
     from { transform: translate3d(0, 0, 0); }
     to { transform: translate3d(-50%, 0, 0); }
@@ -563,7 +565,7 @@
   /* ============ PRINT (legal pages, reports) ============ */
   @media print {
     nav, header, footer, .theme-toggle, .hamburger, #cookie-banner,
-    .proc-strip-controls, .proc-strip-arrows, .proc-strip-fade { display: none !important; }
+    .proc-marquee { display: none !important; }
     body { background: #fff !important; color: #000 !important; }
     .display, h1, h2, h3 { color: #000 !important; }
     a { color: #000 !important; text-decoration: underline; }
