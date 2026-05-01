@@ -69,6 +69,11 @@
     -webkit-font-smoothing: antialiased;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
+  /* When cookie banner is showing, give body padding-bottom so footer isn't obscured */
+  body.has-cookie-banner { padding-bottom: 140px; }
+  @media (max-width: 768px) {
+    body.has-cookie-banner { padding-bottom: 200px; }
+  }
   body, body * {
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
@@ -291,8 +296,8 @@
     display: none;
     background: none;
     border: 1px solid var(--border-strong);
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     cursor: pointer;
     padding: 0;
     flex-direction: column;
@@ -367,15 +372,18 @@
     .app-nav a:last-of-type { border-bottom: none !important; }
     .app-nav .nav-divider { display: none !important; }
     .app-nav #user-avatar { display: none !important; }
-    .app-nav .theme-toggle {
-      align-self: flex-start !important;
-      margin-top: 12px !important;
-    }
     .app-nav button.btn-ghost {
       width: 100% !important;
       margin-top: 8px !important;
-      padding: 12px 16px !important;
+      padding: 14px 16px !important;
+      font-size: 12px !important;
       justify-content: center !important;
+    }
+    .app-nav .theme-toggle {
+      align-self: flex-start !important;
+      margin-top: 12px !important;
+      width: 44px !important;
+      height: 44px !important;
     }
 
     /* Sections / main containers */
@@ -388,6 +396,10 @@
 
     /* Hero stats 4-col -> 2-col on mobile */
     section > div[style*="repeat(4,1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
+
+    /* Stat cell border cleanup: hide dangling right borders on cells in last column */
+    .stats-row .stat-cell:nth-child(2n) { border-right: none !important; }
+    .stats-row .stat-cell:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
 
     /* Full processor directory grid -> 1 column on mobile */
     #full-processors-grid { grid-template-columns: 1fr !important; }
@@ -409,7 +421,7 @@
     /* About Us "Who We Serve" and "Principles" 2-col -> stack */
     section div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; gap: 24px !important; }
 
-    /* Problem section "01 · Who We Serve" 1fr 2fr -> stack */
+    /* "Built for every business stage" section 1fr 2fr -> stack */
     section div[style*="1fr 2fr"] { grid-template-columns: 1fr !important; gap: 24px !important; }
 
     /* Pricing grid 4-col -> stack on mobile */
@@ -510,6 +522,14 @@
     /* Hero stats 4-col -> 1 column for tiny phones */
     section > div[style*="repeat(4,1fr)"] { grid-template-columns: 1fr !important; }
 
+    /* When stat cells fully stack, hide all right borders + use bottom borders for separation */
+    .stats-row .stat-cell { border-right: none !important; border-bottom: 1px solid var(--border); }
+    .stats-row .stat-cell:last-child { border-bottom: none !important; }
+
+    /* Hero CTAs full-width on tiny phones to prevent overflow */
+    .hero-ctas { flex-direction: column !important; }
+    .hero-ctas button { width: 100% !important; justify-content: center !important; }
+
     /* Even smaller typography */
     h1.display { font-size: clamp(28px, 8vw, 40px) !important; }
 
@@ -582,7 +602,7 @@
       One application. 30 payment processors. Real-time approval or denial insights in 90 seconds — before you waste another application.
     </p>
 
-    <div class="fade-up" style="display:flex;gap:16px;margin-top:48px;animation-delay:0.3s;">
+    <div class="fade-up hero-ctas" style="display:flex;gap:16px;margin-top:48px;animation-delay:0.3s;flex-wrap:wrap;">
       <button class="btn-primary" onclick="go('application')">Start application →</button>
       <button class="btn-ghost" onclick="document.getElementById('processors-section').scrollIntoView({behavior:'smooth'})">View payment processors</button>
     </div>
@@ -5076,6 +5096,7 @@ function handleCookies(choice) {
 function dismissCookies() {
   const banner = document.getElementById('cookie-banner');
   if (banner) banner.style.display = 'none';
+  document.body.classList.remove('has-cookie-banner');
 }
 // Show banner if not yet decided
 (function initCookies() {
@@ -5084,7 +5105,10 @@ function dismissCookies() {
     if (!saved) {
       setTimeout(() => {
         const banner = document.getElementById('cookie-banner');
-        if (banner) banner.style.display = 'block';
+        if (banner) {
+          banner.style.display = 'block';
+          document.body.classList.add('has-cookie-banner');
+        }
       }, 1200);
     }
   } catch(e) {}
