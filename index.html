@@ -284,9 +284,8 @@
     from { transform: translate3d(0, 0, 0); }
     to { transform: translate3d(-50%, 0, 0); }
   }
-  /* Respect prefers-reduced-motion */
+  /* Respect prefers-reduced-motion (carousel intentionally exempt for branding) */
   @media (prefers-reduced-motion: reduce) {
-    .proc-carousel-track { animation: none; }
     .stat-live::before { animation: none !important; }
     .fade-up, .slide-in { animation: none !important; opacity: 1 !important; transform: none !important; }
   }
