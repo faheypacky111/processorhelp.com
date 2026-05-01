@@ -253,72 +253,62 @@
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 
-  /* ============ PROCESSOR MARQUEE (continuous scroll) ============ */
-  /* Headline above marquee tightens on mobile so it doesn't sprawl */
-  #processors-section h2.display {
-    text-wrap: balance;
-  }
-  @media (max-width: 768px) {
-    #processors-section h2.display {
-      font-size: clamp(22px, 5.5vw, 30px) !important;
-      line-height: 1.15 !important;
-      margin-bottom: 32px !important;
-    }
-  }
-  @media (max-width: 480px) {
-    #processors-section h2.display {
-      font-size: 22px !important;
-      line-height: 1.2 !important;
-      margin-bottom: 24px !important;
-    }
-  }
-  .proc-marquee {
+  /* ============ PROCESSOR CAROUSEL (continuous scroll of cards) ============ */
+  .proc-section-headline { padding: 0 48px; }
+  .proc-carousel {
     position: relative;
     overflow: hidden;
     width: 100%;
-    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
   }
-  .proc-marquee-track {
+  .proc-carousel-track {
     display: flex;
     width: max-content;
-    animation: proc-marquee-scroll 120s linear infinite;
+    gap: 16px;
+    animation: proc-carousel-scroll 240s linear infinite;
     will-change: transform;
   }
-  @media (hover: hover) {
-    .proc-marquee:hover .proc-marquee-track { animation-play-state: paused; }
-    .proc-marquee-item:hover { color: var(--accent); }
-  }
-  .proc-marquee-item {
+  .proc-carousel-track > div {
     flex-shrink: 0;
-    padding: 0 48px;
-    font-family: 'Fraunces', serif;
-    font-size: 28px;
-    font-weight: 500;
-    color: var(--fg);
-    letter-spacing: -0.01em;
-    line-height: 1;
-    transition: color 0.2s ease;
-    white-space: nowrap;
-    user-select: none;
+    width: 380px;
+    background: var(--bg-card);
+    padding: 28px;
+    min-height: 180px;
+    box-sizing: border-box;
   }
-  @keyframes proc-marquee-scroll {
+  @media (hover: hover) {
+    .proc-carousel:hover .proc-carousel-track { animation-play-state: paused; }
+  }
+  @keyframes proc-carousel-scroll {
     from { transform: translate3d(0, 0, 0); }
     to { transform: translate3d(-50%, 0, 0); }
   }
-  /* Respect prefers-reduced-motion: pause animation for users who request it */
+  /* Respect prefers-reduced-motion */
   @media (prefers-reduced-motion: reduce) {
-    .proc-marquee-track { animation: none; }
+    .proc-carousel-track { animation: none; }
+    .stat-live::before { animation: none !important; }
+    .fade-up, .slide-in { animation: none !important; opacity: 1 !important; transform: none !important; }
   }
-  /* Tablet: slightly smaller text and tighter spacing */
+  /* Tablet */
   @media (max-width: 1024px) {
-    .proc-marquee-item { padding: 0 36px; font-size: 24px; }
-    .proc-marquee-track { animation-duration: 100s; }
+    .proc-carousel-track > div { width: 340px; padding: 24px; }
+    .proc-carousel-track { animation-duration: 200s; }
+    /* Keep processors section flush so carousel can bleed edge-to-edge */
+    #processors-section { padding-left: 0 !important; padding-right: 0 !important; }
+    .proc-section-headline { padding: 0 32px; }
   }
-  /* Mobile: smaller text, tighter padding, faster cycle so it doesn't feel sluggish */
+  /* Mobile */
   @media (max-width: 768px) {
-    .proc-marquee-item { padding: 0 28px; font-size: 20px; }
-    .proc-marquee-track { animation-duration: 85s; }
+    .proc-carousel-track > div { width: 280px; padding: 22px; min-height: 160px; }
+    .proc-carousel-track { animation-duration: 160s; }
+    #processors-section { padding-left: 0 !important; padding-right: 0 !important; }
+    .proc-section-headline { padding: 0 20px; }
+  }
+  /* Tiny mobile */
+  @media (max-width: 480px) {
+    #processors-section { padding-left: 0 !important; padding-right: 0 !important; }
+    .proc-section-headline { padding: 0 16px; }
   }
 
   /* ============ MOBILE HAMBURGER (hidden on desktop) ============ */
@@ -431,7 +421,7 @@
     .stats-row .stat-cell:nth-child(2n) { border-right: none !important; }
     .stats-row .stat-cell:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
 
-    /* Full processor directory grid -> 1 column on mobile */
+    /* Full processor directory grid -> 1 column on mobile (landing carousel handled separately) */
     #full-processors-grid { grid-template-columns: 1fr !important; }
 
     /* Dashboard 3-col stats -> stack on mobile */
@@ -583,7 +573,7 @@
   /* ============ PRINT (legal pages, reports) ============ */
   @media print {
     nav, header, footer, .theme-toggle, .hamburger, #cookie-banner,
-    .proc-marquee { display: none !important; }
+    .proc-carousel { display: none !important; }
     body { background: #fff !important; color: #000 !important; }
     .display, h1, h2, h3 { color: #000 !important; }
     a { color: #000 !important; text-decoration: underline; }
@@ -675,12 +665,11 @@
   </section>
 
   <section id="processors-section" style="padding:80px 0;max-width:1400px;margin:0 auto;">
-    <div style="padding:0 48px;">
+    <div class="proc-section-headline">
       <h2 class="display" style="font-size:42px;line-height:1.05;font-weight:400;margin-bottom:48px;max-width:800px;">From first-time solopreneurs to enterprise operators — every tier of payment processor in one application.</h2>
     </div>
-
-    <div class="proc-marquee" id="proc-marquee">
-      <div class="proc-marquee-track" id="proc-marquee-track"></div>
+    <div class="proc-carousel">
+      <div class="proc-carousel-track" id="processors-grid"></div>
     </div>
   </section>
 
@@ -3244,20 +3233,20 @@ function selectPlan(planId) {
 
 // =============== LANDING RENDER ===============
 function renderProcessorsGrid() {
-  const track = document.getElementById('proc-marquee-track');
-  if (!track) return;
-
-  // Render each processor as a name-only mark (Option B: text-based logo marks).
-  // We duplicate the list so the CSS animation can loop seamlessly:
+  const grid = document.getElementById('processors-grid');
+  if (!grid) return;
+  // Render cards once. We duplicate the list so the CSS animation can loop seamlessly:
   // when the track has translated -50%, the second copy is exactly where the first started.
-  const items = PROCESSORS.map(p =>
-    `<span class="proc-marquee-item">${escapeHtml(p.name)}</span>`
-  ).join('');
-
-  track.innerHTML = items + items;
+  const cards = PROCESSORS.map((p, i) => `
+    <div>
+      <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:16px;">${String(i+1).padStart(2,'0')}</div>
+      <div class="display" style="font-size:24px;font-weight:500;margin-bottom:8px;">${escapeHtml(p.name)}</div>
+      <div style="font-size:12px;color:var(--accent);margin-bottom:12px;font-weight:500;">${escapeHtml(p.category)}</div>
+      <div style="font-size:13px;color:var(--fg-muted);line-height:1.5;">${escapeHtml(p.description)}</div>
+    </div>
+  `).join('');
+  grid.innerHTML = cards + cards;
 }
-
-// =============== END LANDING RENDER ===============
 
 // =============== APPLICATION RENDER ===============
 function renderApplication() {
