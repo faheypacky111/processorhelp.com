@@ -253,42 +253,52 @@
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 
-  /* ============ PROCESSOR STRIP (horizontal scroll) ============ */
-  .proc-strip-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 24px; }
-  .proc-strip-counter { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: var(--fg-muted); white-space: nowrap; text-transform: uppercase; }
-  .proc-strip-progress { flex: 1; height: 2px; background: var(--border); position: relative; overflow: hidden; }
-  .proc-strip-progress-bar { position: absolute; top: 0; left: 0; height: 100%; background: var(--accent); transition: width 0.2s ease, transform 0.2s ease; will-change: width, transform; }
-  .proc-strip-arrows { display: flex; gap: 8px; }
-  .proc-strip-arrow { width: 40px; height: 40px; border: 1px solid var(--border-strong); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--fg); transition: all 0.15s; font-family: 'Inter', sans-serif; font-size: 16px; }
-  .proc-strip-arrow:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-  .proc-strip-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
-  .proc-strip-wrap { position: relative; margin: 0 -48px; padding: 0 48px; }
-  .proc-strip { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding-bottom: 12px; padding-right: 80px; -webkit-overflow-scrolling: touch; }
-  .proc-strip::-webkit-scrollbar { display: none; }
-  .proc-strip { scrollbar-width: none; -ms-overflow-style: none; }
-  .proc-card { flex: 0 0 280px; scroll-snap-align: start; padding: 24px; border: 1px solid var(--border); background: var(--bg-card); cursor: pointer; transition: border-color 0.15s ease, transform 0.15s ease; display: flex; flex-direction: column; min-height: 240px; }
-  .proc-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .proc-card-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--fg-dim); margin-bottom: 12px; }
-  .proc-card-cat { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; font-weight: 500; }
-  .proc-card-name { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; line-height: 1.05; margin-bottom: 12px; letter-spacing: -0.01em; color: var(--fg); }
-  .proc-card-desc { font-size: 13px; line-height: 1.55; color: var(--fg-muted); flex: 1; }
-  .proc-card-speed { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-dim); margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
-  .proc-strip-fade { position: absolute; top: 0; right: 48px; bottom: 12px; width: 80px; pointer-events: none; background: linear-gradient(to right, transparent, var(--bg) 70%); }
-  .proc-strip-hint { margin-top: 16px; font-size: 12px; color: var(--fg-dim); display: flex; justify-content: space-between; align-items: center; }
-
-  /* Mobile: tighter strip, smaller cards */
-  @media (max-width: 1024px) {
-    .proc-strip-wrap { margin: 0 -32px; padding: 0 32px; }
-    .proc-strip-fade { right: 32px; }
+  /* ============ PROCESSOR MARQUEE (continuous scroll) ============ */
+  .proc-marquee {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
   }
+  .proc-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: proc-marquee-scroll 120s linear infinite;
+    will-change: transform;
+  }
+  .proc-marquee:hover .proc-marquee-track { animation-play-state: paused; }
+  .proc-marquee-item {
+    flex-shrink: 0;
+    padding: 0 48px;
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--fg);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .proc-marquee-item:hover { color: var(--accent); }
+  @keyframes proc-marquee-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+  /* Respect prefers-reduced-motion: pause animation for users who request it */
+  @media (prefers-reduced-motion: reduce) {
+    .proc-marquee-track { animation: none; }
+  }
+  /* Tablet: slightly smaller text and tighter spacing */
+  @media (max-width: 1024px) {
+    .proc-marquee-item { padding: 0 36px; font-size: 24px; }
+    .proc-marquee-track { animation-duration: 100s; }
+  }
+  /* Mobile: smaller text, tighter padding, faster cycle so it doesn't feel sluggish */
   @media (max-width: 768px) {
-    .proc-strip-wrap { margin: 0 -20px; padding: 0 20px; }
-    .proc-strip { padding-right: 40px; }
-    .proc-card { flex: 0 0 260px; padding: 20px; min-height: 220px; }
-    .proc-strip-fade { right: 20px; width: 40px; }
-    .proc-strip-controls { flex-wrap: wrap; gap: 12px; }
-    .proc-strip-progress { order: 3; flex-basis: 100%; }
-    .proc-strip-hint { flex-direction: column; gap: 8px; align-items: flex-start; }
+    .proc-marquee-item { padding: 0 28px; font-size: 20px; }
+    .proc-marquee-track { animation-duration: 85s; }
   }
 
   /* ============ MOBILE HAMBURGER (hidden on desktop) ============ */
@@ -644,26 +654,13 @@
     </div>
   </section>
 
-  <section id="processors-section" style="padding:80px 48px;max-width:1400px;margin:0 auto;">
-    <h2 class="display" style="font-size:42px;line-height:1.05;font-weight:400;margin-bottom:48px;max-width:800px;">From first-time solopreneurs to enterprise operators — every tier of payment processor in one application.</h2>
-
-    <div class="proc-strip-controls">
-      <div class="proc-strip-counter" id="proc-counter">Showing 1–3 of 30</div>
-      <div class="proc-strip-progress"><div class="proc-strip-progress-bar" id="proc-progress"></div></div>
-      <div class="proc-strip-arrows">
-        <button class="proc-strip-arrow" id="proc-prev" aria-label="Scroll left">←</button>
-        <button class="proc-strip-arrow" id="proc-next" aria-label="Scroll right">→</button>
-      </div>
+  <section id="processors-section" style="padding:80px 0;max-width:1400px;margin:0 auto;">
+    <div style="padding:0 48px;">
+      <h2 class="display" style="font-size:42px;line-height:1.05;font-weight:400;margin-bottom:48px;max-width:800px;">From first-time solopreneurs to enterprise operators — every tier of payment processor in one application.</h2>
     </div>
 
-    <div class="proc-strip-wrap">
-      <div class="proc-strip" id="processors-grid"></div>
-      <div class="proc-strip-fade"></div>
-    </div>
-
-    <div class="proc-strip-hint">
-      <span>Drag, scroll, or use arrows to browse all 30 processors.</span>
-      <a onclick="startCTA()" style="color:var(--accent);cursor:pointer;font-weight:500;">Find your matches →</a>
+    <div class="proc-marquee" id="proc-marquee">
+      <div class="proc-marquee-track" id="proc-marquee-track"></div>
     </div>
   </section>
 
@@ -3227,64 +3224,20 @@ function selectPlan(planId) {
 
 // =============== LANDING RENDER ===============
 function renderProcessorsGrid() {
-  const grid = document.getElementById('processors-grid');
-  if (!grid) return;
-  grid.innerHTML = PROCESSORS.map((p, i) => `
-    <div class="proc-card" onclick="startCTA()" role="button" tabindex="0">
-      <div class="proc-card-num">${String(i+1).padStart(2,'0')}</div>
-      <div class="proc-card-cat">${escapeHtml(p.category)}</div>
-      <div class="proc-card-name">${escapeHtml(p.name)}</div>
-      <div class="proc-card-desc">${escapeHtml(p.description)}</div>
-      <div class="proc-card-speed">${escapeHtml(p.speed)} approval</div>
-    </div>
-  `).join('');
+  const track = document.getElementById('proc-marquee-track');
+  if (!track) return;
 
-  // Wire up scroll strip controls
-  const counter = document.getElementById('proc-counter');
-  const progress = document.getElementById('proc-progress');
-  const prevBtn = document.getElementById('proc-prev');
-  const nextBtn = document.getElementById('proc-next');
-  if (!counter || !progress || !prevBtn || !nextBtn) return;
+  // Render each processor as a name-only mark (Option B: text-based logo marks).
+  // We duplicate the list so the CSS animation can loop seamlessly:
+  // when the track has translated -50%, the second copy is exactly where the first started.
+  const items = PROCESSORS.map(p =>
+    `<span class="proc-marquee-item">${escapeHtml(p.name)}</span>`
+  ).join('');
 
-  function getCardStep() {
-    const firstCard = grid.querySelector('.proc-card');
-    if (!firstCard) return 296; // fallback (280 + 16 gap)
-    const rect = firstCard.getBoundingClientRect();
-    return rect.width + 16; // card width + gap
-  }
-
-  function updateMeta() {
-    const cardStep = getCardStep();
-    const visibleCount = Math.max(1, Math.floor(grid.clientWidth / cardStep));
-    const startIdx = Math.round(grid.scrollLeft / cardStep);
-    const endIdx = Math.min(startIdx + visibleCount, PROCESSORS.length);
-    counter.textContent = `Showing ${startIdx + 1}–${endIdx} of ${PROCESSORS.length}`;
-
-    const maxScroll = grid.scrollWidth - grid.clientWidth;
-    const visiblePct = (visibleCount / PROCESSORS.length) * 100;
-    progress.style.width = visiblePct + '%';
-    if (maxScroll > 0 && visiblePct < 100) {
-      const scrollPct = grid.scrollLeft / maxScroll;
-      progress.style.transform = `translateX(${(scrollPct * (100 - visiblePct) / visiblePct) * 100}%)`;
-    } else {
-      progress.style.transform = 'translateX(0)';
-    }
-
-    prevBtn.disabled = grid.scrollLeft <= 4;
-    nextBtn.disabled = grid.scrollLeft >= maxScroll - 4;
-  }
-
-  // Remove any prior listeners (in case render is called twice)
-  const newPrev = prevBtn.cloneNode(true); prevBtn.parentNode.replaceChild(newPrev, prevBtn);
-  const newNext = nextBtn.cloneNode(true); nextBtn.parentNode.replaceChild(newNext, nextBtn);
-  newPrev.addEventListener('click', () => { grid.scrollBy({ left: -getCardStep() * 2, behavior: 'smooth' }); });
-  newNext.addEventListener('click', () => { grid.scrollBy({ left: getCardStep() * 2, behavior: 'smooth' }); });
-  grid.addEventListener('scroll', updateMeta);
-  window.addEventListener('resize', updateMeta);
-
-  // Initial state
-  setTimeout(updateMeta, 50);
+  track.innerHTML = items + items;
 }
+
+// =============== END LANDING RENDER ===============
 
 // =============== APPLICATION RENDER ===============
 function renderApplication() {
