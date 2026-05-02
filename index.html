@@ -472,11 +472,11 @@
     /* Buttons */
     .btn-primary, .btn-ghost { padding: 14px 24px; font-size: 12px; }
 
-    /* Progress bar in application form */
+    /* Progress bar in intake form */
     #progress-bar { flex-wrap: wrap; gap: 12px !important; }
     .progress-step { flex: 0 0 calc(50% - 8px); font-size: 11px; }
 
-    /* Application form footer nav */
+    /* Intake form footer nav */
     #view-application footer { max-width: 100% !important; padding: 16px 20px !important; }
 
     /* Results page processor rows - 6-col grid -> mobile-friendly stacked layout */
@@ -618,11 +618,11 @@
     </h1>
 
     <p class="fade-up" style="font-size:20px;max-width:680px;margin-top:40px;color:var(--fg-muted);line-height:1.5;animation-delay:0.2s;">
-      One application. 30 payment processors. Real-time approval or denial insights in 90 seconds — before you waste another application.
+      One intake form. 30 payment processors. Real-time approval or denial insights in 90 seconds — before you waste another application.
     </p>
 
     <div class="fade-up hero-ctas" style="display:flex;gap:16px;margin-top:48px;animation-delay:0.3s;flex-wrap:wrap;">
-      <button class="btn-primary" onclick="go('application')">Start application →</button>
+      <button class="btn-primary" onclick="go('application')">Start intake form →</button>
       <button class="btn-ghost" onclick="document.getElementById('processors-section').scrollIntoView({behavior:'smooth'})">View payment processors</button>
     </div>
 
@@ -633,7 +633,7 @@
       </div>
       <div class="stat-cell" style="padding:32px 24px;border-right:1px solid var(--border);">
         <div class="display stat-number" data-target="90" data-format="seconds" style="font-size:48px;font-weight:500;line-height:1;">~0s</div>
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:12px;">Average Application</div>
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:12px;">Average Intake Form</div>
       </div>
       <div class="stat-cell" style="padding:32px 24px;border-right:1px solid var(--border);">
         <div class="display stat-number stat-live" data-format="text" style="font-size:48px;font-weight:500;line-height:1;">Live</div>
@@ -657,7 +657,7 @@
         <p style="margin-top:14px;"><strong style="color:var(--fg);">Enterprise operators</strong> — multi-MID, regional, backup, high-risk coverage. Ninety seconds, not ninety sales calls.</p>
         <p style="margin-top:14px;"><strong style="color:var(--fg);">Post-shutdown businesses</strong> — see every viable alternative immediately. Every hour costs you.</p>
         <div style="margin-top:32px;">
-          <button class="btn-primary" onclick="startCTA()" style="padding:14px 28px;font-size:13px;">Start application →</button>
+          <button class="btn-primary" onclick="startCTA()" style="padding:14px 28px;font-size:13px;">Start intake form →</button>
         </div>
       </div>
     </div>
@@ -665,7 +665,7 @@
 
   <section id="processors-section" style="padding:80px 0;max-width:1400px;margin:0 auto;">
     <div class="proc-section-headline">
-      <h2 class="display" style="font-size:42px;line-height:1.05;font-weight:400;margin-bottom:48px;max-width:800px;">From first-time solopreneurs to enterprise operators — every tier of payment processor in one application.</h2>
+      <h2 class="display" style="font-size:42px;line-height:1.05;font-weight:400;margin-bottom:48px;max-width:800px;">From first-time solopreneurs to enterprise operators — every tier of payment processor in one intake form.</h2>
     </div>
     <div class="proc-carousel">
       <div class="proc-carousel-track" id="processors-grid"></div>
@@ -679,13 +679,13 @@
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:32px;">
       <div>
         <div class="display" style="font-size:48px;font-weight:400;color:var(--accent);line-height:1;margin-bottom:20px;">01</div>
-        <h3 class="display" style="font-size:22px;font-weight:500;margin-bottom:12px;">Fill the application.</h3>
-        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;">14 structured questions across 4 sections. No documents. Under two minutes.</p>
+        <h3 class="display" style="font-size:22px;font-weight:500;margin-bottom:12px;">Subscribe.</h3>
+        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;">Subscribe to unlock unlimited reports across all 30 payment processors. Plans starting at $29/month. Cancel anytime.</p>
       </div>
       <div>
         <div class="display" style="font-size:48px;font-weight:400;color:var(--accent);line-height:1;margin-bottom:20px;">02</div>
-        <h3 class="display" style="font-size:22px;font-weight:500;margin-bottom:12px;">Subscribe.</h3>
-        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;">Subscribe to unlock unlimited reports across all 30 payment processors. Plans starting at $29/month. Cancel anytime.</p>
+        <h3 class="display" style="font-size:22px;font-weight:500;margin-bottom:12px;">Fill the intake form.</h3>
+        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;">14 structured questions across 4 sections. No documents. Under two minutes.</p>
       </div>
       <div>
         <div class="display" style="font-size:48px;font-weight:400;color:var(--accent);line-height:1;margin-bottom:20px;">03</div>
@@ -861,9 +861,9 @@
       Ready in <span style="font-style:italic;color:var(--accent);">ninety seconds.</span>
     </h2>
     <p style="font-size:18px;color:var(--fg-muted);max-width:600px;margin:24px auto 40px;">
-      Whether you're launching, scaling, or rebuilding — one application reveals every payment processor that fits your business today.
+      Whether you're launching, scaling, or rebuilding — one intake form reveals every payment processor that fits your business today.
     </p>
-    <button class="btn-primary" onclick="go('application')">Start application →</button>
+    <button class="btn-primary" onclick="go('application')">Start intake form →</button>
   </section>
 
   <footer style="padding:64px 48px 32px;">
@@ -881,7 +881,7 @@
       <div>
         <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px;">Product</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
-          <a onclick="go('application')" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">Start Application</a>
+          <a onclick="go('application')" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">Start Intake Form</a>
           <a onclick="go('processors-list')" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">Payment Processors</a>
           <a onclick="goPricing()" style="color:var(--fg);font-size:13px;cursor:pointer;text-decoration:none;">Pricing</a>
         </div>
@@ -1036,7 +1036,7 @@
     <p>Processor Help ("we", "us", "our") is a payment processing solutions company operating processorhelp.com — a payment processor matching and advisory platform. We are an independent service and are not affiliated with any payment processor listed on our platform.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">2. Information We Collect</h2>
-    <p><strong style="color:var(--fg);">Business Information:</strong> Legal business name, entity type, years in business, country of registration, product type, monthly processing volume, average ticket size, industry vertical, subscription status, chargeback ratio, refund ratio, prior processor terminations, MATCH list status, and credit tier — all as provided by you during the application process.</p>
+    <p><strong style="color:var(--fg);">Business Information:</strong> Legal business name, entity type, years in business, country of registration, product type, monthly processing volume, average ticket size, industry vertical, subscription status, chargeback ratio, refund ratio, prior processor terminations, MATCH list status, and credit tier — all as provided by you during the intake form process.</p>
     <p style="margin-top:16px;"><strong style="color:var(--fg);">Payment Information:</strong> Email address, cardholder name, and payment card details submitted during checkout. Payment processing is handled by our third-party payment provider. We do not store full card numbers on our servers.</p>
     <p style="margin-top:16px;"><strong style="color:var(--fg);">Technical Information:</strong> Basic usage data including IP address, browser type, device type, and pages visited, collected through standard web analytics.</p>
 
@@ -1127,7 +1127,7 @@
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">5. Your Responsibilities</h2>
     <p>You agree to:</p>
     <ul style="margin-top:12px;padding-left:24px;">
-      <li style="margin-bottom:8px;">Provide accurate, truthful information on the application form</li>
+      <li style="margin-bottom:8px;">Provide accurate, truthful information on the intake form</li>
       <li style="margin-bottom:8px;">Not use Processor Help for fraudulent, illegal, or deceptive purposes</li>
       <li style="margin-bottom:8px;">Not attempt to reverse-engineer, scrape, or disrupt the service</li>
       <li style="margin-bottom:8px;">Be authorized to submit business information on behalf of your company</li>
@@ -1273,7 +1273,7 @@
       <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Identifiers:</strong> Email address, business name</li>
       <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Commercial Information:</strong> Subscription status, billing records, transaction history</li>
       <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Internet Activity:</strong> Pages visited, features used (with consent)</li>
-      <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Professional Information:</strong> Business details provided in applications (industry, volume, etc.)</li>
+      <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Professional Information:</strong> Business details provided in intake forms (industry, volume, etc.)</li>
     </ul>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">6. Shine the Light</h2>
@@ -1650,7 +1650,7 @@
 <!-- =============== PAYWALL =============== -->
 <div id="view-paywall" class="hidden">
   <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-    <button id="paywall-back" onclick="go('application')" style="background:none;border:none;color:var(--fg-muted);cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13px;font-family:Inter;">← Back to application</button>
+    <button id="paywall-back" onclick="go('application')" style="background:none;border:none;color:var(--fg-muted);cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13px;font-family:Inter;">← Back to intake form</button>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <div style="display:flex;align-items:center;gap:8px;color:var(--fg-muted);font-size:12px;">
       🔒 <span class="mono" style="letter-spacing:0.1em;text-transform:uppercase;">Secure Checkout</span>
@@ -1669,7 +1669,7 @@
       <span class="display" style="font-size:20px;font-weight:600;">Processor Help</span>
     </div>
     <div style="display:flex;gap:12px;">
-      <button class="btn-ghost" onclick="go('application')" style="padding:10px 20px;font-size:12px;">Edit application</button>
+      <button class="btn-ghost" onclick="go('application')" style="padding:10px 20px;font-size:12px;">Edit intake form</button>
       <button class="btn-ghost" onclick="resetAll()" style="padding:10px 20px;font-size:12px;">Start over</button>
     </div>
   </header>
@@ -3455,7 +3455,7 @@ function renderStep(step) {
       <div style="margin-top:32px;padding:20px;border:1px solid var(--border-strong);background:var(--bg-elevated);display:flex;gap:14px;align-items:flex-start;">
         <span style="color:var(--accent);font-size:18px;">🔒</span>
         <div style="font-size:13px;color:var(--fg-muted);line-height:1.6;">
-          Your application is ready. Click "Run underwriting" to generate your report across all 30 payment processors — saved to your account with unlimited re-access.
+          Your intake form is ready. Click "Run underwriting" to generate your report across all 30 payment processors — saved to your account with unlimited re-access.
         </div>
       </div>
     `;
@@ -3711,7 +3711,7 @@ function renderResults() {
       Your results, <span style="font-style:italic;color:var(--accent);">${escapeHtml(merchant.businessName || 'merchant')}</span>.
     </h1>
     <p class="fade-up" style="font-size:18px;color:var(--fg-muted);max-width:700px;margin-bottom:48px;animation-delay:0.2s;">
-      Based on your profile, here's how each of our thirty payment processors evaluated your application. Ranked by approval confidence.
+      Based on your profile, here's how each of our thirty payment processors evaluated your intake form. Ranked by approval confidence.
     </p>
 
     <div class="fade-up" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);animation-delay:0.3s;">
@@ -3829,7 +3829,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'What if I have prior processor terminations or MATCH list status?',
-    a: 'We built Processor Help specifically for this scenario. Several of our 30 integrated payment processors specialize in serving merchants with MATCH list status, prior terminations, elevated chargebacks, and high-risk verticals. Fill out the application honestly — the engine will match you with the processors that actually work with your profile.'
+    a: 'We built Processor Help specifically for this scenario. Several of our 30 integrated payment processors specialize in serving merchants with MATCH list status, prior terminations, elevated chargebacks, and high-risk verticals. Fill out the intake form honestly — the engine will match you with the processors that actually work with your profile.'
   },
   {
     q: 'What high-risk verticals do you cover?',
@@ -5203,7 +5203,7 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
       if (navRight) {
         if (currentUser.subscribed) {
           navRight.innerHTML = `
-            <a onclick="go('dashboard')" style="color:var(--fg-muted);font-size:14px;text-decoration:none;cursor:pointer;">Dashboard</a>
+            <button class="btn-primary" onclick="go('dashboard')" style="padding:10px 20px;font-size:12px;">Dashboard →</button>
           `;
         } else {
           navRight.innerHTML = `
