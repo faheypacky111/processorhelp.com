@@ -4269,6 +4269,82 @@ function useStoredCard() {
   if (newBlock) newBlock.style.display = 'none';
   validateSub();
 }
+// =============== STRIPE CUSTOMER PORTAL ===============
+// Routes user to Stripe's hosted Customer Portal for managing payment method, plan changes,
+// invoices, and cancellation. Returns the user to ?billing=returned on completion (handled in initAuth).
+async function openBillingPortal(triggerEl) {
+  if (!currentUser) {
+    go('signin');
+    return;
+  }
+
+  // Show loading state on whatever button was clicked
+  let originalText = null;
+  if (triggerEl && triggerEl.tagName === 'BUTTON') {
+    originalText = triggerEl.innerHTML;
+    triggerEl.disabled = true;
+    triggerEl.innerHTML = 'Opening portal…';
+  }
+
+  const restoreButton = () => {
+    if (triggerEl && originalText !== null) {
+      triggerEl.disabled = false;
+      triggerEl.innerHTML = originalText;
+    }
+  };
+
+  try {
+    // Get current Supabase session
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session || !session.access_token) {
+      console.warn('[BILLING PORTAL] No active session — redirecting to signin');
+      restoreButton();
+      go('signin');
+      return;
+    }
+
+    // POST to create-portal-session Edge Function
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/create-portal-session`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session.access_token}`,
+        'apikey': SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await res.json().catch(() => null);
+
+    if (!res.ok || !data) {
+      const errMsg = (data && data.error) ? data.error : `Portal request failed (HTTP ${res.status})`;
+      console.error('[BILLING PORTAL] Edge function error:', errMsg);
+
+      // Friendlier copy for the most common error: user has never subscribed
+      if (errMsg && /no stripe customer|customer not found|no customer/i.test(errMsg)) {
+        alert('You need an active subscription to manage billing. Subscribe to a plan first.');
+      } else {
+        alert('Could not open billing portal. Please try again or contact support@processorhelp.com.');
+      }
+      restoreButton();
+      return;
+    }
+
+    if (!data.url) {
+      console.error('[BILLING PORTAL] No URL returned:', data);
+      alert('Could not open billing portal. Please try again or contact support@processorhelp.com.');
+      restoreButton();
+      return;
+    }
+
+    // Redirect to Stripe-hosted portal
+    window.location.href = data.url;
+  } catch (err) {
+    console.error('[BILLING PORTAL] Unexpected error:', err);
+    alert('Could not open billing portal. Please try again or contact support@processorhelp.com.');
+    restoreButton();
+  }
+}
+
 async function processSubscription() {
   // Real Stripe Checkout flow.
   // No more frontend mutation of subscription state — the Stripe webhook updates Supabase
@@ -4804,74 +4880,13 @@ function renderBilling() {
           </div>
         </div>
 
-        <!-- Plan change options - show all other plans (upgrade or downgrade) -->
-        ${(() => {
-          // Plan tier order from lowest to highest. 'explore' is the free tier (no PLANS entry — handled inline).
-          const planOrder = ['explore', 'starter', 'growth', 'enterprise'];
-          const userIdx = planOrder.indexOf(userPlanId);
-          const otherPlans = planOrder.filter(p => p !== userPlanId);
-          if (otherPlans.length === 0) return '';
-          const cols = otherPlans.length >= 3 ? 'repeat(3,1fr)' : (otherPlans.length === 2 ? 'repeat(2,1fr)' : '1fr');
-          return `
-            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:14px;">Change Plan</div>
-            <div style="display:grid;grid-template-columns:${cols};gap:16px;margin-bottom:32px;">
-              ${otherPlans.map(planId => {
-                const idx = planOrder.indexOf(planId);
-                const isUpgrade = idx > userIdx;
-                const direction = isUpgrade ? 'Upgrade' : 'Downgrade';
-                const accentColor = isUpgrade ? 'var(--accent)' : 'var(--fg-muted)';
-                const buttonClass = isUpgrade ? 'btn-primary' : 'btn-ghost';
-                const cardBorder = isUpgrade ? 'var(--accent)' : 'var(--border-strong)';
-                const cardBg = isUpgrade ? 'var(--bg-card)' : 'var(--bg-elevated)';
-
-                // Special case: Explore is the free tier — not in PLANS, handled inline as cancellation
-                if (planId === 'explore') {
-                  return `
-                    <div style="padding:24px;border:1px solid ${cardBorder};background:${cardBg};">
-                      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:${accentColor};margin-bottom:8px;">Free</div>
-                      <div class="display" style="font-size:24px;font-weight:500;margin-bottom:6px;">Explore</div>
-                      <div style="font-size:13px;color:var(--fg-muted);margin-bottom:16px;">Browse only. No underwriting reports.</div>
-                      <div style="font-size:18px;font-weight:600;margin-bottom:16px;">$0<span style="font-size:13px;color:var(--fg-muted);font-weight:400;">/forever</span></div>
-                      <button class="${buttonClass}" onclick="downgradeToExplore()" style="width:100%;justify-content:center;font-size:11px;padding:12px;">Downgrade to Explore →</button>
-                    </div>
-                  `;
-                }
-
-                const p = PLANS[planId];
-                const description = planId === 'starter'
-                  ? 'Single MID. For solopreneurs running tight.'
-                  : planId === 'growth'
-                  ? 'Multi-MID strategy + quarterly calls'
-                  : 'Dedicated advisor + white-glove coverage';
-                return `
-                  <div style="padding:24px;border:1px solid ${cardBorder};background:${cardBg};">
-                    <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:${accentColor};margin-bottom:8px;">${p.name}</div>
-                    <div class="display" style="font-size:24px;font-weight:500;margin-bottom:6px;">${p.label}</div>
-                    <div style="font-size:13px;color:var(--fg-muted);margin-bottom:16px;">${description}</div>
-                    <div style="font-size:18px;font-weight:600;margin-bottom:16px;">$${p.monthly}<span style="font-size:13px;color:var(--fg-muted);font-weight:400;">/month</span></div>
-                    <button class="${buttonClass}" onclick="changePlan('${planId}', ${isUpgrade})" style="width:100%;justify-content:center;font-size:11px;padding:12px;">${direction} to ${p.name} →</button>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-          `;
-        })()}
-
-        <!-- Switch billing period -->
-        ${!userIsAnnual ? `
-          <div style="padding:20px 28px;border:1px solid var(--accent);background:var(--bg-elevated);margin-bottom:32px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
-            <div>
-              <div style="font-size:14px;font-weight:600;color:var(--fg);margin-bottom:4px;">Switch to annual billing</div>
-              <div style="font-size:13px;color:var(--fg-muted);">Save 2 months ($${(userPlan.monthly * 12) - userPlan.annual}/year) by paying annually.</div>
-            </div>
-            <button class="btn-primary" onclick="switchToAnnual()" style="padding:12px 20px;font-size:11px;flex-shrink:0;">Switch to annual →</button>
-          </div>
-        ` : ''}
-
-        <div style="border:1px solid var(--denied);background:var(--denied-bg);padding:24px 28px;">
-          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--denied);margin-bottom:10px;">Cancel Subscription</div>
-          <div style="font-size:14px;color:var(--fg);margin-bottom:16px;">You'll retain access until ${u.subscriptionNextBilling ? new Date(u.subscriptionNextBilling).toLocaleDateString() : 'the end of your current period'}. Your reports will remain in your account.</div>
-          <button onclick="cancelSub()" style="background:var(--denied);color:#fff;border:none;padding:12px 24px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Cancel subscription</button>
+        <!-- Single managed-billing CTA. Routes to Stripe Customer Portal for plan changes,
+             payment method updates, invoice history, and cancellation. -->
+        <div style="padding:28px;border:1px solid var(--accent);background:var(--bg-card);margin-bottom:32px;">
+          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Manage Subscription</div>
+          <div style="font-size:14px;color:var(--fg);margin-bottom:6px;font-weight:500;">Update payment method, change plan, view invoices, or cancel.</div>
+          <div style="font-size:13px;color:var(--fg-muted);margin-bottom:20px;line-height:1.5;">All billing actions are handled through our secure Stripe portal. You'll be redirected and can return here when finished.</div>
+          <button class="btn-primary" onclick="openBillingPortal(this)" style="padding:14px 28px;font-size:12px;">Manage Billing →</button>
         </div>
       ` : `
         <div style="padding:32px;background:var(--bg-card);border:1px solid var(--accent);text-align:center;">
@@ -4906,22 +4921,9 @@ function switchToAnnual() {
 }
 
 async function cancelSub() {
-  // TODO: replace with real Stripe subscription cancellation via Edge Function.
-  // Currently mutates local state only — must call cancel-subscription Edge Function in production
-  // so Stripe records the cancellation and webhooks can fire.
-  if (!confirm('Are you sure you want to cancel your subscription? You will retain access until your next billing date.')) return;
-  currentUser.subscribed = false;
-  currentUser.subscriptionStatus = 'canceled';
-  const ok = await saveCurrentUser(currentUser);
-  if (ok) {
-    alert('Your subscription has been cancelled.');
-    renderBilling();
-  } else {
-    // Revert in-memory state since the save failed
-    currentUser.subscribed = true;
-    currentUser.subscriptionStatus = 'active';
-    alert('There was a problem cancelling your subscription. Please try again or contact support@processorhelp.com.');
-  }
+  // The user cancels through Stripe's hosted Customer Portal.
+  // The webhook (customer.subscription.deleted / .updated) will sync the status to Supabase.
+  await openBillingPortal();
 }
 
 async function downgradeToExplore() {
@@ -5189,6 +5191,37 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
       if (currentUser) {
         go('subscribe');
       }
+    }
+
+    // =============== BILLING PORTAL RETURN ===============
+    // When user returns from Stripe Customer Portal (after updating card / changing plan / cancelling),
+    // they land on ?billing=returned. Re-hydrate to pick up any webhook-driven state changes, then route to billing.
+    const billingStatus = urlParams.get('billing');
+    if (billingStatus === 'returned') {
+      console.log('[BILLING PORTAL] User returned from Customer Portal — re-hydrating for webhook updates');
+
+      // Strip query params immediately so refresh doesn't re-trigger
+      try { window.history.replaceState({}, '', window.location.pathname); } catch(e) {}
+
+      // Show brief processing toast while we wait for any webhook to land
+      const processingToast = document.createElement('div');
+      processingToast.id = 'billing-return-toast';
+      processingToast.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);background:var(--bg-card);border:1px solid var(--accent);color:var(--fg);padding:14px 24px;font-size:13px;z-index:2000;box-shadow:0 4px 16px rgba(0,0,0,0.12);display:flex;align-items:center;gap:12px;';
+      processingToast.innerHTML = `<div class="spinner" style="width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;flex-shrink:0;"></div><span>Refreshing your billing details…</span>`;
+      document.body.appendChild(processingToast);
+
+      // Re-hydrate after 2s delay (matches checkout-success pattern)
+      setTimeout(async () => {
+        try {
+          currentUser = await hydrateCurrentUser();
+        } catch (e) {
+          console.error('[BILLING PORTAL] Re-hydrate failed:', e);
+        }
+        const t = document.getElementById('billing-return-toast');
+        if (t) t.remove();
+        // Route to billing so the user sees their updated state
+        go('billing');
+      }, 2000);
     }
   } catch (e) {
     console.error('[STRIPE CHECKOUT] Post-redirect handler error:', e);
