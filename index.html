@@ -579,7 +579,26 @@
     .legal-layout { grid-template-columns: 1fr !important; }
     .legal-layout aside { display: none !important; }
   }
-</style>
+<!-- ============ PostHog Analytics ============ -->
+<script>
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p=t.createElement("script"),p.type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init Re Ce capture Ie calculateEventProperties Ws register register_once register_for_session unregister unregister_for_session Rs getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Ds Fs createPersonProfile Ls Es opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ps debug As getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+  posthog.init('phc_yrBLfUcmZ66KpU4JCccajRqcFK3cebSmLB5KYyWFLUSk', {
+    api_host: 'https://us.i.posthog.com',
+    defaults: '2026-01-30',
+    person_profiles: 'identified_only',
+  });
+
+  // Safe wrapper — never throws if PostHog fails to load
+  window.track = function(eventName, properties) {
+    try {
+      if (window.posthog && typeof window.posthog.capture === 'function') {
+        window.posthog.capture(eventName, properties || {});
+      }
+    } catch (e) {
+      console.warn('[track] failed:', eventName, e);
+    }
+  };
+</script>
 </head>
 <body class="grain">
 
@@ -2609,6 +2628,8 @@ async function handleSignup() {
   const errorEl = document.getElementById('signup-error');
   const btn = document.getElementById('btn-signup');
 
+  if (window.track) window.track('signup_started');
+
   // Re-validate at submit
   if (business.length < 2 || business.length > 100) {
     errorEl.textContent = 'Business name must be between 2 and 100 characters.';
@@ -2678,6 +2699,23 @@ async function handleSignup() {
 
     const signupData = await signupRes.json();
     console.log('[SIGNUP] Step 1 done. Has session?', !!signupData.access_token);
+
+    // Track signup completion (regardless of whether email confirmation is required)
+    if (window.track) {
+      window.track('signup_completed', {
+        marketing_consent: marketingConsent,
+        email_confirmation_required: !signupData.access_token,
+      });
+      // Identify the user in PostHog so subsequent events are attributed
+      const newUserId = signupData.user?.id || signupData.id;
+      if (newUserId && window.posthog && typeof window.posthog.identify === 'function') {
+        try {
+          window.posthog.identify(newUserId, { email: email, business_name: business });
+        } catch (e) {
+          console.warn('[posthog identify] failed:', e);
+        }
+      }
+    }
 
     // Two possible response shapes:
     // 1. Has access_token + user (session created — email confirmation OFF)
@@ -3108,6 +3146,12 @@ function go(view) {
   // update avatar
   const avatar = document.getElementById('user-avatar');
   if (avatar && currentUser) avatar.textContent = (currentUser.business || currentUser.email).charAt(0).toUpperCase();
+
+  // Track page view (analytics)
+  if (window.track) {
+    window.track('page_view', { view: view, authenticated: !!currentUser, subscribed: !!(currentUser && currentUser.subscribed) });
+    if (view === 'landing') window.track('landing_view');
+  }
 }
 
 function showLegalTab(tabId) {
@@ -3633,6 +3677,19 @@ async function runUnderwritingReport() {
     }).catch(err => console.error('[PROFILE SNAPSHOT] Failed:', err));
 
     window._reportJustRan = true;
+
+    // Track successful report generation
+    if (window.track) {
+      window.track('report_run', {
+        plan: currentUser.subscriptionPlan,
+        approved: approvedCount,
+        conditional: conditionalCount,
+        denied: deniedCount,
+        industry: merchant.industry,
+        country: merchant.country,
+      });
+    }
+
     go('results');
   } catch (err) {
     console.error('[UNDERWRITING] Error:', err);
@@ -3651,6 +3708,15 @@ function showLimitReachedModal() {
   const used = getReportsThisMonth(u);
   const limit = getReportLimit(u);
   const planName = plan ? plan.name : 'your plan';
+
+  // Track limit-hit (highest-intent upgrade moment)
+  if (window.track) {
+    window.track('limit_modal_shown', {
+      plan: u.subscriptionPlan,
+      used: used,
+      limit: limit,
+    });
+  }
 
   // Suggest the next tier up
   const nextTier = u.subscriptionPlan === 'starter' ? PLANS.growth
@@ -4497,6 +4563,14 @@ async function processSubscription() {
   // No more frontend mutation of subscription state — the Stripe webhook updates Supabase
   // directly, and hydrateCurrentUser() reflects the active subscription on return.
 
+  if (window.track) {
+    window.track('subscribe_clicked', {
+      plan: selectedPlanId,
+      billing_period: billingPeriod,
+      is_upgrade: !!(currentUser && currentUser.subscribed),
+    });
+  }
+
   const wasSubscribed = currentUser && currentUser.subscribed;
   const content = document.getElementById('subscribe-content');
 
@@ -5334,6 +5408,16 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
         }
         if (processingToast && processingToast.parentNode) processingToast.remove();
         showSuccessToast();
+
+        // Track successful checkout completion
+        if (window.track) {
+          window.track('checkout_completed', {
+            plan: currentUser ? currentUser.subscriptionPlan : null,
+            billing_period: currentUser ? currentUser.subscriptionBillingPeriod : null,
+            amount: currentUser ? currentUser.subscriptionAmount : null,
+          });
+        }
+
         // Route into the dashboard so the user sees their now-active subscription state
         go('dashboard');
       }, 2000);
