@@ -1001,9 +1001,6 @@
     <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('landing')">
       <span class="display" style="font-size:22px;font-weight:600;">Processor Help</span>
     </div>
-    <div style="display:flex;gap:32px;align-items:center;">
-      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-    </div>
   </nav>
 
   <section style="padding:64px 48px 32px;max-width:1400px;margin:0 auto;">
@@ -3499,7 +3496,7 @@ function renderStep(step) {
   }
 }
 
-function nextStep() {
+async function nextStep() {
   if (currentStep === 0 && !merchant.businessName.trim()) {
     alert('Please enter your business name to continue.');
     return;
@@ -3507,20 +3504,141 @@ function nextStep() {
   if (currentStep < STEPS.length - 1) {
     currentStep++;
     renderApplication();
-  } else {
-    // Subscribed users go straight to results (they already have an active subscription)
-    if (currentUser && currentUser.subscribed) {
-      // Enforce monthly report limit
-      if (!canRunReport(currentUser)) {
+    return;
+  }
+
+  // Final step — handle the actual run
+  if (!currentUser) {
+    go('signup');
+    return;
+  }
+  if (!currentUser.subscribed) {
+    go('subscribe');
+    return;
+  }
+
+  // Optimistic local check (instant feedback). Server is the real enforcer.
+  if (!canRunReport(currentUser)) {
+    showLimitReachedModal();
+    return;
+  }
+
+  await runUnderwritingReport();
+}
+
+// Calls the server-side RPC that atomically checks limits + inserts the report.
+// Only navigates to results on success.
+async function runUnderwritingReport() {
+  const btn = document.getElementById('btn-next');
+  const originalLabel = btn ? btn.innerHTML : null;
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = 'Running underwriting…';
+  }
+
+  try {
+    if (!window._authToken) {
+      alert('Your session has expired. Please sign in again.');
+      go('signin');
+      return;
+    }
+
+    // Compute results client-side (the processor logic still lives here for now)
+    const results = PROCESSORS.map(p => ({ ...p, decision: p.evaluate(merchant) }))
+      .sort((a, b) => b.decision.score - a.decision.score);
+    const approvedCount = results.filter(r => r.decision.status === 'approved').length;
+    const conditionalCount = results.filter(r => r.decision.status === 'conditional').length;
+    const deniedCount = results.filter(r => r.decision.status === 'denied').length;
+
+    const withTimeout = (promise, ms, label) => Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out')), ms))
+    ]);
+
+    const res = await withTimeout(
+      fetch(`${SUPABASE_URL}/rest/v1/rpc/run_underwriting_report`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${window._authToken}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify({
+          p_business_data: { ...merchant },
+          p_results: { approvedCount, conditionalCount, deniedCount },
+        }),
+      }),
+      10000,
+      'Underwriting RPC'
+    );
+
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => '');
+      let parsed = null;
+      try { parsed = JSON.parse(errBody); } catch (_) {}
+      const code = parsed && parsed.code;
+      const message = (parsed && parsed.message) || errBody || 'Unknown error';
+
+      // P0005 = monthly limit reached → show upgrade modal (server-authoritative)
+      if (code === 'P0005' || /limit reached/i.test(message)) {
+        // Reconcile local state with server: bump cached reports to limit
+        // so future client-side checks block too.
         showLimitReachedModal();
         return;
       }
-      window._reportJustRan = true;
-      go('results');
-    } else if (currentUser && !currentUser.subscribed) {
-      go('subscribe');
-    } else {
-      go('signup');
+      // P0003 = no active subscription → reroute
+      if (code === 'P0003' || /no active subscription/i.test(message)) {
+        alert('Your subscription is not active. Please subscribe to run a report.');
+        go('subscribe');
+        return;
+      }
+      // P0001 = not authenticated
+      if (code === 'P0001' || /not authenticated/i.test(message)) {
+        alert('Your session has expired. Please sign in again.');
+        go('signin');
+        return;
+      }
+
+      console.error('[UNDERWRITING] RPC failed:', res.status, errBody);
+      alert('Something went wrong running your report. Please try again. If the problem persists, contact support@processorhelp.com.');
+      return;
+    }
+
+    // Success. The server returns the new report row.
+    const row = await res.json().catch(() => null);
+    const savedReport = (Array.isArray(row) ? row[0] : row) || {};
+
+    // Update local state to match what's now in the database
+    const newReport = {
+      id: savedReport.id || null,
+      createdAt: savedReport.created_at ? new Date(savedReport.created_at).getTime() : Date.now(),
+      created_at: savedReport.created_at,
+      merchant: { ...merchant },
+      approvedCount,
+      conditionalCount,
+      deniedCount,
+    };
+    currentUser.reports = currentUser.reports || [];
+    currentUser.reports.push(newReport);
+    currentUser.savedProfile = { ...merchant };
+
+    // Persist saved profile snapshot async (non-blocking — the report itself is already saved)
+    persistProfileFields({
+      email: currentUser.email,
+      saved_profile: currentUser.savedProfile,
+      updated_at: new Date().toISOString(),
+    }).catch(err => console.error('[PROFILE SNAPSHOT] Failed:', err));
+
+    window._reportJustRan = true;
+    go('results');
+  } catch (err) {
+    console.error('[UNDERWRITING] Error:', err);
+    alert('Network error. Please check your connection and try again.');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      if (originalLabel) btn.innerHTML = originalLabel;
     }
   }
 }
@@ -3740,78 +3858,11 @@ function renderResults() {
   const conditionalCount = results.filter(r => r.decision.status === 'conditional').length;
   const deniedCount = results.filter(r => r.decision.status === 'denied').length;
 
-  // Save new report to user's account (if logged in and this is a fresh run from application flow)
+  // NOTE: Reports are now created server-side via the run_underwriting_report RPC
+  // (called from runUnderwritingReport() before navigation). renderResults() is purely
+  // a display function — the report row is already in the database by the time we get here.
   if (currentUser && window._reportJustRan) {
-    const newReport = {
-      createdAt: Date.now(),
-      merchant: { ...merchant },
-      approvedCount,
-      conditionalCount,
-      deniedCount,
-    };
-    currentUser.reports = currentUser.reports || [];
-    currentUser.reports.push(newReport);
-    currentUser.savedProfile = { ...merchant };
     window._reportJustRan = false;
-
-    // Persist to Supabase asynchronously via direct fetch (Supabase JS client deadlocks)
-    (async () => {
-      try {
-        if (!window._authToken) {
-          console.error('[REPORT SAVE] No auth token available');
-          return;
-        }
-
-        const withTimeout = (promise, ms, label) => Promise.race([
-          promise,
-          new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out')), ms))
-        ]);
-
-        const res = await withTimeout(
-          fetch(`${SUPABASE_URL}/rest/v1/reports`, {
-            method: 'POST',
-            headers: {
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': `Bearer ${window._authToken}`,
-              'Content-Type': 'application/json',
-              'Prefer': 'return=representation',
-            },
-            body: JSON.stringify({
-              user_id: currentUser.id,
-              business_data: newReport.merchant,
-              results: {
-                approvedCount,
-                conditionalCount,
-                deniedCount,
-              },
-            }),
-          }),
-          6000,
-          'Report insert'
-        );
-
-        if (!res.ok) {
-          const errBody = await res.text().catch(() => '');
-          console.error('[REPORT SAVE] Failed:', res.status, errBody);
-        } else {
-          const rows = await res.json().catch(() => []);
-          if (rows && rows.length && rows[0].id) {
-            // Attach the DB id to the in-memory report so future operations can reference it
-            newReport.id = rows[0].id;
-            console.log('[REPORT SAVE] Saved with id', rows[0].id);
-          }
-        }
-
-        // Persist the saved profile snapshot on the profile row (uses direct fetch via persistProfileFields)
-        await persistProfileFields({
-          email: currentUser.email, // REQUIRED — profiles.email has NOT NULL constraint
-          saved_profile: currentUser.savedProfile,
-          updated_at: new Date().toISOString(),
-        });
-      } catch (err) {
-        console.error('[REPORT SAVE] Error:', err);
-      }
-    })();
   }
 
   document.getElementById('results-header').innerHTML = `
