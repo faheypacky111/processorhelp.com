@@ -2467,6 +2467,7 @@ async function hydrateCurrentUser(passedSession) {
     subscriptionAmount: profile.subscription_amount || null,
     subscriptionStartDate: profile.subscription_start_date ? new Date(profile.subscription_start_date).getTime() : null,
     subscriptionNextBilling: sub.current_period_end ? new Date(sub.current_period_end).getTime() : null,
+    cancelAtPeriodEnd: sub.cancel_at_period_end === true,
     paymentMethod: profile.payment_method || null,
     savedProfile: profile.saved_profile || null,
     reports: reports,
@@ -2935,6 +2936,7 @@ async function handleSignin() {
       subscriptionAmount: profile.subscription_amount || null,
       subscriptionStartDate: profile.subscription_start_date ? new Date(profile.subscription_start_date).getTime() : null,
       subscriptionNextBilling: sub.current_period_end ? new Date(sub.current_period_end).getTime() : null,
+      cancelAtPeriodEnd: sub.cancel_at_period_end === true,
       paymentMethod: profile.payment_method || null,
       savedProfile: profile.saved_profile || null,
       reports: reports,
@@ -4986,11 +4988,27 @@ function renderBilling() {
   const userAmount = u.subscriptionAmount || (userIsAnnual ? userPlan.annual : userPlan.monthly);
   const periodText = userIsAnnual ? 'year' : 'month';
   const billingCycle = userIsAnnual ? 'Annual' : 'Monthly';
+  const isCanceling = u.subscribed && u.cancelAtPeriodEnd === true;
+  const cancelDateStr = u.subscriptionNextBilling
+    ? new Date(u.subscriptionNextBilling).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})
+    : null;
 
   document.getElementById('billing-content').innerHTML = `
     <div class="fade-up">
       <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Billing</div>
       <h1 class="display" style="font-size:40px;font-weight:400;margin-bottom:48px;">Subscription & billing.</h1>
+
+      ${isCanceling ? `
+        <div style="border:1px solid var(--conditional);background:var(--conditional-bg);padding:20px 24px;margin-bottom:32px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="color:var(--conditional);font-size:18px;flex-shrink:0;line-height:1;">⚠</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;color:var(--fg);margin-bottom:4px;">Subscription scheduled to cancel${cancelDateStr ? ` on ${cancelDateStr}` : ''}.</div>
+              <div style="font-size:13px;color:var(--fg-muted);line-height:1.5;">You retain full access until then. Changed your mind? Click <strong>Manage Billing</strong> below and choose <em>Renew subscription</em>.</div>
+            </div>
+          </div>
+        </div>
+      ` : ''}
 
       <div style="border:1px solid var(--border);background:var(--bg-card);margin-bottom:32px;">
         <div style="padding:24px 28px;display:flex;justify-content:space-between;align-items:center;gap:16px;">
@@ -4999,8 +5017,8 @@ function renderBilling() {
             <div class="display" style="font-size:22px;font-weight:500;">${u.subscribed ? `${userPlan.name} — ${userPlan.label}` : 'No active subscription'}</div>
             <div style="font-size:13px;color:var(--fg-muted);margin-top:4px;">${u.subscribed ? `$${userAmount}/${periodText} · ${billingCycle} billing` : 'Subscribe to run reports'}</div>
           </div>
-          <div class="chip" style="background:${u.subscribed?'var(--approved-bg)':'var(--conditional-bg)'};color:${u.subscribed?'var(--approved)':'var(--conditional)'};">
-            ${u.subscribed ? '● Active' : '● Inactive'}
+          <div class="chip" style="background:${isCanceling?'var(--conditional-bg)':(u.subscribed?'var(--approved-bg)':'var(--conditional-bg)')};color:${isCanceling?'var(--conditional)':(u.subscribed?'var(--approved)':'var(--conditional)')};">
+            ${isCanceling ? '● Canceling' : (u.subscribed ? '● Active' : '● Inactive')}
           </div>
         </div>
       </div>
@@ -5008,8 +5026,8 @@ function renderBilling() {
       ${u.subscribed ? `
         <div style="border:1px solid var(--border);background:var(--bg-card);margin-bottom:32px;">
           <div style="padding:20px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">
-            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">Next Billing Date</div>
-            <div style="font-size:14px;font-weight:500;">${u.subscriptionNextBilling ? new Date(u.subscriptionNextBilling).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '—'}</div>
+            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">${isCanceling ? 'Access Ends' : 'Next Billing Date'}</div>
+            <div style="font-size:14px;font-weight:500;">${cancelDateStr || '—'}</div>
           </div>
           <div style="padding:20px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">
             <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">Payment Method</div>
