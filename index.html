@@ -794,7 +794,7 @@
         </div>
 
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;flex:1;font-size:13px;">
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:var(--fg);">10 reports</strong> per month</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:var(--fg);">6 reports</strong> per month</span></div>
           <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Everything in Starter</span></div>
           <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Multi-MID strategy guidance</span></div>
           <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Quarterly check-in calls</span></div>
@@ -1121,7 +1121,7 @@
     </ul>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">3. The Service</h2>
-    <p>For a monthly or annual subscription fee (varies by plan), we provide you with underwriting reports showing likely approval, conditional approval, or denial outcomes across 30 payment processors based on the business information you provide and our proprietary underwriting logic modeled on publicly available processor criteria. Each plan includes a monthly report allowance: Starter (3 reports/month), Growth (10 reports/month), and Enterprise (unlimited). Allowances reset on the first day of each calendar month. Cancel anytime.</p>
+    <p>For a monthly or annual subscription fee (varies by plan), we provide you with underwriting reports showing likely approval, conditional approval, or denial outcomes across 30 payment processors based on the business information you provide and our proprietary underwriting logic modeled on publicly available processor criteria. Each plan includes a monthly report allowance: Starter (3 reports/month), Growth (6 reports/month), and Enterprise (unlimited). Allowances reset on the first day of each calendar month. Cancel anytime.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4. No Guarantee of Approval</h2>
     <p><strong style="color:var(--fg);">Our reports are predictive, not binding.</strong> Each payment processor performs its own independent underwriting using criteria, data sources, and policies that change over time. A "Likely Approved" result is not a guarantee. A "Likely Denied" result is not final — you may still apply. Approval decisions rest solely with each payment processor.</p>
@@ -3184,8 +3184,8 @@ const PLANS = {
     monthly: 99,
     annual: 990,  // 2 months free
     annualMonthly: 82,
-    monthlyReports: 10,
-    reportsLabel: '10 reports/month',
+    monthlyReports: 6,
+    reportsLabel: '6 reports/month',
   },
   enterprise: {
     id: 'enterprise',
@@ -3927,7 +3927,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'How much does Processor Help cost?',
-    a: 'We offer three subscription tiers based on your business stage: Starter at $29/month for solopreneurs (3 reports/month), Growth at $99/month for scaling brands with $50K-$500K monthly volume (10 reports/month), and Enterprise at $299/month for high-volume operators with $500K+ monthly volume (unlimited reports). Annual plans available with 2 months free. Cancel anytime from your billing page.'
+    a: 'We offer three subscription tiers based on your business stage: Starter at $29/month for solopreneurs (3 reports/month), Growth at $99/month for scaling brands with $50K-$500K monthly volume (6 reports/month), and Enterprise at $299/month for high-volume operators with $500K+ monthly volume (unlimited reports). Annual plans available with 2 months free. Cancel anytime from your billing page.'
   },
   {
     q: 'How accurate are your approval predictions?',
@@ -3967,7 +3967,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Can I use the tool more than once?',
-    a: 'Yes — re-running is exactly what subscription access is designed for. Every time your business profile changes — new volume tier, chargeback shift, new vertical, new country — run the tool again. The payment processor landscape also shifts quarterly, so periodic re-runs are worthwhile. Each tier includes a monthly report allowance: Starter 3, Growth 10, Enterprise unlimited. Each new run counts against your monthly allowance.'
+    a: 'Yes — re-running is exactly what subscription access is designed for. Every time your business profile changes — new volume tier, chargeback shift, new vertical, new country — run the tool again. The payment processor landscape also shifts quarterly, so periodic re-runs are worthwhile. Each tier includes a monthly report allowance: Starter 3, Growth 6, Enterprise unlimited. Each new run counts against your monthly allowance.'
   },
 ];
 
@@ -4174,7 +4174,7 @@ function renderSubscribe() {
       'Email support (48-hour response)',
     ],
     growth: [
-      '10 underwriting reports per month',
+      '6 underwriting reports per month',
       'Everything in Starter, plus:',
       'Multi-MID strategy guidance',
       'Quarterly check-in calls with our team',
