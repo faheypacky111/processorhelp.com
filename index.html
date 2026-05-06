@@ -2427,6 +2427,7 @@ async function hydrateCurrentUser(passedSession) {
         approvedCount: (r.results && r.results.approvedCount) || 0,
         conditionalCount: (r.results && r.results.conditionalCount) || 0,
         deniedCount: (r.results && r.results.deniedCount) || 0,
+        decisions: (r.results && r.results.decisions) || null,
       }));
     }
   } catch (e) {
@@ -3603,88 +3604,210 @@ function processPayment() {
 }
 
 // =============== RESULTS RENDER ===============
-function renderResults() {
-  const results = PROCESSORS.map(p => ({ ...p, decision: p.evaluate(merchant) }))
-    .sort((a,b) => b.decision.score - a.decision.score);
+// Two modes:
+//   1. Fresh run (window._reportJustRan === true): POST to evaluate-processors Edge Function.
+//      Server runs the eval, persists via run_underwriting_report RPC (which enforces plan limits),
+//      and returns { report, decisions }. Handle 402 limit_reached → render inline upgrade panel.
+//   2. Historical view (window._viewingPastReport set): use the decisions stored on the report row.
+//      No API call. If decisions are missing (legacy report), show a "regenerate" prompt.
+async function renderResults() {
+  const headerEl = document.getElementById('results-header');
+  const listEl = document.getElementById('results-list');
 
-  const approvedCount = results.filter(r => r.decision.status === 'approved').length;
-  const conditionalCount = results.filter(r => r.decision.status === 'conditional').length;
-  const deniedCount = results.filter(r => r.decision.status === 'denied').length;
+  // FRESH RUN path
+  if (window._reportJustRan) {
+    window._reportJustRan = false;
 
-  // Save new report to user's account (if logged in and this is a fresh run from application flow)
-  if (currentUser && window._reportJustRan) {
+    // Show loading state
+    headerEl.innerHTML = `
+      <div class="fade-up" style="text-align:center;padding:64px 0;">
+        <div class="spinner" style="width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;margin:0 auto 24px;"></div>
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Underwriting in progress</div>
+        <h2 class="display" style="font-size:28px;font-weight:400;margin-bottom:8px;">Running evaluation across 29 payment processors…</h2>
+        <p style="color:var(--fg-muted);font-size:14px;">This usually takes a few seconds.</p>
+      </div>
+    `;
+    listEl.innerHTML = '';
+
+    // Auth check
+    if (!currentUser || !window._authToken) {
+      go('signin');
+      return;
+    }
+
+    // POST to Edge Function
+    let res, body;
+    try {
+      res = await fetch(`${SUPABASE_URL}/functions/v1/evaluate-processors`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${window._authToken}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ merchant: { ...merchant } }),
+      });
+      body = await res.json().catch(() => null);
+    } catch (err) {
+      console.error('[RUN REPORT] Network error:', err);
+      renderResultsError('Network error. Please check your connection and try again.');
+      return;
+    }
+
+    // Handle non-200 responses
+    if (!res.ok) {
+      console.error('[RUN REPORT] Server returned', res.status, body);
+
+      if (res.status === 402 && body && body.error === 'limit_reached') {
+        renderLimitReached(body);
+        return;
+      }
+      if (res.status === 403) {
+        // No active subscription — back to subscribe page
+        go('subscribe');
+        return;
+      }
+      if (res.status === 401) {
+        go('signin');
+        return;
+      }
+      const detail = (body && (body.details || body.error)) || `Server returned ${res.status}.`;
+      renderResultsError(detail);
+      return;
+    }
+
+    // 200 OK — persist to in-memory user record and render
+    if (!body || !Array.isArray(body.decisions)) {
+      console.error('[RUN REPORT] Malformed response:', body);
+      renderResultsError('Unexpected response from server. Please try again.');
+      return;
+    }
+
+    const decisions = body.decisions;
+    const approvedCount = decisions.filter(r => r.decision && r.decision.status === 'approved').length;
+    const conditionalCount = decisions.filter(r => r.decision && r.decision.status === 'conditional').length;
+    const deniedCount = decisions.filter(r => r.decision && r.decision.status === 'denied').length;
+
     const newReport = {
-      createdAt: Date.now(),
+      id: body.report && body.report.id ? body.report.id : null,
+      createdAt: body.report && body.report.created_at ? new Date(body.report.created_at).getTime() : Date.now(),
       merchant: { ...merchant },
       approvedCount,
       conditionalCount,
       deniedCount,
+      decisions,
     };
     currentUser.reports = currentUser.reports || [];
     currentUser.reports.push(newReport);
     currentUser.savedProfile = { ...merchant };
-    window._reportJustRan = false;
 
-    // Persist to Supabase asynchronously via direct fetch (Supabase JS client deadlocks)
-    (async () => {
-      try {
-        if (!window._authToken) {
-          console.error('[REPORT SAVE] No auth token available');
-          return;
-        }
+    // Persist saved_profile snapshot on profile row (best-effort, doesn't block render)
+    persistProfileFields({
+      email: currentUser.email,
+      saved_profile: currentUser.savedProfile,
+      updated_at: new Date().toISOString(),
+    }).catch(err => console.warn('[RUN REPORT] saved_profile persist failed:', err));
 
-        const withTimeout = (promise, ms, label) => Promise.race([
-          promise,
-          new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out')), ms))
-        ]);
-
-        const res = await withTimeout(
-          fetch(`${SUPABASE_URL}/rest/v1/reports`, {
-            method: 'POST',
-            headers: {
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': `Bearer ${window._authToken}`,
-              'Content-Type': 'application/json',
-              'Prefer': 'return=representation',
-            },
-            body: JSON.stringify({
-              user_id: currentUser.id,
-              business_data: newReport.merchant,
-              results: {
-                approvedCount,
-                conditionalCount,
-                deniedCount,
-              },
-            }),
-          }),
-          6000,
-          'Report insert'
-        );
-
-        if (!res.ok) {
-          const errBody = await res.text().catch(() => '');
-          console.error('[REPORT SAVE] Failed:', res.status, errBody);
-        } else {
-          const rows = await res.json().catch(() => []);
-          if (rows && rows.length && rows[0].id) {
-            // Attach the DB id to the in-memory report so future operations can reference it
-            newReport.id = rows[0].id;
-            console.log('[REPORT SAVE] Saved with id', rows[0].id);
-          }
-        }
-
-        // Persist the saved profile snapshot on the profile row (uses direct fetch via persistProfileFields)
-        await persistProfileFields({
-          email: currentUser.email, // REQUIRED — profiles.email has NOT NULL constraint
-          saved_profile: currentUser.savedProfile,
-          updated_at: new Date().toISOString(),
-        });
-      } catch (err) {
-        console.error('[REPORT SAVE] Error:', err);
-      }
-    })();
+    paintResults(decisions, approvedCount, conditionalCount, deniedCount);
+    return;
   }
 
+  // HISTORICAL VIEW path — uses the in-memory report set by viewPastReport()
+  const past = window._viewingPastReport;
+  if (past) {
+    window._viewingPastReport = null;
+
+    if (Array.isArray(past.decisions) && past.decisions.length) {
+      paintResults(
+        past.decisions,
+        past.approvedCount || 0,
+        past.conditionalCount || 0,
+        past.deniedCount || 0
+      );
+      return;
+    }
+
+    // Legacy report — no per-processor decisions stored
+    renderLegacyReport(past);
+    return;
+  }
+
+  // No fresh run, no past report — defensive fallback (shouldn't normally hit)
+  go('dashboard');
+}
+
+function renderResultsError(message) {
+  document.getElementById('results-header').innerHTML = `
+    <div class="fade-up" style="padding:48px 32px;text-align:center;border:1px solid var(--denied);background:var(--denied-bg);">
+      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--denied);margin-bottom:12px;">Report failed</div>
+      <h2 class="display" style="font-size:28px;font-weight:400;margin-bottom:12px;">Something went wrong.</h2>
+      <p style="color:var(--fg-muted);font-size:15px;margin-bottom:24px;">${escapeHtml(message)}</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="window._reportJustRan = true; go('results');">Try again</button>
+        <button class="btn-ghost" onclick="go('dashboard')">Back to dashboard</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('results-list').innerHTML = '';
+}
+
+function renderLimitReached(body) {
+  // body shape from Edge Function: { error, code, used, limit, plan }
+  const used = typeof body.used === 'number' ? body.used : null;
+  const limit = typeof body.limit === 'number' ? body.limit : null;
+  const planId = body.plan || (currentUser && currentUser.subscriptionPlan) || 'starter';
+  const plan = PLANS[planId] || null;
+  const planName = plan ? plan.name : (planId.charAt(0).toUpperCase() + planId.slice(1));
+
+  // Recommend the next tier up
+  const nextTier = planId === 'starter' ? 'growth' : (planId === 'growth' ? 'enterprise' : null);
+  const nextPlan = nextTier ? PLANS[nextTier] : null;
+
+  const usageLine = (used !== null && limit !== null)
+    ? `You've used ${used} of ${limit} report${limit !== 1 ? 's' : ''} this month on the ${escapeHtml(planName)} plan.`
+    : `You've reached your monthly report limit on the ${escapeHtml(planName)} plan.`;
+
+  const upgradeBlock = nextPlan
+    ? `<button class="btn-primary" onclick="upgradePlan('${nextTier}')" style="padding:14px 24px;">Upgrade to ${escapeHtml(nextPlan.name)} ($${nextPlan.monthly}/mo)</button>`
+    : '';
+
+  document.getElementById('results-header').innerHTML = `
+    <div class="fade-up" style="padding:48px 32px;text-align:center;border:1px solid var(--accent);background:var(--bg-card);">
+      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Monthly limit reached</div>
+      <h2 class="display" style="font-size:32px;font-weight:400;margin-bottom:12px;">You're out of reports for this month.</h2>
+      <p style="color:var(--fg-muted);font-size:15px;margin-bottom:8px;">${usageLine}</p>
+      ${nextPlan ? `<p style="color:var(--fg-muted);font-size:14px;margin-bottom:32px;">Upgrade to ${escapeHtml(nextPlan.name)} for ${nextTier === 'enterprise' ? 'unlimited' : nextPlan.monthly === 99 ? '6' : ''} reports per month.</p>` : `<p style="color:var(--fg-muted);font-size:14px;margin-bottom:32px;">Your limit resets at the start of the next month.</p>`}
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        ${upgradeBlock}
+        <button class="btn-ghost" onclick="go('dashboard')" style="padding:14px 24px;">Back to dashboard</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('results-list').innerHTML = '';
+}
+
+function renderLegacyReport(past) {
+  const reportDate = past.createdAt ? new Date(past.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '—';
+  document.getElementById('results-header').innerHTML = `
+    <div class="fade-up" style="padding:48px 32px;text-align:center;border:1px solid var(--border);background:var(--bg-card);">
+      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:12px;">Report from ${escapeHtml(reportDate)}</div>
+      <h2 class="display" style="font-size:28px;font-weight:400;margin-bottom:12px;">Summary only.</h2>
+      <p style="color:var(--fg-muted);font-size:15px;max-width:520px;margin:0 auto 24px;">This report was generated before our system upgrade and only stored summary counts. Run a new report to see the full per-processor breakdown.</p>
+      <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;">
+        <div style="text-align:center;"><div class="display" style="font-size:36px;color:var(--approved);">${past.approvedCount || 0}</div><div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:4px;">Approved</div></div>
+        <div style="text-align:center;"><div class="display" style="font-size:36px;color:var(--conditional);">${past.conditionalCount || 0}</div><div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:4px;">Conditional</div></div>
+        <div style="text-align:center;"><div class="display" style="font-size:36px;color:var(--denied);">${past.deniedCount || 0}</div><div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:4px;">Denied</div></div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="go('application')">Run new report</button>
+        <button class="btn-ghost" onclick="go('reports')">Back to history</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('results-list').innerHTML = '';
+}
+
+function paintResults(decisions, approvedCount, conditionalCount, deniedCount) {
   document.getElementById('results-header').innerHTML = `
     <div class="fade-up mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">
       Underwriting Decision · ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
@@ -3693,7 +3816,7 @@ function renderResults() {
       Your results, <span style="font-style:italic;color:var(--accent);">${escapeHtml(merchant.businessName || 'merchant')}</span>.
     </h1>
     <p class="fade-up" style="font-size:18px;color:var(--fg-muted);max-width:700px;margin-bottom:48px;animation-delay:0.2s;">
-      Based on your profile, here's how each of our thirty payment processors evaluated your intake form. Ranked by approval confidence.
+      Based on your profile, here's how each of our 29 payment processors evaluated your intake form. Ranked by approval confidence.
     </p>
 
     <div class="fade-up" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);animation-delay:0.3s;">
@@ -3712,7 +3835,7 @@ function renderResults() {
     </div>
   `;
 
-  document.getElementById('results-list').innerHTML = results.map((r, i) => {
+  document.getElementById('results-list').innerHTML = decisions.map((r, i) => {
     const d = r.decision;
     const cfg = d.status === 'approved' ? { color: 'var(--approved)', bg: 'var(--approved-bg)', icon: '✓', label: 'Approved' }
              : d.status === 'conditional' ? { color: 'var(--conditional)', bg: 'var(--conditional-bg)', icon: '⚠', label: 'Conditional' }
@@ -4948,6 +5071,7 @@ function viewPastReport(index) {
     return;
   }
   merchant = { ...report.merchant };
+  window._viewingPastReport = report;
   go('results');
 }
 
