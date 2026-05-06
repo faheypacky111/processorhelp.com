@@ -1755,572 +1755,151 @@ const PROCESSORS = [
     id: 'stripe', name: 'Stripe', category: 'Low-Risk Premium', speed: '1-2 days',
     applyUrl: 'https://dashboard.stripe.com/register',
     description: 'Industry-leading payment processor for low-risk digital businesses and standard e-commerce.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['Vertical outside Stripe accepted business categories'], score: 0 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Multiple prior payment processor terminations flagged'], score: 5 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies from Stripe underwriting'], score: 0 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds 1.0% threshold`], score: 10 };
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile may require additional review');
-      if (m.chargebackRatio > 0.5) reasons.push('Chargeback ratio elevated but within tolerance');
-      if (m.terminations === 1) reasons.push('One prior termination — additional documentation required');
-      if (risk === 'medium') reasons.push('Vertical acceptable but underwriting review required');
-      const score = reasons.length === 0 ? 95 : reasons.length === 1 ? 78 : 62;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Clean profile matches Stripe standard underwriting'], score };
-    },
   },
   {
     id: 'paypal', name: 'PayPal', category: 'Low-Risk Premium', speed: '1-3 days',
     applyUrl: 'https://www.paypal.com/us/business',
     description: 'Mass-market payment processor with strong consumer trust. Strict risk tolerances.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['Vertical prohibited under PayPal Acceptable Use Policy'], score: 0 };
-      if (m.chargebackRatio > 0.9) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds PayPal threshold`], score: 5 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history exceeds tolerance'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list disqualifies application'], score: 0 };
-      if (m.refundRatio > 15) reasons.push('Refund ratio above 15% will trigger rolling reserve');
-      if (risk === 'medium') reasons.push('Vertical requires enhanced monitoring');
-      if (m.terminations === 1) reasons.push('Prior termination — 180-day rolling reserve likely');
-      const score = reasons.length === 0 ? 92 : reasons.length === 1 ? 74 : 58;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile aligned with PayPal standard merchant'], score };
-    },
   },
   {
     id: 'adyen', name: 'Adyen', category: 'Enterprise', speed: '3-7 days',
     applyUrl: 'https://www.adyen.com/signup',
     description: 'Enterprise-grade unified commerce platform. Prefers high-volume, established merchants.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.monthlyVolume < 50000) return { status: 'denied', reasons: ['Monthly volume below Adyen enterprise minimum ($50K+)'], score: 15 };
-      if (risk === 'high' && m.industry !== 'gambling') return { status: 'denied', reasons: ['Vertical not supported without specialized license'], score: 5 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible with Adyen standards'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (m.yearsInBusiness < 1) reasons.push('Business tenure under 12 months — additional financials required');
-      if (m.monthlyVolume < 100000) reasons.push('Volume below preferred tier — underwriting review');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires executive review');
-      const score = reasons.length === 0 ? 90 : reasons.length === 1 ? 72 : 55;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches Adyen enterprise underwriting'], score };
-    },
   },
   {
     id: 'checkout', name: 'Checkout.com', category: 'Mid-Market Premium', speed: '2-5 days',
     applyUrl: 'https://www.checkout.com/get-in-touch',
     description: 'Flexible mid-to-enterprise payment processor with strong global capabilities.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.industry === 'adult' || m.industry === 'firearms') return { status: 'denied', reasons: ['Vertical not supported'], score: 0 };
-      if (m.monthlyVolume < 25000) return { status: 'denied', reasons: ['Below Checkout.com volume minimum ($25K+)'], score: 15 };
-      if (m.chargebackRatio > 1.2) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list disqualifies'], score: 0 };
-      if (risk === 'high') reasons.push('High-risk vertical requires specialized underwriting and higher rates');
-      if (m.terminations >= 1) reasons.push('Prior termination flagged — documentation required');
-      if (risk === 'medium') reasons.push('Vertical acceptable with standard review');
-      const score = reasons.length === 0 ? 88 : reasons.length === 1 ? 71 : 54;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile aligned with Checkout.com mid-market tier'], score };
-    },
   },
   {
     id: 'mollie', name: 'Mollie', category: 'EU-Focused', speed: '1-3 days',
     applyUrl: 'https://www.mollie.com/signup',
     description: 'European payment leader with strong SEPA, iDEAL, and regional method support.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.country !== 'EU' && m.country !== 'UK') return { status: 'denied', reasons: ['Mollie requires EU/UK registered entity'], score: 0 };
-      if (risk === 'high') return { status: 'denied', reasons: ['High-risk verticals not supported'], score: 5 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: ['Chargeback ratio exceeds 1% threshold'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list disqualifies'], score: 0 };
-      if (risk === 'medium') reasons.push('Vertical requires standard compliance review');
-      if (m.terminations >= 1) reasons.push('Prior termination — additional documentation required');
-      const score = reasons.length === 0 ? 89 : reasons.length === 1 ? 72 : 0;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches Mollie EU underwriting'], score };
-    },
   },
   {
     id: 'paymentcloud', name: 'PaymentCloud', category: 'High-Risk Specialist', speed: '3-7 days',
     applyUrl: 'https://paymentcloudinc.com/apply/',
     description: 'High-risk merchant specialist. Accepts CBD, nutra, firearms, adult, credit repair, and other restricted verticals.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list status — PaymentCloud works with reformed MATCH merchants, additional fees apply');
-      if (m.chargebackRatio > 3) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds even high-risk tolerance (3%)`], score: 10 };
-      if (m.terminations >= 4) return { status: 'denied', reasons: ['Excessive termination history — 4+ priors'], score: 15 };
-      if (m.terminations >= 1) reasons.push('Prior terminations accepted — rolling reserve of 5-10% likely');
-      if (m.chargebackRatio > 1.5) reasons.push('Elevated chargebacks — chargeback mitigation program required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit rebuild accepted — personal guarantee required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved at specialized rates');
-      const score = reasons.length <= 1 ? 91 : reasons.length === 2 ? 82 : 75;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Clean profile accepted on standard high-risk terms'], score };
-    },
   },
   {
     id: 'paykings', name: 'PayKings', category: 'High-Risk Specialist', speed: '2-5 days',
     applyUrl: 'https://paykings.com/apply-now/',
     description: 'Aggressive high-risk underwriter. Strong for nutra, CBD, adult, travel, debt consolidation, and rebuilding merchants.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list merchants accepted with enhanced underwriting and reserves');
-      if (m.chargebackRatio > 4) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds PayKings maximum (4%)`], score: 10 };
-      if (m.terminations >= 5) return { status: 'denied', reasons: ['Termination history exceeds 5 priors'], score: 15 };
-      if (m.chargebackRatio > 2) reasons.push('High chargebacks — CB Alert and mitigation mandatory');
-      if (m.terminations >= 2) reasons.push('Multiple prior terminations — 10% rolling reserve standard');
-      if (m.credit === 'rebuilding') reasons.push('Credit rebuild profile approved — personal guarantee required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved — specialized rates apply');
-      const score = reasons.length <= 1 ? 90 : reasons.length === 2 ? 81 : 73;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard high-risk terms'], score };
-    },
   },
   {
     id: 'worldline', name: 'Worldline', category: 'Enterprise', speed: '5-14 days',
     applyUrl: 'https://worldline.com/en/home/main-navigation/get-in-touch.html',
     description: 'European enterprise leader. Strong for regulated industries, omnichannel, and high-volume merchants.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.monthlyVolume < 100000) return { status: 'denied', reasons: ['Monthly volume below Worldline enterprise minimum ($100K+)'], score: 15 };
-      if (m.yearsInBusiness < 2) return { status: 'denied', reasons: ['Worldline requires 2+ years operating history'], score: 20 };
-      if (risk === 'high' && !['gambling','travel'].includes(m.industry)) return { status: 'denied', reasons: ['Vertical requires specialized regulatory license'], score: 5 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list disqualifies from Worldline'], score: 0 };
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires executive committee review');
-      if (m.monthlyVolume < 250000) reasons.push('Volume below preferred enterprise tier');
-      if (m.terminations === 1) reasons.push('Prior termination — compliance review required');
-      const score = reasons.length === 0 ? 87 : reasons.length === 1 ? 70 : 52;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches Worldline enterprise underwriting'], score };
-    },
   },
   {
     id: 'worldpay', name: 'Worldpay', category: 'Enterprise', speed: '3-10 days',
     applyUrl: 'https://www.worldpay.com/en-us/contact-sales',
     description: 'Global enterprise payment processor (FIS). Broad industry acceptance with flexibility across verticals and geographies.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.monthlyVolume < 30000) return { status: 'denied', reasons: ['Monthly volume below Worldpay mid-market minimum ($30K+)'], score: 15 };
-      if (m.terminations >= 3) return { status: 'denied', reasons: ['Termination history exceeds tolerance'], score: 10 };
-      if (m.chargebackRatio > 1.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds Worldpay threshold`], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (risk === 'high' && !['gambling','travel','supplements'].includes(m.industry)) reasons.push('High-risk vertical requires specialized division review — higher rates apply');
-      if (m.terminations >= 1) reasons.push('Prior termination — additional documentation required');
-      if (m.monthlyVolume < 75000) reasons.push('Volume below preferred tier — standard underwriting');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length === 0 ? 88 : reasons.length === 1 ? 72 : 56;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile aligned with Worldpay mid-market underwriting'], score };
-    },
   },
   {
     id: 'authorizenet', name: 'Authorize.Net', category: 'Gateway', speed: '1-3 days',
     applyUrl: 'https://www.authorize.net/sign-up/',
     description: 'Long-standing payment gateway backed by Visa. Broadly accessible for small and mid-sized merchants with standard risk profiles.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high' && !['supplements','coaching','subscription-box'].includes(m.industry)) return { status: 'denied', reasons: ['High-risk vertical outside Authorize.Net acceptance criteria'], score: 5 };
-      if (m.chargebackRatio > 1.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (risk === 'medium') reasons.push('Vertical requires standard underwriting review');
-      if (m.chargebackRatio > 0.8) reasons.push('Chargebacks elevated — monitoring required');
-      if (m.terminations === 1) reasons.push('Prior termination — documentation required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile may require co-signer or reserve');
-      const score = reasons.length === 0 ? 86 : reasons.length === 1 ? 70 : 55;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard Authorize.Net terms'], score };
-    },
   },
   {
     id: 'elavon', name: 'Elavon', category: 'Bank-Backed', speed: '3-7 days',
     applyUrl: 'https://www.elavon.com/contact-us.html',
     description: 'US Bank subsidiary. Conservative, bank-backed underwriting — strong for established low-risk merchants seeking stability.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['High-risk verticals outside Elavon bank-backed underwriting'], score: 5 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds 1% threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible with bank standards'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (m.yearsInBusiness < 1) reasons.push('Business tenure under 12 months — enhanced review required');
-      if (risk === 'medium') reasons.push('Vertical requires standard compliance review');
-      if (m.terminations === 1) reasons.push('Prior termination — additional documentation required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires bank committee review');
-      const score = reasons.length === 0 ? 87 : reasons.length === 1 ? 71 : 54;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches Elavon bank-backed standards'], score };
-    },
   },
   {
     id: 'shopifypayments', name: 'Shopify Payments', category: 'Platform-Integrated', speed: 'Same day',
     applyUrl: 'https://www.shopify.com/payments',
     description: 'Exclusive to merchants on the Shopify platform. Low-risk verticals only — powered by Stripe underneath with Shopify own underwriting overlay.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['Vertical prohibited under Shopify Payments Acceptable Use Policy'], score: 0 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds 1% threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Multiple prior terminations disqualify'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      reasons.push('Requires active Shopify store to activate');
-      if (risk === 'medium') reasons.push('Vertical acceptable with standard review');
-      if (m.terminations === 1) reasons.push('Prior termination — Shopify review required');
-      if (m.chargebackRatio > 0.5) reasons.push('Chargeback ratio elevated but within tolerance');
-      const score = reasons.length <= 1 ? 85 : reasons.length === 2 ? 70 : 55;
-      return { status: reasons.length > 2 ? 'conditional' : 'approved', reasons, score };
-    },
   },
   {
     id: 'durango', name: 'Durango Merchant Services', category: 'High-Risk Specialist', speed: '3-5 days',
     applyUrl: 'https://durangomerchantservices.com/apply/',
     description: 'High-risk specialist with 20+ years experience. Strong for CBD, nutra, adult, firearms, credit repair, and rebuilding merchants.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list accepted — Durango works with reformed merchants, enhanced reserves apply');
-      if (m.chargebackRatio > 3.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds even high-risk tolerance`], score: 10 };
-      if (m.terminations >= 4) return { status: 'denied', reasons: ['Termination history exceeds 4 priors'], score: 15 };
-      if (m.terminations >= 1) reasons.push('Prior terminations accepted — rolling reserve of 5-10% likely');
-      if (m.chargebackRatio > 1.5) reasons.push('High chargebacks — mitigation program required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit rebuild accepted — personal guarantee required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved at specialized rates');
-      const score = reasons.length <= 1 ? 90 : reasons.length === 2 ? 81 : 74;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Clean profile accepted on standard high-risk terms'], score };
-    },
   },
   {
     id: 'flutterwave', name: 'Flutterwave', category: 'Africa-Focused', speed: '2-5 days',
     applyUrl: 'https://dashboard.flutterwave.com/signup',
     description: 'Leading African payments platform. Strong for merchants targeting Nigeria, Kenya, Ghana, South Africa, and global businesses serving African markets.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high' && !['gambling'].includes(m.industry)) return { status: 'denied', reasons: ['High-risk verticals outside Flutterwave acceptance'], score: 5 };
-      if (m.chargebackRatio > 1.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (!['US','UK','EU'].includes(m.country)) reasons.push('Africa-based or international merchant — strong regional fit');
-      else reasons.push('Best suited for merchants serving African markets — verify cross-border fit');
-      if (risk === 'medium') reasons.push('Vertical requires compliance review');
-      if (m.terminations === 1) reasons.push('Prior termination — additional documentation required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length === 1 ? 82 : reasons.length === 2 ? 70 : 55;
-      return { status: reasons.length > 2 ? 'conditional' : 'approved', reasons, score };
-    },
   },
   {
     id: 'phoenix', name: 'Phoenix Technologies', category: 'High-Risk Specialist', speed: '3-7 days',
     applyUrl: 'https://phoenixtechnologies.com/',
     description: 'High-risk specialist serving nutra, CBD, adult, and hard-to-place merchants. Custom underwriting and reserve structures.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list accepted — enhanced reserves and monitoring apply');
-      if (m.chargebackRatio > 3.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds high-risk tolerance`], score: 10 };
-      if (m.terminations >= 4) return { status: 'denied', reasons: ['Excessive termination history — 4+ priors'], score: 15 };
-      if (m.terminations >= 1) reasons.push('Prior terminations accepted — rolling reserve likely');
-      if (m.chargebackRatio > 1.5) reasons.push('High chargebacks — mitigation program required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit rebuild accepted — personal guarantee required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved at specialized rates');
-      const score = reasons.length <= 1 ? 88 : reasons.length === 2 ? 79 : 72;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Clean profile accepted on standard high-risk terms'], score };
-    },
   },
   {
     id: 'paycom', name: 'Pay.com', category: 'Mid-Market Flexible', speed: '2-5 days',
     applyUrl: 'https://pay.com/',
     description: 'Modern, flexible payment platform for mid-market businesses. Strong tech, broad acceptance, competitive rates.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high' && !['supplements','coaching'].includes(m.industry)) return { status: 'denied', reasons: ['High-risk vertical outside Pay.com standard underwriting'], score: 5 };
-      if (m.chargebackRatio > 1.3) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history exceeds tolerance'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (risk === 'medium') reasons.push('Vertical acceptable with standard review');
-      if (m.terminations === 1) reasons.push('Prior termination — documentation required');
-      if (m.chargebackRatio > 0.8) reasons.push('Chargebacks elevated — monitoring required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length === 0 ? 86 : reasons.length === 1 ? 71 : 56;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches Pay.com standard underwriting'], score };
-    },
   },
   {
     id: 'soarpay', name: 'SoarPay', category: 'High-Risk Specialist', speed: '2-5 days',
     applyUrl: 'https://soarpay.com/',
     description: 'High-risk specialist covering CBD, nutra, adult, firearms, credit repair, and MATCH-listed merchants.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list merchants accepted with standard high-risk reserves');
-      if (m.chargebackRatio > 4) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds maximum (4%)`], score: 10 };
-      if (m.terminations >= 5) return { status: 'denied', reasons: ['Termination history exceeds 5 priors'], score: 15 };
-      if (m.terminations >= 2) reasons.push('Multiple prior terminations — rolling reserve required');
-      if (m.chargebackRatio > 2) reasons.push('High chargebacks — CB mitigation program mandatory');
-      if (m.credit === 'rebuilding') reasons.push('Credit rebuild approved — personal guarantee required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved — specialized rates apply');
-      const score = reasons.length <= 1 ? 89 : reasons.length === 2 ? 80 : 72;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard high-risk terms'], score };
-    },
   },
   {
     id: 'woopayments', name: 'WooPayments', category: 'Platform-Integrated', speed: 'Same day',
     applyUrl: 'https://woocommerce.com/payments/',
     description: 'Exclusive to WooCommerce merchants. Low-risk verticals only — native WooCommerce integration with standard underwriting.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['Vertical prohibited under WooPayments Acceptable Use Policy'], score: 0 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds 1% threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Multiple prior terminations disqualify'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      reasons.push('Requires active WooCommerce store to activate');
-      if (risk === 'medium') reasons.push('Vertical acceptable with standard review');
-      if (m.terminations === 1) reasons.push('Prior termination — additional review required');
-      if (m.chargebackRatio > 0.5) reasons.push('Chargebacks elevated but within tolerance');
-      const score = reasons.length <= 1 ? 84 : reasons.length === 2 ? 69 : 54;
-      return { status: reasons.length > 2 ? 'conditional' : 'approved', reasons, score };
-    },
   },
   {
     id: 'hubspot', name: 'HubSpot Payments', category: 'Platform-Integrated', speed: '1-2 days',
     applyUrl: 'https://www.hubspot.com/products/commerce/payments',
     description: 'Available to HubSpot CRM customers in the US. Low-risk verticals only with direct CRM integration for invoicing and subscriptions.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.country !== 'US') return { status: 'denied', reasons: ['HubSpot Payments is US-only at this time'], score: 0 };
-      if (risk === 'high') return { status: 'denied', reasons: ['High-risk verticals not supported'], score: 5 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      reasons.push('Requires active HubSpot CRM account to activate');
-      if (risk === 'medium') reasons.push('Vertical acceptable with standard review');
-      if (m.terminations === 1) reasons.push('Prior termination — additional documentation required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length <= 1 ? 83 : reasons.length === 2 ? 68 : 53;
-      return { status: reasons.length > 2 ? 'conditional' : 'approved', reasons, score };
-    },
   },
   {
     id: 'highriskpay', name: 'HighRiskPay.com', category: 'Extreme High-Risk', speed: '1-3 days',
     applyUrl: 'https://highriskpay.com/',
     description: 'Extreme high-risk specialist. Accepts virtually all verticals including those rejected by other high-risk processors.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list merchants welcomed — rehabilitation program available');
-      if (m.chargebackRatio > 5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds absolute maximum`], score: 10 };
-      if (m.terminations >= 6) return { status: 'denied', reasons: ['Termination history exceeds 6 priors'], score: 15 };
-      if (m.terminations >= 2) reasons.push('Multiple prior terminations — 15-20% rolling reserve likely');
-      if (m.chargebackRatio > 2.5) reasons.push('Very high chargebacks — mandatory CB alert service required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('All credit profiles accepted — personal guarantee required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('Extreme high-risk vertical approved — premium rates apply');
-      const score = reasons.length <= 1 ? 86 : reasons.length === 2 ? 78 : 71;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on extreme high-risk terms'], score };
-    },
   },
   {
     id: 'easypaydirect', name: 'Easy Pay Direct', category: 'High-Risk Specialist', speed: '3-7 days',
     applyUrl: 'https://easypaydirect.com/',
     description: 'High-risk specialist with load-balancing technology across multiple MIDs. Strong for subscription, nutra, coaching, and scaling brands.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list accepted — load-balanced MID structure helps mitigate risk');
-      if (m.chargebackRatio > 3) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds tolerance even with load balancing`], score: 10 };
-      if (m.terminations >= 4) return { status: 'denied', reasons: ['Termination history exceeds 4 priors'], score: 15 };
-      if (m.terminations >= 1) reasons.push('Prior terminations accepted — multi-MID setup recommended');
-      if (m.subscription === 'yes') reasons.push('Subscription model — load balancing particularly effective');
-      if (m.chargebackRatio > 1.5) reasons.push('Elevated chargebacks — load balancing across MIDs advised');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile accepted with personal guarantee');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved with specialized MID structure');
-      const score = reasons.length <= 1 ? 89 : reasons.length === 2 ? 81 : 74;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard high-risk terms'], score };
-    },
   },
   {
     id: 'totalprocessing', name: 'Total Processing', category: 'High-Risk Specialist', speed: '3-7 days',
     applyUrl: 'https://totalprocessing.com/',
     description: 'UK-based high-risk specialist. Strong for adult, gambling, crypto, nutra, and other restricted verticals across Europe and beyond.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list accepted with enhanced reserves and monitoring');
-      if (m.chargebackRatio > 3.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds high-risk tolerance`], score: 10 };
-      if (m.terminations >= 4) return { status: 'denied', reasons: ['Excessive termination history — 4+ priors'], score: 15 };
-      if (m.terminations >= 1) reasons.push('Prior terminations accepted — rolling reserve likely');
-      if (m.chargebackRatio > 1.5) reasons.push('Elevated chargebacks — mitigation program required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit rebuild accepted — personal guarantee required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved — specialized UK/EU underwriting');
-      if (!['US','UK','EU'].includes(m.country)) reasons.push('International merchant — strongest fit for UK/EU operations');
-      const score = reasons.length <= 1 ? 88 : reasons.length === 2 ? 79 : 72;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard high-risk terms'], score };
-    },
   },
   {
     id: 'nmi', name: 'NMI', category: 'Gateway Platform', speed: '1-3 days',
     applyUrl: 'https://www.nmi.com/',
     description: 'Major payment gateway platform (Network Merchants Inc). Broadly accessible through hundreds of ISO partners. Strong for mid-market and omnichannel merchants.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.chargebackRatio > 1.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies at standard ISO tier'], score: 5 };
-      if (risk === 'high') reasons.push('High-risk vertical — requires high-risk ISO partner via NMI network');
-      if (risk === 'medium') reasons.push('Vertical acceptable with standard underwriting review');
-      if (m.terminations === 1) reasons.push('Prior termination — documentation required');
-      if (m.chargebackRatio > 0.8) reasons.push('Chargebacks elevated — monitoring required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length === 0 ? 87 : reasons.length === 1 ? 72 : 58;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches NMI standard gateway onboarding'], score };
-    },
   },
   {
     id: 'emerchantpay', name: 'EmerchantPay', category: 'High-Risk Specialist', speed: '3-10 days',
     applyUrl: 'https://www.emerchantpay.com/contact/',
     description: 'Global high-risk specialist. Strong for gambling, forex, crypto exchanges, adult, and other regulated verticals across EU, UK, and global markets.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list accepted with enhanced reserves and compliance review');
-      if (m.chargebackRatio > 3) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds tolerance`], score: 10 };
-      if (m.terminations >= 3) return { status: 'denied', reasons: ['Excessive termination history'], score: 15 };
-      if (m.monthlyVolume < 20000) reasons.push('Volume below preferred enterprise tier — standard review');
-      if (m.terminations >= 1) reasons.push('Prior terminations accepted — rolling reserve likely');
-      if (m.chargebackRatio > 1.5) reasons.push('High chargebacks — mitigation program required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved — specialized underwriting applies');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length <= 1 ? 87 : reasons.length === 2 ? 78 : 71;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard EmerchantPay terms'], score };
-    },
   },
   {
     id: 'nomupay', name: 'Nomupay', category: 'Emerging Markets', speed: '3-7 days',
     applyUrl: 'https://www.nomupay.com/contact/',
     description: 'Emerging markets payment specialist. Strong for merchants expanding into Asia-Pacific, Middle East, Turkey, and other underserved regions.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high' && !['gambling'].includes(m.industry)) return { status: 'denied', reasons: ['High-risk verticals outside Nomupay acceptance'], score: 5 };
-      if (m.chargebackRatio > 1.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (['US','UK','EU'].includes(m.country)) reasons.push('Best suited for merchants expanding into emerging markets — verify cross-border fit');
-      else reasons.push('Strong regional fit for emerging market merchants');
-      if (risk === 'medium') reasons.push('Vertical requires compliance review');
-      if (m.terminations === 1) reasons.push('Prior termination — additional documentation required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length === 1 ? 82 : reasons.length === 2 ? 70 : 55;
-      return { status: reasons.length > 2 ? 'conditional' : 'approved', reasons, score };
-    },
   },
   {
     id: 'square', name: 'Square', category: 'Low-Risk SMB', speed: 'Same day',
     applyUrl: 'https://squareup.com/signup',
     description: 'Low-risk SMB processor with strong POS and in-person capabilities. Instant approval for most standard US-based retail, food service, and professional services.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['Vertical prohibited under Square Acceptable Use Policy'], score: 0 };
-      if (m.country !== 'US' && m.country !== 'CA' && m.country !== 'UK' && m.country !== 'AU') return { status: 'denied', reasons: ['Square not available in this country'], score: 5 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds 1% threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Multiple prior terminations disqualify'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (m.monthlyVolume > 250000) reasons.push('High volume — Square may place holds; Square for larger businesses recommended');
-      if (risk === 'medium') reasons.push('Vertical acceptable but may require enhanced monitoring');
-      if (m.terminations === 1) reasons.push('Prior termination — additional review required');
-      if (m.chargebackRatio > 0.5) reasons.push('Chargebacks elevated but within tolerance');
-      const score = reasons.length === 0 ? 91 : reasons.length === 1 ? 76 : 60;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Clean profile accepted — Square instant approval likely'], score };
-    },
   },
   {
     id: 'quickpay', name: 'QuickPay', category: 'EU Mid-Market', speed: '2-5 days',
     applyUrl: 'https://quickpay.net/signup/',
     description: 'Danish payment processor serving European merchants. Strong for mid-market e-commerce, subscription businesses, and Nordic/EU market coverage.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.country !== 'EU' && m.country !== 'UK') return { status: 'denied', reasons: ['QuickPay requires EU/UK registered entity'], score: 0 };
-      if (risk === 'high') return { status: 'denied', reasons: ['High-risk verticals not supported'], score: 5 };
-      if (m.chargebackRatio > 1.2) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (risk === 'medium') reasons.push('Vertical requires standard compliance review');
-      if (m.terminations === 1) reasons.push('Prior termination — additional documentation required');
-      if (m.chargebackRatio > 0.7) reasons.push('Chargebacks elevated — monitoring required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length === 0 ? 86 : reasons.length === 1 ? 71 : 56;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches QuickPay EU mid-market underwriting'], score };
-    },
   },
   {
     id: 'pepperpay', name: 'Pepper Pay', category: 'PayFac · High-Risk Capable', speed: '1-3 days',
     applyUrl: 'https://pepperpay.com/contact-us.php',
     description: 'Florida-based PayFac with strong high-risk capabilities. Offers ACH, pinless debit, and chargeback protection (Rapid Dispute Resolution). Strong for businesses needing fast onboarding with high-risk vertical support.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.chargebackRatio > 3) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds tolerance`], score: 10 };
-      if (m.terminations >= 4) return { status: 'denied', reasons: ['Termination history exceeds 4 priors'], score: 15 };
-      if (m.matchList === 'yes') reasons.push('MATCH list accepted with enhanced reserves and RDR enrollment');
-      if (m.terminations >= 1) reasons.push('Prior terminations accepted — chargeback protection program recommended');
-      if (m.chargebackRatio > 1.5) reasons.push('Elevated chargebacks — Pepper Pay Protect (RDR) required');
-      if (m.subscription === 'yes') reasons.push('Subscription billing supported with recurring tools and customer vault');
-      if (risk === 'high') reasons.push('High-risk vertical approved — specialized PayFac underwriting applies');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile accepted with personal guarantee');
-      if (m.country !== 'US' && m.country !== 'CA') reasons.push('Best fit for North American merchants — international onboarding limited');
-      const score = reasons.length <= 1 ? 87 : reasons.length === 2 ? 79 : 71;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard PayFac terms with fast onboarding'], score };
-    },
   },
   {
     id: 'braintree', name: 'Braintree', category: 'Low-Risk Premium · PayPal-Owned', speed: '1-3 days',
     applyUrl: 'https://www.braintreepayments.com/sales-apply',
     description: 'PayPal-owned enterprise payment processor. Strong for low-to-medium-risk e-commerce, marketplaces, and SaaS. Native Venmo, PayPal, Apple Pay, Google Pay support. Does not accept high-risk verticals.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['Vertical prohibited under Braintree Acceptable Use Policy (no high-risk industries)'], score: 0 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds Braintree threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Multiple prior terminations disqualify'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies — Braintree shares PayPal underwriting standards'], score: 0 };
-      if (m.country !== 'US' && m.country !== 'CA' && m.country !== 'UK' && m.country !== 'EU' && m.country !== 'AU') {
-        return { status: 'denied', reasons: ['Braintree not available in this country'], score: 5 };
-      }
-      if (risk === 'medium') reasons.push('Vertical may trigger reserve or rolling hold per Braintree underwriting');
-      if (m.monthlyVolume > 100000) reasons.push('High volume — personal/corporate guarantee may be required');
-      if (m.terminations === 1) reasons.push('Prior termination — full underwriting documentation required');
-      if (m.chargebackRatio > 0.5) reasons.push('Chargebacks elevated but within tolerance — fraud tools required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review and possible reserve');
-      const score = reasons.length === 0 ? 90 : reasons.length === 1 ? 76 : 62;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Clean profile accepted — standard Braintree onboarding likely'], score };
-    },
   },
   {
     id: 'emerchantbroker', name: 'eMerchantBroker', category: 'High-Risk Aggregator', speed: '1-2 days',
     applyUrl: 'https://emerchantbroker.com/apply/',
     description: 'High-risk specialist with 99% approval rate claim. Aggregator that routes applications to network of acquiring banks (Fiserv, iPayment, North American Bancard, etc.). Strong for previously-declined merchants, MATCH list cases, and complex verticals.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.chargebackRatio > 4) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds even high-risk aggregator tolerance`], score: 10 };
-      if (m.matchList === 'yes') reasons.push('MATCH list specifically supported — offshore acquiring bank routing available');
-      if (m.terminations >= 1) reasons.push('Prior terminations expected and accepted — aggregator network designed for previously-declined merchants');
-      if (m.chargebackRatio > 1.5) reasons.push('Elevated chargebacks — chargeback protection (Verifi/Ethoca) included');
-      if (risk === 'high') reasons.push('High-risk vertical — primary use case for EMB network');
-      if (risk === 'medium') reasons.push('Mid-risk vertical accepted on standard aggregator terms');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Bad credit/bankruptcy accepted — placement among network partners');
-      if (m.subscription === 'yes') reasons.push('Recurring billing supported across acquiring partners');
-      if (m.monthlyVolume < 10000) reasons.push('Lower volume — pricing may be higher than direct processor relationships');
-      if (m.country !== 'US') reasons.push('International placement available across 35 supported countries — verify acquiring bank fit');
-      const score = reasons.length <= 2 ? 84 : reasons.length === 3 ? 76 : 70;
-      return { status: reasons.length >= 4 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Standard placement via aggregator network'], score };
-    },
   },
 ];
 
@@ -2440,6 +2019,7 @@ async function hydrateCurrentUser(passedSession) {
         approvedCount: (r.results && r.results.approvedCount) || 0,
         conditionalCount: (r.results && r.results.conditionalCount) || 0,
         deniedCount: (r.results && r.results.deniedCount) || 0,
+        results: r.results || null,
       }));
     }
   } catch (e) {
@@ -3564,130 +3144,116 @@ async function runUnderwritingReport() {
   }
 
   try {
-    if (!window._authToken) {
-      alert('Your session has expired. Please sign in again.');
-      go('signin');
+    const { data, error } = await supabaseClient.functions.invoke('evaluate-processors', {
+      body: { merchant: { ...merchant } }
+    });
+
+    if (error) {
+      // FunctionsHttpError — has .context (a Response object).
+      if (error.context && typeof error.context.status === 'number') {
+        const status = error.context.status;
+        let body = null;
+        try { body = await error.context.json(); } catch (_) { body = null; }
+        const code = body && body.code;
+
+        // Plan limit reached.
+        if (status === 402 && (code === 'P0005' || /limit reached/i.test((body && body.error) || ''))) {
+          showLimitReachedModal({
+            used: body && body.used,
+            limit: body && body.limit,
+            plan: body && body.plan
+          });
+          return;
+        }
+        // No active subscription.
+        if (status === 403 && code === 'P0003') {
+          alert((body && body.message) || 'You need an active subscription to run reports.');
+          go('subscribe');
+          return;
+        }
+        // Auth lost / not authenticated.
+        if (status === 401) {
+          alert('Your session expired. Please sign in again.');
+          go('signin');
+          return;
+        }
+        // Bad merchant data.
+        if (status === 400) {
+          alert((body && (body.details || body.message || body.error)) || 'Some inputs are invalid. Please review your business profile and try again.');
+          return;
+        }
+        // Any other HTTP error from the function.
+        alert((body && (body.details || body.message || body.error)) || ('Report failed (status ' + status + '). Please try again.'));
+        return;
+      }
+      // FunctionsFetchError / FunctionsRelayError — no .context.
+      alert('Network error — could not reach our servers. Please check your connection and try again.');
       return;
     }
 
-    // Compute results client-side (the processor logic still lives here for now)
-    const results = PROCESSORS.map(p => ({ ...p, decision: p.evaluate(merchant) }))
-      .sort((a, b) => b.decision.score - a.decision.score);
-    const approvedCount = results.filter(r => r.decision.status === 'approved').length;
-    const conditionalCount = results.filter(r => r.decision.status === 'conditional').length;
-    const deniedCount = results.filter(r => r.decision.status === 'denied').length;
-
-    const withTimeout = (promise, ms, label) => Promise.race([
-      promise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out')), ms))
-    ]);
-
-    const res = await withTimeout(
-      fetch(`${SUPABASE_URL}/rest/v1/rpc/run_underwriting_report`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${window._authToken}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation',
-        },
-        body: JSON.stringify({
-          p_business_data: { ...merchant },
-          p_results: { approvedCount, conditionalCount, deniedCount },
-        }),
-      }),
-      10000,
-      'Underwriting RPC'
-    );
-
-    if (!res.ok) {
-      const errBody = await res.text().catch(() => '');
-      let parsed = null;
-      try { parsed = JSON.parse(errBody); } catch (_) {}
-      const code = parsed && parsed.code;
-      const message = (parsed && parsed.message) || errBody || 'Unknown error';
-
-      // P0005 = monthly limit reached → show upgrade modal (server-authoritative)
-      if (code === 'P0005' || /limit reached/i.test(message)) {
-        // Reconcile local state with server: bump cached reports to limit
-        // so future client-side checks block too.
-        showLimitReachedModal();
-        return;
-      }
-      // P0003 = no active subscription → reroute
-      if (code === 'P0003' || /no active subscription/i.test(message)) {
-        alert('Your subscription is not active. Please subscribe to run a report.');
-        go('subscribe');
-        return;
-      }
-      // P0001 = not authenticated
-      if (code === 'P0001' || /not authenticated/i.test(message)) {
-        alert('Your session has expired. Please sign in again.');
-        go('signin');
-        return;
-      }
-
-      console.error('[UNDERWRITING] RPC failed:', res.status, errBody);
-      alert('Something went wrong running your report. Please try again. If the problem persists, contact support@processorhelp.com.');
+    // Branch 2: success.
+    if (!data || !data.report || !Array.isArray(data.decisions)) {
+      alert('Unexpected response from server. Please try again.');
       return;
     }
 
-    // Success. The server returns the new report row.
-    const row = await res.json().catch(() => null);
-    const savedReport = (Array.isArray(row) ? row[0] : row) || {};
+    // Cache decisions so renderResults can read without re-evaluating.
+    window._lastDecisions = data.decisions;
+    window._reportJustRan = true;
 
-    // Update local state to match what's now in the database
+    // Push the saved report into the in-memory user object so the history list updates immediately.
+    const savedReport = data.report || {};
     const newReport = {
       id: savedReport.id || null,
       createdAt: savedReport.created_at ? new Date(savedReport.created_at).getTime() : Date.now(),
       created_at: savedReport.created_at,
       merchant: { ...merchant },
-      approvedCount,
-      conditionalCount,
-      deniedCount,
+      approvedCount: data.approvedCount,
+      conditionalCount: data.conditionalCount,
+      deniedCount: data.deniedCount,
+      results: {
+        approvedCount: data.approvedCount,
+        conditionalCount: data.conditionalCount,
+        deniedCount: data.deniedCount,
+        decisions: data.decisions,
+      },
     };
     currentUser.reports = currentUser.reports || [];
     currentUser.reports.push(newReport);
     currentUser.savedProfile = { ...merchant };
 
-    // Persist saved profile snapshot async (non-blocking — the report itself is already saved)
+    // Persist saved profile snapshot async (non-blocking).
     persistProfileFields({
       email: currentUser.email,
       saved_profile: currentUser.savedProfile,
       updated_at: new Date().toISOString(),
-    }).catch(err => console.error('[PROFILE SNAPSHOT] Failed:', err));
+    }).catch(() => {});
 
-    window._reportJustRan = true;
-
-    // Track successful report generation
-    if (window.track) {
+    if (typeof window.track === 'function') {
       window.track('report_run', {
-        plan: currentUser.subscriptionPlan,
-        approved: approvedCount,
-        conditional: conditionalCount,
-        denied: deniedCount,
-        industry: merchant.industry,
-        country: merchant.country,
+        approvedCount: data.approvedCount,
+        conditionalCount: data.conditionalCount,
+        deniedCount: data.deniedCount,
       });
     }
 
     go('results');
-  } catch (err) {
-    console.error('[UNDERWRITING] Error:', err);
-    alert('Network error. Please check your connection and try again.');
+  } catch (e) {
+    console.error('[runUnderwritingReport]', e);
+    alert('Something went wrong running your report. Please try again.');
   } finally {
     if (btn) {
       btn.disabled = false;
-      if (originalLabel) btn.innerHTML = originalLabel;
+      if (originalLabel !== null) btn.innerHTML = originalLabel;
     }
   }
 }
 
-function showLimitReachedModal() {
+function showLimitReachedModal(override) {
   const u = currentUser;
-  const plan = PLANS[u.subscriptionPlan];
-  const used = getReportsThisMonth(u);
-  const limit = getReportLimit(u);
+  const plan = (override && override.plan && PLANS[override.plan]) || PLANS[u.subscriptionPlan];
+  const used = (override && Number.isFinite(override.used)) ? override.used : getReportsThisMonth(u);
+  const limit = (override && Number.isFinite(override.limit)) ? override.limit : getReportLimit(u);
   const planName = plan ? plan.name : 'your plan';
 
   // Track limit-hit (highest-intent upgrade moment)
@@ -3900,8 +3466,11 @@ function processPayment() {
 
 // =============== RESULTS RENDER ===============
 function renderResults() {
-  const results = PROCESSORS.map(p => ({ ...p, decision: p.evaluate(merchant) }))
-    .sort((a,b) => b.decision.score - a.decision.score);
+  // Read decisions from cache (set by runUnderwritingReport on success), then fall back
+  // to the most recent saved report's decisions, then empty array as last resort.
+  const lastReport = (currentUser && currentUser.reports && currentUser.reports.length)
+    ? currentUser.reports[currentUser.reports.length - 1] : null;
+  const results = window._lastDecisions || (lastReport && lastReport.results && lastReport.results.decisions) || [];
 
   const approvedCount = results.filter(r => r.decision.status === 'approved').length;
   const conditionalCount = results.filter(r => r.decision.status === 'conditional').length;
