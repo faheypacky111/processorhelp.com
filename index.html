@@ -655,7 +655,7 @@
 
     <div class="fade-up stats-row" style="margin-top:96px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;animation-delay:0.4s;">
       <div class="stat-cell" style="padding:32px 24px;border-right:1px solid var(--border);">
-        <div class="display stat-number" data-target="30" data-format="number" style="font-size:48px;font-weight:500;line-height:1;">0</div>
+        <div class="display stat-number" data-target="29" data-format="number" style="font-size:48px;font-weight:500;line-height:1;">0</div>
         <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:12px;">Integrated Payment Processors</div>
       </div>
       <div class="stat-cell" style="padding:32px 24px;border-right:1px solid var(--border);">
@@ -1084,9 +1084,10 @@
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4a. Third-Party Service Providers</h2>
     <p>We use carefully selected third-party services to operate Processor Help. These providers receive only the data necessary to perform their function, are bound by data protection agreements, and may not use your information for their own purposes.</p>
     <ul style="margin-top:16px;padding-left:24px;">
+      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Supabase, Inc.</strong> — Hosts our database, authentication, and serverless backend functions. Supabase stores your account credentials, business profile, subscription state, and saved reports. May log standard request metadata (IP address, user-agent, request timestamps) for security and abuse prevention. Their <a href="https://supabase.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Stripe, Inc.</strong> — Payment processing for your subscription. Stripe receives your name, email, billing address, and payment card details. Stripe is PCI-DSS Level 1 certified. Their <a href="https://stripe.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
-      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">GitHub, Inc.</strong> — Hosts our website infrastructure. May log basic technical information (IP address, browser type, request timestamps).</li>
-      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Email service providers</strong> — Used to deliver transactional emails (password resets, receipts, account notifications). We will update this Policy when we select a specific provider.</li>
+      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Resend</strong> — Delivers transactional emails (account confirmations, password resets, receipts, account notifications). Resend receives your email address and the message content for each transactional email we send you. Their <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
+      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">GitHub, Inc.</strong> — Hosts our public-facing website (GitHub Pages). May log basic technical information (IP address, browser type, request timestamps) for service operation.</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Analytics providers (with your consent)</strong> — Used to understand usage patterns and improve the service. Active only if you accept analytics cookies in our cookie banner.</li>
     </ul>
     <p style="margin-top:16px;">We do not sell, rent, or trade your personal information to any third party. We do not share your data with payment processors listed in our underwriting engine — when you click "Apply at [Processor]," you are redirected to their website to apply directly.</p>
@@ -2781,7 +2782,7 @@ function renderStep(step) {
         </select>
       </div>
       <div class="field"><label>Years in business</label>
-        <input type="number" min="0" max="50" value="${merchant.yearsInBusiness}" oninput="merchant.yearsInBusiness = Number(this.value)" />
+        <input type="number" min="0" max="200" value="${merchant.yearsInBusiness}" oninput="merchant.yearsInBusiness = Number(this.value)" />
       </div>
       <div class="field"><label>Country of registration</label>
         <select onchange="merchant.country = this.value">
@@ -2906,7 +2907,7 @@ function renderStep(step) {
       <div style="margin-top:32px;padding:20px;border:1px solid var(--border-strong);background:var(--bg-elevated);display:flex;gap:14px;align-items:flex-start;">
         <span style="color:var(--accent);font-size:18px;">🔒</span>
         <div style="font-size:13px;color:var(--fg-muted);line-height:1.6;">
-          Your intake form is ready. Click "Run underwriting" to generate your report across all 29 payment processors — saved to your account with unlimited re-access.
+          Your intake form is ready. Click "Run underwriting" to generate your report across all 29 payment processors — saved to your account for future reference.
         </div>
       </div>
     `;
@@ -2914,9 +2915,41 @@ function renderStep(step) {
 }
 
 function nextStep() {
-  if (currentStep === 0 && !merchant.businessName.trim()) {
-    alert('Please enter your business name to continue.');
-    return;
+  // Per-step validation. The Edge Function also validates server-side, but front-end
+  // checks let us show clear errors before the user wastes a click and a report quota.
+  if (currentStep === 0) {
+    if (!merchant.businessName.trim()) {
+      alert('Please enter your business name to continue.');
+      return;
+    }
+    if (merchant.businessName.length > 200) {
+      alert('Business name is too long. Please shorten it to 200 characters or fewer.');
+      return;
+    }
+  }
+  if (currentStep === 1) {
+    if (!Number.isFinite(merchant.monthlyVolume) || merchant.monthlyVolume <= 0) {
+      alert('Please enter your monthly processing volume to continue. If you are pre-revenue, enter your projected monthly volume.');
+      return;
+    }
+    if (!Number.isFinite(merchant.avgTicket) || merchant.avgTicket <= 0) {
+      alert('Please enter your average ticket size to continue.');
+      return;
+    }
+  }
+  if (currentStep === 2) {
+    if (!Number.isFinite(merchant.chargebackRatio) || merchant.chargebackRatio < 0) {
+      alert('Please enter a valid chargeback ratio (0 if you have none).');
+      return;
+    }
+    if (!Number.isFinite(merchant.refundRatio) || merchant.refundRatio < 0) {
+      alert('Please enter a valid refund ratio (0 if you have none).');
+      return;
+    }
+    if (!Number.isFinite(merchant.terminations) || merchant.terminations < 0) {
+      alert('Please enter a valid number for prior payment processor terminations (0 if none).');
+      return;
+    }
   }
   if (currentStep < STEPS.length - 1) {
     currentStep++;
@@ -4267,7 +4300,16 @@ async function deleteAccountFlow() {
 
 async function updateBusiness() {
   const newName = document.getElementById('settings-business').value.trim();
-  if (newName.length < 2) return;
+  if (newName.length < 2) {
+    alert('Business name must be at least 2 characters.');
+    return;
+  }
+  if (newName.length > 100) {
+    alert('Business name must be 100 characters or fewer.');
+    return;
+  }
+  // Capture previous value so we can revert in-memory state if persistence fails.
+  const previousName = currentUser.business;
   currentUser.business = newName;
   const ok = await persistProfileFields({
     email: currentUser.email, // REQUIRED — profiles.email has NOT NULL constraint
@@ -4279,6 +4321,8 @@ async function updateBusiness() {
     alert('Business name updated.');
     renderSettings();
   } else {
+    // Revert in-memory state so subsequent renders don't show an unsaved value.
+    currentUser.business = previousName;
     alert('Unable to update business name. Please try again.');
   }
 }
@@ -4630,6 +4674,15 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
         document.body.appendChild(toast);
         setTimeout(() => { toast.style.transition = 'opacity 0.3s ease'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 350); }, 4000);
       };
+      const showSignInPromptToast = () => {
+        const existing = document.getElementById('stripe-success-toast');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);background:var(--bg-card);border:1px solid var(--accent);color:var(--fg);padding:14px 24px;font-size:13px;z-index:2000;box-shadow:0 4px 16px rgba(0,0,0,0.12);display:flex;align-items:center;gap:12px;max-width:480px;';
+        toast.innerHTML = `<div style="width:18px;height:18px;background:var(--bg-elevated);border:1px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--accent);flex-shrink:0;">i</div><span><strong>Subscription activated.</strong> Please sign in to access your account.</span>`;
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.transition = 'opacity 0.3s ease'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 350); }, 6000);
+      };
 
       // Strip query params immediately so a refresh doesn't re-trigger
       try { window.history.replaceState({}, '', window.location.pathname); } catch(e) {}
@@ -4644,9 +4697,17 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
           console.error('[STRIPE CHECKOUT] Re-hydrate failed:', e);
         }
         if (processingToast && processingToast.parentNode) processingToast.remove();
-        showSuccessToast();
-        // Route into the dashboard so the user sees their now-active subscription state
-        go('dashboard');
+        if (currentUser) {
+          showSuccessToast();
+          // Route into the dashboard so the user sees their now-active subscription state
+          go('dashboard');
+        } else {
+          // Session was lost between checkout and return — webhook still fired and
+          // the subscription IS active in our DB, but this browser/tab can't see it.
+          // Don't lie to the user. Tell them to sign in.
+          showSignInPromptToast();
+          go('signin');
+        }
       }, 2000);
     } else if (checkoutStatus === 'cancelled') {
       console.log('[STRIPE CHECKOUT] User cancelled checkout');
@@ -4665,13 +4726,12 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
       if (currentUser) {
         go('subscribe');
       }
-    }
-
-    // =============== BILLING PORTAL RETURN ===============
-    // When user returns from Stripe Customer Portal (after updating card / changing plan / cancelling),
-    // they land on ?billing=returned. Re-hydrate to pick up any webhook-driven state changes, then route to billing.
-    const billingStatus = urlParams.get('billing');
-    if (billingStatus === 'returned') {
+    } else if (urlParams.get('billing') === 'returned') {
+      // =============== BILLING PORTAL RETURN ===============
+      // When user returns from Stripe Customer Portal (after updating card / changing plan / cancelling),
+      // they land on ?billing=returned. Re-hydrate to pick up any webhook-driven state changes, then route to billing.
+      // NOTE: this branch is mutually exclusive with the checkout=* branches above so we never
+      // run two re-hydrate timers at once on a single page load.
       console.log('[BILLING PORTAL] User returned from Customer Portal — re-hydrating for webhook updates');
 
       // Strip query params immediately so refresh doesn't re-trigger
@@ -4693,7 +4753,8 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
         }
         const t = document.getElementById('billing-return-toast');
         if (t) t.remove();
-        // Route to billing so the user sees their updated state
+        // Route to billing so the user sees their updated state. If session was lost, route guard
+        // will redirect to signin automatically.
         go('billing');
       }, 2000);
     }
