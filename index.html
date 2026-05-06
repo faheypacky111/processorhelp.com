@@ -3300,8 +3300,11 @@ function showLimitReachedModal(override) {
   }
 
   // Suggest the next tier up
-  const nextTier = u.subscriptionPlan === 'starter' ? PLANS.growth
-    : u.subscriptionPlan === 'growth' ? PLANS.enterprise
+  // Honor override.plan if the server provided it (e.g. via 402 payload),
+  // otherwise fall back to the user's local plan record.
+  const effectivePlanId = (override && override.plan) || u.subscriptionPlan;
+  const nextTier = effectivePlanId === 'starter' ? PLANS.growth
+    : effectivePlanId === 'growth' ? PLANS.enterprise
     : null;
 
   // Reset date = 1st of next month
@@ -3342,8 +3345,14 @@ function showLimitReachedModal(override) {
 
       <div style="display:flex;gap:12px;flex-wrap:wrap;">
         ${nextTier ? `
-          <button class="btn-primary" onclick="closeLimitModal();go('billing');" style="flex:1;min-width:200px;justify-content:center;">Upgrade to ${nextTier.name} →</button>
+          <button class="btn-primary" onclick="closeLimitModal();upgradeFromLimitModal('${nextTier.id}_monthly');" style="flex:1;min-width:200px;justify-content:center;">Upgrade to ${nextTier.name} →</button>
           <button class="btn-ghost" onclick="closeLimitModal();" style="flex:1;min-width:140px;justify-content:center;">Wait until ${resetStr}</button>
+          <div style="margin-top:10px;text-align:center;flex-basis:100%;">
+            <a href="#" onclick="event.preventDefault();closeLimitModal();upgradeFromLimitModal('${nextTier.id}_annual');"
+               style="font-size:13px;color:#6b7280;text-decoration:underline;">
+              Save with annual — 2 months free (${nextTier.id === 'enterprise' ? '$598' : '$198'}/year savings)
+            </a>
+          </div>
         ` : `
           <button class="btn-ghost" onclick="closeLimitModal();" style="flex:1;justify-content:center;">Got it</button>
         `}
@@ -3354,6 +3363,30 @@ function showLimitReachedModal(override) {
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) closeLimitModal();
   });
+}
+
+// One-click upgrade from the limit-reached modal. Calls create-checkout-session,
+// which returns either a Stripe Checkout URL (new subscribers) or a Stripe Customer
+// Portal URL with subscription_update_confirm flow (existing subscribers).
+async function upgradeFromLimitModal(targetLookupKey) {
+  try {
+    const { data, error } = await supabaseClient.functions.invoke('create-checkout-session', {
+      body: {
+        lookup_key: targetLookupKey,
+        success_url: window.location.origin + '/?upgrade=success',
+        cancel_url: window.location.origin + '/?upgrade=canceled',
+      },
+    });
+    if (error || !data || !data.url) {
+      console.error('[upgrade]', error);
+      alert('Could not start upgrade. Please try again or contact support@processorhelp.com.');
+      return;
+    }
+    window.location.href = data.url;
+  } catch (e) {
+    console.error('[upgrade]', e);
+    alert('Could not start upgrade. Please try again.');
+  }
 }
 
 function closeLimitModal() {
