@@ -433,9 +433,8 @@
     /* Dashboard 2-col actions -> stack */
     #dashboard-content div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; gap: 16px !important; }
 
-    /* Subscribe/paywall checkout 2-col -> stack */
-    #subscribe-content div[style*="1fr 1fr"],
-    #paywall-content div[style*="1fr 1fr"] { grid-template-columns: 1fr !important; gap: 32px !important; }
+    /* Subscribe checkout 2-col -> stack */
+    #subscribe-content div[style*="1fr 1fr"] { grid-template-columns: 1fr !important; gap: 32px !important; }
 
     /* About Us "Who We Serve" and "Principles" 2-col -> stack */
     section div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; gap: 24px !important; }
@@ -597,6 +596,34 @@
   </div>
 </div>
 
+<!-- =============== PASSWORD MODAL =============== -->
+<!-- Reusable password-entry dialog. Opened via promptPassword() — returns a Promise.
+     Used by Change Password (Settings) and Password Recovery (email-link landing). -->
+<div id="password-modal" role="dialog" aria-modal="true" aria-labelledby="password-modal-title" style="display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--bg-card);border:1px solid var(--border-strong);box-shadow:0 12px 40px rgba(0,0,0,0.18);width:100%;max-width:440px;padding:32px;">
+    <div class="mono" id="password-modal-eyebrow" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Account Security</div>
+    <h2 class="display" id="password-modal-title" style="font-size:24px;font-weight:500;margin-bottom:8px;">Change password</h2>
+    <p id="password-modal-subtitle" style="color:var(--fg-muted);font-size:13px;line-height:1.6;margin-bottom:20px;">Enter your new password. Minimum 8 characters.</p>
+
+    <div style="margin-bottom:14px;">
+      <label for="password-modal-input" style="display:block;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px;" id="password-modal-input-label">New password</label>
+      <input id="password-modal-input" type="password" autocomplete="new-password" style="width:100%;padding:12px 14px;font-size:14px;background:var(--bg-elevated);border:1px solid var(--border-strong);color:var(--fg);font-family:Inter;" />
+    </div>
+
+    <div id="password-modal-confirm-wrap" style="margin-bottom:14px;">
+      <label for="password-modal-confirm" style="display:block;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px;">Confirm new password</label>
+      <input id="password-modal-confirm" type="password" autocomplete="new-password" style="width:100%;padding:12px 14px;font-size:14px;background:var(--bg-elevated);border:1px solid var(--border-strong);color:var(--fg);font-family:Inter;" />
+    </div>
+
+    <div id="password-modal-error" style="display:none;color:var(--denied);font-size:12px;margin-bottom:14px;line-height:1.5;"></div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;">
+      <button id="password-modal-cancel" class="btn-ghost" style="padding:10px 18px;font-size:11px;">Cancel</button>
+      <button id="password-modal-submit" class="btn-primary" style="padding:10px 18px;font-size:11px;">Update password</button>
+    </div>
+  </div>
+</div>
+
 <!-- =============== LANDING =============== -->
 <div id="view-landing">
   <nav>
@@ -641,7 +668,7 @@
       </div>
       <div class="stat-cell" style="padding:32px 24px;">
         <div class="display stat-number" data-target="29" data-format="dollar" style="font-size:48px;font-weight:500;line-height:1;">$0</div>
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:12px;">Per Month · Unlimited Reports</div>
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:12px;">Per Month · Starting Price</div>
       </div>
     </div>
   </section>
@@ -680,7 +707,7 @@
       <div>
         <div class="display" style="font-size:48px;font-weight:400;color:var(--accent);line-height:1;margin-bottom:20px;">01</div>
         <h3 class="display" style="font-size:22px;font-weight:500;margin-bottom:12px;">Subscribe.</h3>
-        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;">Subscribe to unlock unlimited reports across all 29 payment processors. Plans starting at $29/month. Cancel anytime.</p>
+        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;">Subscribe to unlock underwriting reports across all 29 payment processors. Plans starting at $29/month. Cancel anytime.</p>
       </div>
       <div>
         <div class="display" style="font-size:48px;font-weight:400;color:var(--accent);line-height:1;margin-bottom:20px;">02</div>
@@ -766,7 +793,7 @@
         </div>
 
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;flex:1;font-size:13px;">
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:var(--fg);">Unlimited</strong> reports</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:var(--fg);">3 reports</strong> per month</span></div>
           <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>All 29 processors evaluated</span></div>
           <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Match scores & reasoning</span></div>
           <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Direct apply links</span></div>
@@ -1029,7 +1056,7 @@
         <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: April 23, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
-      <strong style="color:var(--fg);">Plain-language summary:</strong> We collect the business information you provide to generate your underwriting report. We charge a monthly or annual subscription fee for access to unlimited reports. We don't sell your data. We don't share it with payment processors without your action. You're always in control.
+      <strong style="color:var(--fg);">Plain-language summary:</strong> We collect the business information you provide to generate your underwriting report. We charge a monthly or annual subscription fee for access to underwriting reports (the number of reports per month varies by plan). We don't sell your data. We don't share it with payment processors without your action. You're always in control.
     </p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:40px;">1. Who We Are</h2>
@@ -1102,7 +1129,7 @@
         <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: April 23, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
-      <strong style="color:var(--fg);">Plain-language summary:</strong> Processor Help is an advisory tool, not a payment processor or broker. We charge a subscription fee (monthly or annual, varies by plan) for access to unlimited reports showing approval likelihood across 29 payment processors. Results are informational — processors make their own final decisions. Don't misrepresent your business on the form.
+      <strong style="color:var(--fg);">Plain-language summary:</strong> Processor Help is an advisory tool, not a payment processor or broker. We charge a subscription fee (monthly or annual, varies by plan) for access to underwriting reports across 29 payment processors. The number of reports per month varies by plan; the Enterprise tier includes unlimited reports. Results are informational — processors make their own final decisions. Don't misrepresent your business on the form.
     </p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:40px;">1. Acceptance of Terms</h2>
@@ -1119,7 +1146,7 @@
     </ul>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">3. The Service</h2>
-    <p>For a monthly or annual subscription fee (varies by plan), we provide you with unlimited underwriting reports showing likely approval, conditional approval, or denial outcomes across 29 payment processors based on the business information you provide and our proprietary underwriting logic modeled on publicly available processor criteria. Cancel anytime.</p>
+    <p>For a monthly or annual subscription fee (varies by plan), we provide you with monthly underwriting reports showing likely approval, conditional approval, or denial outcomes across 29 payment processors based on the business information you provide and our proprietary underwriting logic modeled on publicly available processor criteria. The number of reports per month is determined by your subscription tier: Starter (3 reports/month), Growth (6 reports/month), Enterprise (unlimited). Limits reset on the first day of each calendar month. Cancel anytime.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4. No Guarantee of Approval</h2>
     <p><strong style="color:var(--fg);">Our reports are predictive, not binding.</strong> Each payment processor performs its own independent underwriting using criteria, data sources, and policies that change over time. A "Likely Approved" result is not a guarantee. A "Likely Denied" result is not final — you may still apply. Approval decisions rest solely with each payment processor.</p>
@@ -1134,7 +1161,7 @@
     </ul>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">6. Payment, Subscription & Refunds</h2>
-    <p><strong style="color:var(--fg);">Subscription billing.</strong> The $29 monthly subscription fee is automatically charged to your card on file each month and grants unlimited access to underwriting reports during the active billing period. The subscription continues until you cancel.</p>
+    <p><strong style="color:var(--fg);">Subscription billing.</strong> Subscription fees vary by plan: Starter ($29/month), Growth ($99/month), Enterprise ($299/month). Annual plans are also available with two months free. Your subscription fee is automatically charged to your card on file at the start of each billing period and grants access to the report quota associated with your plan during that period. The subscription continues until you cancel.</p>
     <p style="margin-top:12px;"><strong style="color:var(--fg);">Cancellation.</strong> You may cancel your subscription at any time from your Billing page. Cancellation is effective immediately — no phone calls, no retention pressure, no waiting periods. You retain full access until the end of your current paid billing period (e.g., if you cancel on day 5 of a 30-day cycle, you keep access through day 30).</p>
     <p style="margin-top:12px;"><strong style="color:var(--fg);">Refund policy.</strong> All subscription fees are final upon charge. Refunds are issued in two specific situations:</p>
     <ul style="margin-top:8px;padding-left:24px;">
@@ -1420,7 +1447,7 @@
     <div class="fade-up">
       <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Create Account</div>
       <h1 class="display" style="font-size:42px;font-weight:400;margin-bottom:12px;letter-spacing:-0.02em;">Start your<br>underwriting journey.</h1>
-      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:40px;">Free account. Subscribe to unlock unlimited payment processor underwriting reports — plans starting at $29/month.</p>
+      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:40px;">Free account. Subscribe to unlock payment processor underwriting reports — plans starting at $29/month.</p>
       <div class="field"><label>Business name</label>
         <input id="signup-business" placeholder="Acme Commerce LLC" oninput="validateSignup()" />
       </div>
@@ -1548,7 +1575,7 @@
   </main>
 </div>
 
-<!-- =============== SUBSCRIBE (PAYWALL) =============== -->
+<!-- =============== SUBSCRIBE =============== -->
 <div id="view-subscribe" class="hidden">
   <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
     <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('dashboard')">
@@ -1645,21 +1672,6 @@
     <button id="btn-prev" class="btn-ghost" onclick="prevStep()">← Previous</button>
     <button id="btn-next" class="btn-primary" onclick="nextStep()">Continue →</button>
   </footer>
-</div>
-
-<!-- =============== PAYWALL =============== -->
-<div id="view-paywall" class="hidden">
-  <header style="padding:24px 48px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-    <button id="paywall-back" onclick="go('application')" style="background:none;border:none;color:var(--fg-muted);cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13px;font-family:Inter;">← Back to intake form</button>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-      <div style="display:flex;align-items:center;gap:8px;color:var(--fg-muted);font-size:12px;">
-      🔒 <span class="mono" style="letter-spacing:0.1em;text-transform:uppercase;">Secure Checkout</span>
-    </div>
-  </header>
-
-  <main style="flex:1;padding:64px 48px;max-width:1100px;margin:0 auto;width:100%;">
-    <div id="paywall-content"></div>
-  </main>
 </div>
 
 <!-- =============== RESULTS =============== -->
@@ -1759,554 +1771,146 @@ const PROCESSORS = [
     id: 'stripe', name: 'Stripe', category: 'Low-Risk Premium', speed: '1-2 days',
     applyUrl: 'https://dashboard.stripe.com/register',
     description: 'Industry-leading payment processor for low-risk digital businesses and standard e-commerce.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['Vertical outside Stripe accepted business categories'], score: 0 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Multiple prior payment processor terminations flagged'], score: 5 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies from Stripe underwriting'], score: 0 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds 1.0% threshold`], score: 10 };
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile may require additional review');
-      if (m.chargebackRatio > 0.5) reasons.push('Chargeback ratio elevated but within tolerance');
-      if (m.terminations === 1) reasons.push('One prior termination — additional documentation required');
-      if (risk === 'medium') reasons.push('Vertical acceptable but underwriting review required');
-      const score = reasons.length === 0 ? 95 : reasons.length === 1 ? 78 : 62;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Clean profile matches Stripe standard underwriting'], score };
-    },
   },
   {
     id: 'paypal', name: 'PayPal', category: 'Low-Risk Premium', speed: '1-3 days',
     applyUrl: 'https://www.paypal.com/us/business',
     description: 'Mass-market payment processor with strong consumer trust. Strict risk tolerances.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['Vertical prohibited under PayPal Acceptable Use Policy'], score: 0 };
-      if (m.chargebackRatio > 0.9) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds PayPal threshold`], score: 5 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history exceeds tolerance'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list disqualifies application'], score: 0 };
-      if (m.refundRatio > 15) reasons.push('Refund ratio above 15% will trigger rolling reserve');
-      if (risk === 'medium') reasons.push('Vertical requires enhanced monitoring');
-      if (m.terminations === 1) reasons.push('Prior termination — 180-day rolling reserve likely');
-      const score = reasons.length === 0 ? 92 : reasons.length === 1 ? 74 : 58;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile aligned with PayPal standard merchant'], score };
-    },
   },
   {
     id: 'adyen', name: 'Adyen', category: 'Enterprise', speed: '3-7 days',
     applyUrl: 'https://www.adyen.com/contact/sales',
     description: 'Enterprise-grade unified commerce platform. Prefers high-volume, established merchants.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.monthlyVolume < 50000) return { status: 'denied', reasons: ['Monthly volume below Adyen enterprise minimum ($50K+)'], score: 15 };
-      if (risk === 'high' && m.industry !== 'gambling') return { status: 'denied', reasons: ['Vertical not supported without specialized license'], score: 5 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible with Adyen standards'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (m.yearsInBusiness < 1) reasons.push('Business tenure under 12 months — additional financials required');
-      if (m.monthlyVolume < 100000) reasons.push('Volume below preferred tier — underwriting review');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires executive review');
-      const score = reasons.length === 0 ? 90 : reasons.length === 1 ? 72 : 55;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches Adyen enterprise underwriting'], score };
-    },
   },
   {
     id: 'checkout', name: 'Checkout.com', category: 'Mid-Market Premium', speed: '2-5 days',
     applyUrl: 'https://www.checkout.com/contact-sales',
     description: 'Flexible mid-to-enterprise payment processor with strong global capabilities.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.industry === 'adult' || m.industry === 'firearms') return { status: 'denied', reasons: ['Vertical not supported'], score: 0 };
-      if (m.monthlyVolume < 25000) return { status: 'denied', reasons: ['Below Checkout.com volume minimum ($25K+)'], score: 15 };
-      if (m.chargebackRatio > 1.2) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list disqualifies'], score: 0 };
-      if (risk === 'high') reasons.push('High-risk vertical requires specialized underwriting and higher rates');
-      if (m.terminations >= 1) reasons.push('Prior termination flagged — documentation required');
-      if (risk === 'medium') reasons.push('Vertical acceptable with standard review');
-      const score = reasons.length === 0 ? 88 : reasons.length === 1 ? 71 : 54;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile aligned with Checkout.com mid-market tier'], score };
-    },
   },
   {
     id: 'mollie', name: 'Mollie', category: 'EU-Focused', speed: '1-3 days',
     applyUrl: 'https://my.mollie.com/dashboard/signup',
     description: 'European payment leader with strong SEPA, iDEAL, and regional method support.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.country !== 'EU' && m.country !== 'UK') return { status: 'denied', reasons: ['Mollie requires EU/UK registered entity'], score: 0 };
-      if (risk === 'high') return { status: 'denied', reasons: ['High-risk verticals not supported'], score: 5 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: ['Chargeback ratio exceeds 1% threshold'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list disqualifies'], score: 0 };
-      if (risk === 'medium') reasons.push('Vertical requires standard compliance review');
-      if (m.terminations >= 1) reasons.push('Prior termination — additional documentation required');
-      const score = reasons.length === 0 ? 89 : reasons.length === 1 ? 72 : 0;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches Mollie EU underwriting'], score };
-    },
   },
   {
     id: 'paymentcloud', name: 'PaymentCloud', category: 'High-Risk Specialist', speed: '3-7 days',
     applyUrl: 'https://apply.paymentcloudinc.com/apply/',
     description: 'High-risk merchant specialist. Accepts CBD, nutra, firearms, adult, credit repair, and other restricted verticals.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list status — PaymentCloud works with reformed MATCH merchants, additional fees apply');
-      if (m.chargebackRatio > 3) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds even high-risk tolerance (3%)`], score: 10 };
-      if (m.terminations >= 4) return { status: 'denied', reasons: ['Excessive termination history — 4+ priors'], score: 15 };
-      if (m.terminations >= 1) reasons.push('Prior terminations accepted — rolling reserve of 5-10% likely');
-      if (m.chargebackRatio > 1.5) reasons.push('Elevated chargebacks — chargeback mitigation program required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit rebuild accepted — personal guarantee required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved at specialized rates');
-      const score = reasons.length <= 1 ? 91 : reasons.length === 2 ? 82 : 75;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Clean profile accepted on standard high-risk terms'], score };
-    },
   },
   {
     id: 'paykings', name: 'PayKings', category: 'High-Risk Specialist', speed: '2-5 days',
     applyUrl: 'https://paykings.com/get-started/',
     description: 'Aggressive high-risk underwriter. Strong for nutra, CBD, adult, travel, debt consolidation, and rebuilding merchants.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list merchants accepted with enhanced underwriting and reserves');
-      if (m.chargebackRatio > 4) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds PayKings maximum (4%)`], score: 10 };
-      if (m.terminations >= 5) return { status: 'denied', reasons: ['Termination history exceeds 5 priors'], score: 15 };
-      if (m.chargebackRatio > 2) reasons.push('High chargebacks — CB Alert and mitigation mandatory');
-      if (m.terminations >= 2) reasons.push('Multiple prior terminations — 10% rolling reserve standard');
-      if (m.credit === 'rebuilding') reasons.push('Credit rebuild profile approved — personal guarantee required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved — specialized rates apply');
-      const score = reasons.length <= 1 ? 90 : reasons.length === 2 ? 81 : 73;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard high-risk terms'], score };
-    },
   },
   {
     id: 'worldline', name: 'Worldline', category: 'Enterprise', speed: '5-14 days',
     applyUrl: 'https://worldline.com/en/home/main-navigation/git/contact',
     description: 'European enterprise leader. Strong for regulated industries, omnichannel, and high-volume merchants.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.monthlyVolume < 100000) return { status: 'denied', reasons: ['Monthly volume below Worldline enterprise minimum ($100K+)'], score: 15 };
-      if (m.yearsInBusiness < 2) return { status: 'denied', reasons: ['Worldline requires 2+ years operating history'], score: 20 };
-      if (risk === 'high' && !['gambling','travel'].includes(m.industry)) return { status: 'denied', reasons: ['Vertical requires specialized regulatory license'], score: 5 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list disqualifies from Worldline'], score: 0 };
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires executive committee review');
-      if (m.monthlyVolume < 250000) reasons.push('Volume below preferred enterprise tier');
-      if (m.terminations === 1) reasons.push('Prior termination — compliance review required');
-      const score = reasons.length === 0 ? 87 : reasons.length === 1 ? 70 : 52;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches Worldline enterprise underwriting'], score };
-    },
   },
   {
     id: 'worldpay', name: 'Worldpay', category: 'Enterprise', speed: '3-10 days',
     applyUrl: 'https://www.worldpay.com/en/contact-sales',
     description: 'Global enterprise payment processor (FIS). Broad industry acceptance with flexibility across verticals and geographies.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.monthlyVolume < 30000) return { status: 'denied', reasons: ['Monthly volume below Worldpay mid-market minimum ($30K+)'], score: 15 };
-      if (m.terminations >= 3) return { status: 'denied', reasons: ['Termination history exceeds tolerance'], score: 10 };
-      if (m.chargebackRatio > 1.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds Worldpay threshold`], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (risk === 'high' && !['gambling','travel','supplements'].includes(m.industry)) reasons.push('High-risk vertical requires specialized division review — higher rates apply');
-      if (m.terminations >= 1) reasons.push('Prior termination — additional documentation required');
-      if (m.monthlyVolume < 75000) reasons.push('Volume below preferred tier — standard underwriting');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length === 0 ? 88 : reasons.length === 1 ? 72 : 56;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile aligned with Worldpay mid-market underwriting'], score };
-    },
   },
   {
     id: 'authorizenet', name: 'Authorize.Net', category: 'Gateway', speed: '1-3 days',
     applyUrl: 'https://www.authorize.net/sign-up/',
     description: 'Long-standing payment gateway backed by Visa. Broadly accessible for small and mid-sized merchants with standard risk profiles.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high' && !['supplements','coaching','subscription-box'].includes(m.industry)) return { status: 'denied', reasons: ['High-risk vertical outside Authorize.Net acceptance criteria'], score: 5 };
-      if (m.chargebackRatio > 1.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (risk === 'medium') reasons.push('Vertical requires standard underwriting review');
-      if (m.chargebackRatio > 0.8) reasons.push('Chargebacks elevated — monitoring required');
-      if (m.terminations === 1) reasons.push('Prior termination — documentation required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile may require co-signer or reserve');
-      const score = reasons.length === 0 ? 86 : reasons.length === 1 ? 70 : 55;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard Authorize.Net terms'], score };
-    },
   },
   {
     id: 'elavon', name: 'Elavon', category: 'Bank-Backed', speed: '3-7 days',
     applyUrl: 'https://www.elavon.com/contact-us/new-customers.html',
     description: 'US Bank subsidiary. Conservative, bank-backed underwriting — strong for established low-risk merchants seeking stability.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['High-risk verticals outside Elavon bank-backed underwriting'], score: 5 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds 1% threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible with bank standards'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (m.yearsInBusiness < 1) reasons.push('Business tenure under 12 months — enhanced review required');
-      if (risk === 'medium') reasons.push('Vertical requires standard compliance review');
-      if (m.terminations === 1) reasons.push('Prior termination — additional documentation required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires bank committee review');
-      const score = reasons.length === 0 ? 87 : reasons.length === 1 ? 71 : 54;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches Elavon bank-backed standards'], score };
-    },
   },
   {
     id: 'shopifypayments', name: 'Shopify Payments', category: 'Platform-Integrated', speed: 'Same day',
     applyUrl: 'https://www.shopify.com/payments',
     description: 'Exclusive to merchants on the Shopify platform. Low-risk verticals only — powered by Stripe underneath with Shopify own underwriting overlay.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['Vertical prohibited under Shopify Payments Acceptable Use Policy'], score: 0 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds 1% threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Multiple prior terminations disqualify'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      reasons.push('Requires active Shopify store to activate');
-      if (risk === 'medium') reasons.push('Vertical acceptable with standard review');
-      if (m.terminations === 1) reasons.push('Prior termination — Shopify review required');
-      if (m.chargebackRatio > 0.5) reasons.push('Chargeback ratio elevated but within tolerance');
-      const score = reasons.length <= 1 ? 85 : reasons.length === 2 ? 70 : 55;
-      return { status: reasons.length > 2 ? 'conditional' : 'approved', reasons, score };
-    },
   },
   {
     id: 'durango', name: 'Durango Merchant Services', category: 'High-Risk Specialist', speed: '3-5 days',
     applyUrl: 'https://durangomerchantservices.com/apply-for-a-merchant-account/',
     description: 'High-risk specialist with 20+ years experience. Strong for CBD, nutra, adult, firearms, credit repair, and rebuilding merchants.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list accepted — Durango works with reformed merchants, enhanced reserves apply');
-      if (m.chargebackRatio > 3.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds even high-risk tolerance`], score: 10 };
-      if (m.terminations >= 4) return { status: 'denied', reasons: ['Termination history exceeds 4 priors'], score: 15 };
-      if (m.terminations >= 1) reasons.push('Prior terminations accepted — rolling reserve of 5-10% likely');
-      if (m.chargebackRatio > 1.5) reasons.push('High chargebacks — mitigation program required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit rebuild accepted — personal guarantee required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved at specialized rates');
-      const score = reasons.length <= 1 ? 90 : reasons.length === 2 ? 81 : 74;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Clean profile accepted on standard high-risk terms'], score };
-    },
   },
   {
     id: 'flutterwave', name: 'Flutterwave', category: 'Africa-Focused', speed: '2-5 days',
     applyUrl: 'https://app.flutterwave.com/login',
     description: 'Leading African payments platform. Strong for merchants targeting Nigeria, Kenya, Ghana, South Africa, and global businesses serving African markets.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high' && !['gambling'].includes(m.industry)) return { status: 'denied', reasons: ['High-risk verticals outside Flutterwave acceptance'], score: 5 };
-      if (m.chargebackRatio > 1.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (!['US','UK','EU'].includes(m.country)) reasons.push('Africa-based or international merchant — strong regional fit');
-      else reasons.push('Best suited for merchants serving African markets — verify cross-border fit');
-      if (risk === 'medium') reasons.push('Vertical requires compliance review');
-      if (m.terminations === 1) reasons.push('Prior termination — additional documentation required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length === 1 ? 82 : reasons.length === 2 ? 70 : 55;
-      return { status: reasons.length > 2 ? 'conditional' : 'approved', reasons, score };
-    },
   },
   {
     id: 'paycom', name: 'Pay.com', category: 'Mid-Market Flexible', speed: '2-5 days',
     applyUrl: 'https://pay.com/',
     description: 'Modern, flexible payment platform for mid-market businesses. Strong tech, broad acceptance, competitive rates.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high' && !['supplements','coaching'].includes(m.industry)) return { status: 'denied', reasons: ['High-risk vertical outside Pay.com standard underwriting'], score: 5 };
-      if (m.chargebackRatio > 1.3) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history exceeds tolerance'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (risk === 'medium') reasons.push('Vertical acceptable with standard review');
-      if (m.terminations === 1) reasons.push('Prior termination — documentation required');
-      if (m.chargebackRatio > 0.8) reasons.push('Chargebacks elevated — monitoring required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length === 0 ? 86 : reasons.length === 1 ? 71 : 56;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches Pay.com standard underwriting'], score };
-    },
   },
   {
     id: 'soarpay', name: 'SoarPay', category: 'High-Risk Specialist', speed: '2-5 days',
     applyUrl: 'https://www.soarpay.com/online-application/',
     description: 'High-risk specialist covering CBD, nutra, adult, firearms, credit repair, and MATCH-listed merchants.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list merchants accepted with standard high-risk reserves');
-      if (m.chargebackRatio > 4) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds maximum (4%)`], score: 10 };
-      if (m.terminations >= 5) return { status: 'denied', reasons: ['Termination history exceeds 5 priors'], score: 15 };
-      if (m.terminations >= 2) reasons.push('Multiple prior terminations — rolling reserve required');
-      if (m.chargebackRatio > 2) reasons.push('High chargebacks — CB mitigation program mandatory');
-      if (m.credit === 'rebuilding') reasons.push('Credit rebuild approved — personal guarantee required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved — specialized rates apply');
-      const score = reasons.length <= 1 ? 89 : reasons.length === 2 ? 80 : 72;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard high-risk terms'], score };
-    },
   },
   {
     id: 'woopayments', name: 'WooPayments', category: 'Platform-Integrated', speed: 'Same day',
     applyUrl: 'https://woocommerce.com/products/woopayments/',
     description: 'Exclusive to WooCommerce merchants. Low-risk verticals only — native WooCommerce integration with standard underwriting.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['Vertical prohibited under WooPayments Acceptable Use Policy'], score: 0 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds 1% threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Multiple prior terminations disqualify'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      reasons.push('Requires active WooCommerce store to activate');
-      if (risk === 'medium') reasons.push('Vertical acceptable with standard review');
-      if (m.terminations === 1) reasons.push('Prior termination — additional review required');
-      if (m.chargebackRatio > 0.5) reasons.push('Chargebacks elevated but within tolerance');
-      const score = reasons.length <= 1 ? 84 : reasons.length === 2 ? 69 : 54;
-      return { status: reasons.length > 2 ? 'conditional' : 'approved', reasons, score };
-    },
   },
   {
     id: 'hubspot', name: 'HubSpot Payments', category: 'Platform-Integrated', speed: '1-2 days',
     applyUrl: 'https://www.hubspot.com/products/commerce/payments',
     description: 'Available to HubSpot CRM customers in the US. Low-risk verticals only with direct CRM integration for invoicing and subscriptions.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.country !== 'US') return { status: 'denied', reasons: ['HubSpot Payments is US-only at this time'], score: 0 };
-      if (risk === 'high') return { status: 'denied', reasons: ['High-risk verticals not supported'], score: 5 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      reasons.push('Requires active HubSpot CRM account to activate');
-      if (risk === 'medium') reasons.push('Vertical acceptable with standard review');
-      if (m.terminations === 1) reasons.push('Prior termination — additional documentation required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length <= 1 ? 83 : reasons.length === 2 ? 68 : 53;
-      return { status: reasons.length > 2 ? 'conditional' : 'approved', reasons, score };
-    },
   },
   {
     id: 'highriskpay', name: 'HighRiskPay.com', category: 'Extreme High-Risk', speed: '1-3 days',
     applyUrl: 'https://highriskpay.com/',
     description: 'Extreme high-risk specialist. Accepts virtually all verticals including those rejected by other high-risk processors.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list merchants welcomed — rehabilitation program available');
-      if (m.chargebackRatio > 5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds absolute maximum`], score: 10 };
-      if (m.terminations >= 6) return { status: 'denied', reasons: ['Termination history exceeds 6 priors'], score: 15 };
-      if (m.terminations >= 2) reasons.push('Multiple prior terminations — 15-20% rolling reserve likely');
-      if (m.chargebackRatio > 2.5) reasons.push('Very high chargebacks — mandatory CB alert service required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('All credit profiles accepted — personal guarantee required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('Extreme high-risk vertical approved — premium rates apply');
-      const score = reasons.length <= 1 ? 86 : reasons.length === 2 ? 78 : 71;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on extreme high-risk terms'], score };
-    },
   },
   {
     id: 'easypaydirect', name: 'Easy Pay Direct', category: 'High-Risk Specialist', speed: '3-7 days',
     applyUrl: 'https://easypaydirect.com/',
     description: 'High-risk specialist with load-balancing technology across multiple MIDs. Strong for subscription, nutra, coaching, and scaling brands.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list accepted — load-balanced MID structure helps mitigate risk');
-      if (m.chargebackRatio > 3) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds tolerance even with load balancing`], score: 10 };
-      if (m.terminations >= 4) return { status: 'denied', reasons: ['Termination history exceeds 4 priors'], score: 15 };
-      if (m.terminations >= 1) reasons.push('Prior terminations accepted — multi-MID setup recommended');
-      if (m.subscription === 'yes') reasons.push('Subscription model — load balancing particularly effective');
-      if (m.chargebackRatio > 1.5) reasons.push('Elevated chargebacks — load balancing across MIDs advised');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile accepted with personal guarantee');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved with specialized MID structure');
-      const score = reasons.length <= 1 ? 89 : reasons.length === 2 ? 81 : 74;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard high-risk terms'], score };
-    },
   },
   {
     id: 'totalprocessing', name: 'Total Processing', category: 'High-Risk Specialist', speed: '3-7 days',
     applyUrl: 'https://totalprocessing.com/',
     description: 'UK-based high-risk specialist. Strong for adult, gambling, crypto, nutra, and other restricted verticals across Europe and beyond.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list accepted with enhanced reserves and monitoring');
-      if (m.chargebackRatio > 3.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds high-risk tolerance`], score: 10 };
-      if (m.terminations >= 4) return { status: 'denied', reasons: ['Excessive termination history — 4+ priors'], score: 15 };
-      if (m.terminations >= 1) reasons.push('Prior terminations accepted — rolling reserve likely');
-      if (m.chargebackRatio > 1.5) reasons.push('Elevated chargebacks — mitigation program required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit rebuild accepted — personal guarantee required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved — specialized UK/EU underwriting');
-      if (!['US','UK','EU'].includes(m.country)) reasons.push('International merchant — strongest fit for UK/EU operations');
-      const score = reasons.length <= 1 ? 88 : reasons.length === 2 ? 79 : 72;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard high-risk terms'], score };
-    },
   },
   {
     id: 'nmi', name: 'NMI', category: 'Gateway Platform', speed: '1-3 days',
     applyUrl: 'https://www.nmi.com/talk-to-our-team/',
     description: 'Major payment gateway platform (Network Merchants Inc). Broadly accessible through hundreds of ISO partners. Strong for mid-market and omnichannel merchants.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.chargebackRatio > 1.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies at standard ISO tier'], score: 5 };
-      if (risk === 'high') reasons.push('High-risk vertical — requires high-risk ISO partner via NMI network');
-      if (risk === 'medium') reasons.push('Vertical acceptable with standard underwriting review');
-      if (m.terminations === 1) reasons.push('Prior termination — documentation required');
-      if (m.chargebackRatio > 0.8) reasons.push('Chargebacks elevated — monitoring required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length === 0 ? 87 : reasons.length === 1 ? 72 : 58;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches NMI standard gateway onboarding'], score };
-    },
   },
   {
     id: 'emerchantpay', name: 'EmerchantPay', category: 'High-Risk Specialist', speed: '3-10 days',
     applyUrl: 'https://www.emerchantpay.com/contact-us/',
     description: 'Global high-risk specialist. Strong for gambling, forex, crypto exchanges, adult, and other regulated verticals across EU, UK, and global markets.',
-    evaluate: (m) => {
-      const reasons = [];
-      if (m.matchList === 'yes') reasons.push('MATCH list accepted with enhanced reserves and compliance review');
-      if (m.chargebackRatio > 3) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds tolerance`], score: 10 };
-      if (m.terminations >= 3) return { status: 'denied', reasons: ['Excessive termination history'], score: 15 };
-      if (m.monthlyVolume < 20000) reasons.push('Volume below preferred enterprise tier — standard review');
-      if (m.terminations >= 1) reasons.push('Prior terminations accepted — rolling reserve likely');
-      if (m.chargebackRatio > 1.5) reasons.push('High chargebacks — mitigation program required');
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') reasons.push('High-risk vertical approved — specialized underwriting applies');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length <= 1 ? 87 : reasons.length === 2 ? 78 : 71;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard EmerchantPay terms'], score };
-    },
   },
   {
     id: 'nomupay', name: 'Nomupay', category: 'Emerging Markets', speed: '3-7 days',
     applyUrl: 'https://nomupay.com/application/',
     description: 'Emerging markets payment specialist. Strong for merchants expanding into Asia-Pacific, Middle East, Turkey, and other underserved regions.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high' && !['gambling'].includes(m.industry)) return { status: 'denied', reasons: ['High-risk verticals outside Nomupay acceptance'], score: 5 };
-      if (m.chargebackRatio > 1.5) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (['US','UK','EU'].includes(m.country)) reasons.push('Best suited for merchants expanding into emerging markets — verify cross-border fit');
-      else reasons.push('Strong regional fit for emerging market merchants');
-      if (risk === 'medium') reasons.push('Vertical requires compliance review');
-      if (m.terminations === 1) reasons.push('Prior termination — additional documentation required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length === 1 ? 82 : reasons.length === 2 ? 70 : 55;
-      return { status: reasons.length > 2 ? 'conditional' : 'approved', reasons, score };
-    },
   },
   {
     id: 'square', name: 'Square', category: 'Low-Risk SMB', speed: 'Same day',
     applyUrl: 'https://squareup.com/signup',
     description: 'Low-risk SMB processor with strong POS and in-person capabilities. Instant approval for most standard US-based retail, food service, and professional services.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['Vertical prohibited under Square Acceptable Use Policy'], score: 0 };
-      if (m.country !== 'US' && m.country !== 'CA' && m.country !== 'UK' && m.country !== 'AU') return { status: 'denied', reasons: ['Square not available in this country'], score: 5 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds 1% threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Multiple prior terminations disqualify'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (m.monthlyVolume > 250000) reasons.push('High volume — Square may place holds; Square for larger businesses recommended');
-      if (risk === 'medium') reasons.push('Vertical acceptable but may require enhanced monitoring');
-      if (m.terminations === 1) reasons.push('Prior termination — additional review required');
-      if (m.chargebackRatio > 0.5) reasons.push('Chargebacks elevated but within tolerance');
-      const score = reasons.length === 0 ? 91 : reasons.length === 1 ? 76 : 60;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Clean profile accepted — Square instant approval likely'], score };
-    },
   },
   {
     id: 'quickpay', name: 'QuickPay', category: 'EU Mid-Market', speed: '2-5 days',
     applyUrl: 'https://manage.quickpay.net/login/create-user',
     description: 'Danish payment processor serving European merchants. Strong for mid-market e-commerce, subscription businesses, and Nordic/EU market coverage.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.country !== 'EU' && m.country !== 'UK') return { status: 'denied', reasons: ['QuickPay requires EU/UK registered entity'], score: 0 };
-      if (risk === 'high') return { status: 'denied', reasons: ['High-risk verticals not supported'], score: 5 };
-      if (m.chargebackRatio > 1.2) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Termination history incompatible'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies'], score: 0 };
-      if (risk === 'medium') reasons.push('Vertical requires standard compliance review');
-      if (m.terminations === 1) reasons.push('Prior termination — additional documentation required');
-      if (m.chargebackRatio > 0.7) reasons.push('Chargebacks elevated — monitoring required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review');
-      const score = reasons.length === 0 ? 86 : reasons.length === 1 ? 71 : 56;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile matches QuickPay EU mid-market underwriting'], score };
-    },
   },
   {
     id: 'pepperpay', name: 'Pepper Pay', category: 'PayFac · High-Risk Capable', speed: '1-3 days',
     applyUrl: 'https://pepperpay.com/contact.php',
     description: 'Florida-based PayFac with strong high-risk capabilities. Offers ACH, pinless debit, and chargeback protection (Rapid Dispute Resolution). Strong for businesses needing fast onboarding with high-risk vertical support.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.chargebackRatio > 3) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds tolerance`], score: 10 };
-      if (m.terminations >= 4) return { status: 'denied', reasons: ['Termination history exceeds 4 priors'], score: 15 };
-      if (m.matchList === 'yes') reasons.push('MATCH list accepted with enhanced reserves and RDR enrollment');
-      if (m.terminations >= 1) reasons.push('Prior terminations accepted — chargeback protection program recommended');
-      if (m.chargebackRatio > 1.5) reasons.push('Elevated chargebacks — Pepper Pay Protect (RDR) required');
-      if (m.subscription === 'yes') reasons.push('Subscription billing supported with recurring tools and customer vault');
-      if (risk === 'high') reasons.push('High-risk vertical approved — specialized PayFac underwriting applies');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile accepted with personal guarantee');
-      if (m.country !== 'US' && m.country !== 'CA') reasons.push('Best fit for North American merchants — international onboarding limited');
-      const score = reasons.length <= 1 ? 87 : reasons.length === 2 ? 79 : 71;
-      return { status: reasons.length >= 3 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Profile accepted on standard PayFac terms with fast onboarding'], score };
-    },
   },
   {
     id: 'braintree', name: 'Braintree', category: 'Low-Risk Premium · PayPal-Owned', speed: '1-3 days',
     applyUrl: 'https://www.paypal.com/us/braintree',
     description: 'PayPal-owned enterprise payment processor. Strong for low-to-medium-risk e-commerce, marketplaces, and SaaS. Native Venmo, PayPal, Apple Pay, Google Pay support. Does not accept high-risk verticals.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (risk === 'high') return { status: 'denied', reasons: ['Vertical prohibited under Braintree Acceptable Use Policy (no high-risk industries)'], score: 0 };
-      if (m.chargebackRatio > 1) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds Braintree threshold`], score: 10 };
-      if (m.terminations >= 2) return { status: 'denied', reasons: ['Multiple prior terminations disqualify'], score: 10 };
-      if (m.matchList === 'yes') return { status: 'denied', reasons: ['MATCH list status disqualifies — Braintree shares PayPal underwriting standards'], score: 0 };
-      if (m.country !== 'US' && m.country !== 'CA' && m.country !== 'UK' && m.country !== 'EU' && m.country !== 'AU') {
-        return { status: 'denied', reasons: ['Braintree not available in this country'], score: 5 };
-      }
-      if (risk === 'medium') reasons.push('Vertical may trigger reserve or rolling hold per Braintree underwriting');
-      if (m.monthlyVolume > 100000) reasons.push('High volume — personal/corporate guarantee may be required');
-      if (m.terminations === 1) reasons.push('Prior termination — full underwriting documentation required');
-      if (m.chargebackRatio > 0.5) reasons.push('Chargebacks elevated but within tolerance — fraud tools required');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Credit profile requires enhanced review and possible reserve');
-      const score = reasons.length === 0 ? 90 : reasons.length === 1 ? 76 : 62;
-      return { status: reasons.length > 1 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Clean profile accepted — standard Braintree onboarding likely'], score };
-    },
   },
   {
     id: 'emerchantbroker', name: 'eMerchantBroker', category: 'High-Risk Aggregator', speed: '1-2 days',
     applyUrl: 'https://emerchantbroker.com/',
     description: 'High-risk specialist with 99% approval rate claim. Aggregator that routes applications to network of acquiring banks (Fiserv, iPayment, North American Bancard, etc.). Strong for previously-declined merchants, MATCH list cases, and complex verticals.',
-    evaluate: (m) => {
-      const reasons = [];
-      const risk = INDUSTRY_RISK[m.industry]?.tier;
-      if (m.chargebackRatio > 4) return { status: 'denied', reasons: [`Chargeback ratio ${m.chargebackRatio}% exceeds even high-risk aggregator tolerance`], score: 10 };
-      if (m.matchList === 'yes') reasons.push('MATCH list specifically supported — offshore acquiring bank routing available');
-      if (m.terminations >= 1) reasons.push('Prior terminations expected and accepted — aggregator network designed for previously-declined merchants');
-      if (m.chargebackRatio > 1.5) reasons.push('Elevated chargebacks — chargeback protection (Verifi/Ethoca) included');
-      if (risk === 'high') reasons.push('High-risk vertical — primary use case for EMB network');
-      if (risk === 'medium') reasons.push('Mid-risk vertical accepted on standard aggregator terms');
-      if (m.credit === 'poor' || m.credit === 'rebuilding') reasons.push('Bad credit/bankruptcy accepted — placement among network partners');
-      if (m.subscription === 'yes') reasons.push('Recurring billing supported across acquiring partners');
-      if (m.monthlyVolume < 10000) reasons.push('Lower volume — pricing may be higher than direct processor relationships');
-      if (m.country !== 'US') reasons.push('International placement available across 35 supported countries — verify acquiring bank fit');
-      const score = reasons.length <= 2 ? 84 : reasons.length === 3 ? 76 : 70;
-      return { status: reasons.length >= 4 ? 'conditional' : 'approved', reasons: reasons.length ? reasons : ['Standard placement via aggregator network'], score };
-    },
   },
 ];
 
@@ -2339,10 +1943,10 @@ const STEPS = [
 ];
 
 const PUBLIC_VIEWS = ['landing','processors-list','faq','legal','signup','signin','forgot'];
-const AUTH_REQUIRED_VIEWS = ['dashboard','settings','billing','reports','subscribe','application','paywall','results'];
-// Subscription is only required for RUNNING new reports (application/paywall).
+const AUTH_REQUIRED_VIEWS = ['dashboard','settings','billing','reports','subscribe','application','results'];
+// Subscription is only required for RUNNING new reports (application).
 // Viewing historical results is allowed on the free tier — they earned those reports while subscribed.
-const SUBSCRIPTION_REQUIRED_VIEWS = ['application','paywall'];
+const SUBSCRIPTION_REQUIRED_VIEWS = ['application'];
 
 // =============== AUTH STORAGE (Supabase) ===============
 // currentUser is the canonical in-memory user state, hydrated from Supabase.
@@ -2501,78 +2105,11 @@ async function persistProfileFields(fields) {
   }
 }
 
-async function persistSubscriptionFields(fields) {
-  // Updates subscription row. Uses direct fetch (Supabase JS client deadlocks).
-  // Uses upsert so a missing subscription row gets created on first subscribe.
-  if (!currentUser) return false;
-  if (!window._authToken) {
-    console.error('[PERSIST SUB] No auth token available');
-    return false;
-  }
-
-  const withTimeout = (promise, ms, label) => Promise.race([
-    promise,
-    new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out')), ms))
-  ]);
-
-  try {
-    const res = await withTimeout(
-      fetch(`${SUPABASE_URL}/rest/v1/subscriptions?on_conflict=user_id`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${window._authToken}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'resolution=merge-duplicates,return=minimal',
-        },
-        body: JSON.stringify({ user_id: currentUser.id, ...fields }),
-      }),
-      6000,
-      'Subscription upsert'
-    );
-    if (!res.ok) {
-      const errBody = await res.text().catch(() => '');
-      console.error('[PERSIST SUB] Failed:', res.status, errBody);
-      return false;
-    }
-    return true;
-  } catch (err) {
-    console.error('[PERSIST SUB] Error:', err.message);
-    return false;
-  }
-}
-
-// Backwards-compat shim: existing code calls saveCurrentUser(currentUser) after mutating fields.
-// We translate that into appropriate Supabase updates based on which fields look changed.
-async function saveCurrentUser(userData) {
-  currentUser = userData;
-  // Persist all editable profile fields.
-  // IMPORTANT: include `email` because the profiles table has a NOT NULL constraint on it.
-  // Postgres upsert validates the full row, so a missing required column causes 23502 errors.
-  const profileOk = await persistProfileFields({
-    email: userData.email,
-    business_name: userData.business,
-    marketing_consent: userData.marketingConsent || false,
-    consent_timestamp: userData.consentTimestamp ? new Date(userData.consentTimestamp).toISOString() : null,
-    consent_history: userData.consentHistory || [],
-    data_requests: userData.dataRequests || [],
-    subscription_plan: userData.subscriptionPlan || null,
-    subscription_plan_name: userData.subscriptionPlanName || null,
-    subscription_billing_period: userData.subscriptionBillingPeriod || null,
-    subscription_amount: userData.subscriptionAmount || null,
-    subscription_start_date: userData.subscriptionStartDate ? new Date(userData.subscriptionStartDate).toISOString() : null,
-    payment_method: userData.paymentMethod || null,
-    saved_profile: userData.savedProfile || null,
-    updated_at: new Date().toISOString(),
-  });
-  // Persist subscription status
-  const subOk = await persistSubscriptionFields({
-    status: userData.subscribed ? 'active' : (userData.subscriptionStatus || 'inactive'),
-    current_period_end: userData.subscriptionNextBilling ? new Date(userData.subscriptionNextBilling).toISOString() : null,
-    updated_at: new Date().toISOString(),
-  });
-  return profileOk && subOk;
-}
+// Note: there is no frontend equivalent of persistSubscriptionFields / saveCurrentUser
+// by design. The `subscriptions` table is owned exclusively by the Stripe webhook —
+// any client writes would race with webhook updates and cause drift between Stripe's
+// truth and our database. Profile-only mutations (consent, business name, saved profile
+// snapshots, etc.) go through persistProfileFields directly.
 
 // =============== AUTH HANDLERS ===============
 function validateSignup() {
@@ -2845,89 +2382,22 @@ async function handleSignin() {
       console.warn('[SIGNIN] setSession failed, will use direct fetch for queries:', e.message);
     }
 
-    // Helper to query a table directly via REST using the access token we have in hand.
-    // This works whether or not the JS client is healthy.
-    const directQuery = async (path) => {
-      const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${authData.access_token}`,
-          'Accept': 'application/json',
-        },
-      });
-      if (!r.ok) throw new Error(`Query ${path} returned ${r.status}`);
-      return r.json();
-    };
-
-    let profile = {};
-    let sub = {};
-    let reports = [];
-
-    try {
-      console.log('[SIGNIN] Step 3: querying profiles...');
-      const rows = await withTimeout(directQuery(`profiles?id=eq.${userId}&select=*`), 6000, 'Profile query');
-      if (rows && rows.length) profile = rows[0];
-      console.log('[SIGNIN] Step 3 done. Found profile?', !!rows.length);
-    } catch (e) {
-      console.warn('[SIGNIN] Profile query failed, continuing:', e.message);
-    }
-
-    try {
-      console.log('[SIGNIN] Step 4: querying subscriptions...');
-      const rows = await withTimeout(directQuery(`subscriptions?user_id=eq.${userId}&select=*`), 6000, 'Subscription query');
-      if (rows && rows.length) sub = rows[0];
-      console.log('[SIGNIN] Step 4 done. Found subscription?', !!rows.length);
-    } catch (e) {
-      console.warn('[SIGNIN] Subscription query failed, continuing:', e.message);
-    }
-
-    try {
-      console.log('[SIGNIN] Step 5: querying reports...');
-      const rows = await withTimeout(directQuery(`reports?user_id=eq.${userId}&select=*&order=created_at.asc`), 6000, 'Reports query');
-      if (rows && rows.length) {
-        reports = rows.map(r => ({
-          id: r.id,
-          createdAt: new Date(r.created_at).getTime(),
-          merchant: r.business_data,
-          approvedCount: (r.results && r.results.approvedCount) || 0,
-          conditionalCount: (r.results && r.results.conditionalCount) || 0,
-          deniedCount: (r.results && r.results.deniedCount) || 0,
-        }));
-      }
-      console.log('[SIGNIN] Step 5 done. Reports:', reports.length);
-    } catch (e) {
-      console.warn('[SIGNIN] Reports query failed, continuing:', e.message);
-    }
-
-    console.log('[SIGNIN] Step 6: building currentUser');
-    // Store access token globally so other operations (logout, queries) can use direct fetch
-    // when the broken Supabase JS client setSession fails.
+    // Store access token globally so direct-fetch helpers (logout, persist, edge functions) can use it
     window._authToken = authData.access_token;
     window._refreshToken = authData.refresh_token;
-    currentUser = {
-      id: userId,
-      email: userEmail,
-      business: profile.business_name || '',
-      createdAt: new Date(profile.created_at || authData.user.created_at).getTime(),
-      ageConfirmed: profile.age_confirmed !== false,
-      marketingConsent: profile.marketing_consent || false,
-      consentTimestamp: profile.consent_timestamp ? new Date(profile.consent_timestamp).getTime() : null,
-      consentHistory: profile.consent_history || [],
-      dataRequests: profile.data_requests || [],
-      subscribed: sub.status === 'active' || sub.status === 'trialing',
-      subscriptionStatus: sub.status || 'inactive',
-      subscriptionPlan: profile.subscription_plan || null,
-      subscriptionPlanName: profile.subscription_plan_name || null,
-      subscriptionBillingPeriod: profile.subscription_billing_period || null,
-      subscriptionAmount: profile.subscription_amount || null,
-      subscriptionStartDate: profile.subscription_start_date ? new Date(profile.subscription_start_date).getTime() : null,
-      subscriptionNextBilling: sub.current_period_end ? new Date(sub.current_period_end).getTime() : null,
-      paymentMethod: profile.payment_method || null,
-      savedProfile: profile.saved_profile || null,
-      reports: reports,
-    };
 
-    console.log('[SIGNIN] Step 7: navigating to dashboard');
+    // Use the canonical hydration path so profile/sub/reports mapping (including decisions) stays
+    // in one place. handleSignup uses the same call.
+    const session = {
+      access_token: authData.access_token,
+      refresh_token: authData.refresh_token,
+      user: authData.user,
+    };
+    console.log('[SIGNIN] Step 3: hydrating currentUser');
+    currentUser = await hydrateCurrentUser(session);
+    window._signinInProgress = false;
+
+    console.log('[SIGNIN] Step 4: navigating to dashboard');
     errorEl.style.display = 'none';
     resetButton();
     go('dashboard');
@@ -3071,7 +2541,7 @@ function go(view) {
   }
 
   currentView = view;
-  const allViews = ['landing','application','paywall','results','processors-list','faq','legal','signup','signin','forgot','dashboard','subscribe','settings','billing','reports'];
+  const allViews = ['landing','application','results','processors-list','faq','legal','signup','signin','forgot','dashboard','subscribe','settings','billing','reports'];
   allViews.forEach(v => {
     const el = document.getElementById('view-' + v);
     if (el) el.classList.toggle('hidden', v !== view);
@@ -3079,7 +2549,6 @@ function go(view) {
   window.scrollTo(0, 0);
 
   if (view === 'application') renderApplication();
-  if (view === 'paywall') renderPaywall();
   if (view === 'results') renderResults();
   if (view === 'processors-list') renderFullProcessorsList();
   if (view === 'faq') renderFAQ();
@@ -3472,136 +2941,6 @@ function prevStep() {
   }
 }
 
-// =============== PAYWALL RENDER ===============
-function renderPaywall() {
-  const content = document.getElementById('paywall-content');
-  content.innerHTML = `
-    <div class="fade-up" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;" id="paywall-checkout">
-      <div>
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Order Summary</div>
-        <h2 class="display" style="font-size:40px;font-weight:400;margin-bottom:32px;">
-          Unlock your <span style="font-style:italic;color:var(--accent);">underwriting report.</span>
-        </h2>
-
-        <div style="border:1px solid var(--border);background:var(--bg-card);margin-bottom:32px;">
-          <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-            <div>
-              <div style="font-size:15px;font-weight:500;">Processor Help Underwriting Report</div>
-              <div style="font-size:12px;color:var(--fg-muted);margin-top:4px;">${escapeHtml(merchant.businessName || 'Your business')} · One-time access</div>
-            </div>
-            <div class="display" style="font-size:28px;font-weight:500;">$10.00</div>
-          </div>
-          <div style="padding:20px 24px;">
-            <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:14px;">What's included</div>
-            ${[
-              'Real-time underwriting across all 29 payment processors',
-              'Detailed approval, conditional, and denial decisions',
-              'Match score and underwriting reasoning per payment processor',
-              'Direct links to apply at each approved payment processor',
-            ].map(item => `
-              <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:13px;line-height:1.5;">
-                <span style="color:var(--approved);font-weight:700;">✓</span>
-                <span>${item}</span>
-              </div>
-            `).join('')}
-          </div>
-          <div style="padding:16px 24px;border-top:1px solid var(--border);background:var(--bg-elevated);display:flex;justify-content:space-between;align-items:center;">
-            <div class="mono" style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;">Total Due Today</div>
-            <div class="display" style="font-size:28px;font-weight:600;color:var(--accent);">$10.00</div>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:16px;background:var(--bg-elevated);border:1px solid var(--border);">
-          <span style="color:var(--fg-muted);">🛡️</span>
-          <div style="font-size:12px;color:var(--fg-muted);line-height:1.6;">
-            Processor Help is an independent advisory tool and is not affiliated with or endorsed by any payment processor listed. All applications to payment processors are submitted by you directly.
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:24px;">Payment Details</div>
-
-        <div class="field"><label>Email address</label>
-          <div class="hint">We'll send your report here</div>
-          <input type="email" id="pay-email" placeholder="you@business.com" oninput="validatePay()" />
-        </div>
-
-        <div class="field"><label>Cardholder name</label>
-          <input id="pay-name" placeholder="Full name on card" oninput="validatePay()" />
-        </div>
-
-        <div class="field"><label>Card number</label>
-          <input id="pay-card" placeholder="1234 5678 9012 3456" inputmode="numeric" oninput="formatCard(this); validatePay()" />
-        </div>
-
-        <div class="two-col">
-          <div class="field"><label>Expiry</label>
-            <input id="pay-expiry" placeholder="MM/YY" inputmode="numeric" maxlength="5" oninput="formatExp(this); validatePay()" />
-          </div>
-          <div class="field"><label>CVC</label>
-            <input id="pay-cvc" placeholder="123" inputmode="numeric" maxlength="4" oninput="this.value = this.value.replace(/\\D/g,''); validatePay()" />
-          </div>
-        </div>
-
-        <button id="btn-pay" class="btn-primary" disabled onclick="processPayment()" style="width:100%;justify-content:center;margin-top:16px;padding:18px 32px;">
-          🔒 Pay $10 and unlock report
-        </button>
-
-        <div style="margin-top:16px;text-align:center;font-size:11px;color:var(--fg-dim);line-height:1.6;">
-          By completing payment you agree to the Processor Help Terms of Service.<br>
-          All transactions are encrypted and secure.
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function formatCard(el) {
-  let v = el.value.replace(/\s/g, '').replace(/\D/g, '');
-  v = v.slice(0, 16);
-  el.value = v.replace(/(.{4})/g, '$1 ').trim();
-}
-
-function formatExp(el) {
-  let v = el.value.replace(/\D/g, '');
-  if (v.length >= 3) el.value = v.slice(0,2) + '/' + v.slice(2,4);
-  else el.value = v;
-}
-
-function validatePay() {
-  const email = document.getElementById('pay-email').value;
-  const name = document.getElementById('pay-name').value;
-  const card = document.getElementById('pay-card').value.replace(/\s/g,'');
-  const exp = document.getElementById('pay-expiry').value;
-  const cvc = document.getElementById('pay-cvc').value;
-  const valid = email.includes('@') && email.includes('.') && name.length > 1 && card.length >= 15 && exp.length >= 4 && cvc.length >= 3;
-  document.getElementById('btn-pay').disabled = !valid;
-}
-
-function processPayment() {
-  const content = document.getElementById('paywall-content');
-  document.getElementById('paywall-back').style.visibility = 'hidden';
-  content.innerHTML = `
-    <div class="fade-up" style="text-align:center;padding:80px 0;">
-      <div class="spinner" style="width:64px;height:64px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;margin:0 auto 32px;"></div>
-      <h2 class="display" style="font-size:32px;font-weight:400;margin-bottom:12px;">Processing payment…</h2>
-      <p style="color:var(--fg-muted);font-size:15px;">Do not close this window.</p>
-    </div>
-  `;
-  setTimeout(() => {
-    content.innerHTML = `
-      <div class="fade-up" style="text-align:center;padding:80px 0;">
-        <div style="width:72px;height:72px;background:var(--approved-bg);border:2px solid var(--approved);border-radius:50%;margin:0 auto 32px;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--approved);">✓</div>
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--approved);margin-bottom:12px;">Payment Successful</div>
-        <h2 class="display" style="font-size:36px;font-weight:400;margin-bottom:12px;">Unlocking your report…</h2>
-        <p style="color:var(--fg-muted);font-size:15px;">Running underwriting across all 29 payment processors.</p>
-      </div>
-    `;
-    setTimeout(() => go('results'), 1400);
-  }, 1800);
-}
-
 // =============== RESULTS RENDER ===============
 // Two modes:
 //   1. Fresh run (window._reportJustRan === true): POST to evaluate-processors Edge Function.
@@ -3917,7 +3256,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'How much does Processor Help cost?',
-    a: 'We offer three subscription tiers based on your business stage: Starter at $29/month for solopreneurs, Growth at $99/month for scaling brands ($50K-$500K monthly volume), and Enterprise at $299/month for high-volume operators ($500K+ monthly volume). All tiers include unlimited reports across all 29 payment processors. Annual plans available with 2 months free. Cancel anytime from your billing page.'
+    a: 'We offer three subscription tiers based on your business stage: Starter at $29/month (3 reports per month), Growth at $99/month (6 reports per month), and Enterprise at $299/month (unlimited reports). All tiers evaluate your business across all 29 payment processors. Annual plans available with 2 months free. Cancel anytime from your billing page.'
   },
   {
     q: 'How accurate are your approval predictions?',
@@ -3957,7 +3296,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Can I use the tool more than once?',
-    a: 'Absolutely — that is exactly what subscription access is designed for. Every time your business profile changes — new volume tier, chargeback shift, new vertical, new country — run the tool again at no additional cost. The payment processor landscape also shifts quarterly, so periodic re-runs are worthwhile. One subscription, unlimited reports.'
+    a: 'Yes — periodic re-runs are exactly what subscription access is designed for. Every time your business profile changes — new volume tier, chargeback shift, new vertical, new country — run the tool again. The payment processor landscape also shifts quarterly, so periodic re-runs are worthwhile. Each plan includes a monthly report quota: Starter gets 3, Growth gets 6, Enterprise is unlimited.'
   },
 ];
 
@@ -4019,7 +3358,7 @@ function renderDashboard() {
   const planName = u.subscribed
     ? (PLANS[u.subscriptionPlan]?.name || 'Active')
     : (isCanceled ? 'Canceled' : 'Inactive');
-  const subAmount = u.subscriptionAmount || 29;
+  const subAmount = u.subscriptionAmount || (PLANS[u.subscriptionPlan]?.monthly) || 29;
   const subPeriod = u.subscriptionBillingPeriod === 'annual' ? 'yr' : 'mo';
   const nextBillingDate = u.subscriptionNextBilling
     ? new Date(u.subscriptionNextBilling).toLocaleDateString()
@@ -4038,7 +3377,7 @@ function renderDashboard() {
         Welcome, <span style="font-style:italic;color:var(--accent);">${escapeHtml(u.business)}</span>.
       </h1>
       <p style="color:var(--fg-muted);font-size:17px;margin-bottom:48px;">
-        ${u.subscribed ? 'Your subscription is active. Run unlimited underwriting reports anytime.' : (u.subscriptionStatus === 'canceled' || u.subscriptionPlanName) ? 'Your subscription is currently inactive. Reactivate to run unlimited underwriting reports.' : 'Subscribe to unlock unlimited underwriting reports across 29 payment processors.'}
+        ${u.subscribed ? 'Your subscription is active. Run underwriting reports anytime.' : (u.subscriptionStatus === 'canceled' || u.subscriptionPlanName) ? 'Your subscription is currently inactive. Reactivate to run underwriting reports.' : 'Subscribe to unlock underwriting reports across 29 payment processors.'}
       </p>
 
       ${!u.subscribed ? (
@@ -4136,7 +3475,7 @@ function renderSubscribe() {
   // Plan-specific features (mapped to what each tier includes)
   const features = {
     starter: [
-      'Unlimited underwriting reports across all 29 payment processors',
+      '3 underwriting reports per month across all 29 payment processors',
       'Real-time approval, conditional, and denial decisions',
       'Match scores and underwriting reasoning',
       'Direct apply links to every processor',
@@ -4144,6 +3483,7 @@ function renderSubscribe() {
       'Email support (48-hour response)',
     ],
     growth: [
+      '6 underwriting reports per month across all 29 payment processors',
       'Everything in Starter, plus:',
       'Multi-MID strategy guidance',
       'Quarterly check-in calls with our team',
@@ -4152,6 +3492,7 @@ function renderSubscribe() {
       'Priority support (24-hour response)',
     ],
     enterprise: [
+      'Unlimited underwriting reports across all 29 payment processors',
       'Everything in Growth, plus:',
       'Dedicated payments advisor',
       'Custom underwriting deep-dives',
@@ -4603,6 +3944,101 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+// =============== PASSWORD MODAL ===============
+// Shows the #password-modal element and resolves with the validated new password (a string),
+// or null if the user cancelled.
+//
+// Options:
+//   title           — h2 text (default 'Change password')
+//   subtitle        — paragraph below title
+//   inputLabel      — label for first input (default 'New password')
+//   submitLabel     — submit button text (default 'Update password')
+//   requireConfirm  — show + match a confirm field (default true)
+//   minLength       — client-side min length (default 8)
+//
+// Both inputs use type="password" so values are masked. The browser also won't surface
+// them in screenshots or screen-recording dialogs the way prompt() does.
+function promptPassword(opts) {
+  const o = opts || {};
+  const title         = o.title         || 'Change password';
+  const subtitle      = o.subtitle      || 'Enter your new password. Minimum 8 characters.';
+  const inputLabel    = o.inputLabel    || 'New password';
+  const submitLabel   = o.submitLabel   || 'Update password';
+  const requireConfirm = o.requireConfirm !== false;
+  const minLength     = typeof o.minLength === 'number' ? o.minLength : 8;
+
+  return new Promise((resolve) => {
+    const modal      = document.getElementById('password-modal');
+    const titleEl    = document.getElementById('password-modal-title');
+    const subEl      = document.getElementById('password-modal-subtitle');
+    const inputLabelEl = document.getElementById('password-modal-input-label');
+    const input      = document.getElementById('password-modal-input');
+    const confirmWrap = document.getElementById('password-modal-confirm-wrap');
+    const confirm    = document.getElementById('password-modal-confirm');
+    const errorEl    = document.getElementById('password-modal-error');
+    const submitBtn  = document.getElementById('password-modal-submit');
+    const cancelBtn  = document.getElementById('password-modal-cancel');
+
+    titleEl.textContent = title;
+    subEl.textContent = subtitle;
+    inputLabelEl.textContent = inputLabel;
+    submitBtn.textContent = submitLabel;
+    input.value = '';
+    confirm.value = '';
+    errorEl.style.display = 'none';
+    errorEl.textContent = '';
+    confirmWrap.style.display = requireConfirm ? '' : 'none';
+
+    modal.style.display = 'flex';
+    setTimeout(() => input.focus(), 30);
+
+    const cleanup = () => {
+      modal.style.display = 'none';
+      submitBtn.removeEventListener('click', onSubmit);
+      cancelBtn.removeEventListener('click', onCancel);
+      modal.removeEventListener('click', onBackdrop);
+      document.removeEventListener('keydown', onKey);
+      input.removeEventListener('keydown', onEnter);
+      confirm.removeEventListener('keydown', onEnter);
+    };
+
+    const onCancel = () => { cleanup(); resolve(null); };
+
+    const onSubmit = () => {
+      const pw = input.value;
+      if (pw.length < minLength) {
+        errorEl.textContent = 'Password must be at least ' + minLength + ' characters.';
+        errorEl.style.display = 'block';
+        input.focus();
+        return;
+      }
+      if (requireConfirm && pw !== confirm.value) {
+        errorEl.textContent = 'Passwords do not match.';
+        errorEl.style.display = 'block';
+        confirm.focus();
+        return;
+      }
+      cleanup();
+      resolve(pw);
+    };
+
+    const onBackdrop = (e) => { if (e.target === modal) onCancel(); };
+    const onKey = (e) => {
+      if (e.key === 'Escape') onCancel();
+    };
+    const onEnter = (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); onSubmit(); }
+    };
+
+    submitBtn.addEventListener('click', onSubmit);
+    cancelBtn.addEventListener('click', onCancel);
+    modal.addEventListener('click', onBackdrop);
+    document.addEventListener('keydown', onKey);
+    input.addEventListener('keydown', onEnter);
+    confirm.addEventListener('keydown', onEnter);
+  });
+}
+
 // ============ COMPLIANCE FUNCTIONS ============
 async function toggleMarketingConsent() {
   const checked = document.getElementById('marketing-toggle').checked;
@@ -4614,7 +4050,15 @@ async function toggleMarketingConsent() {
     action: checked ? 'opt-in' : 'opt-out',
     timestamp: Date.now(),
   });
-  await saveCurrentUser(currentUser);
+  // Persist only the consent-related fields. Subscription fields are owned by the
+  // Stripe webhook and must never be written from the frontend.
+  await persistProfileFields({
+    email: currentUser.email, // REQUIRED — profiles.email has NOT NULL constraint
+    marketing_consent: currentUser.marketingConsent,
+    consent_timestamp: new Date(currentUser.consentTimestamp).toISOString(),
+    consent_history: currentUser.consentHistory,
+    updated_at: new Date().toISOString(),
+  });
   renderSettings();
 }
 
@@ -4649,6 +4093,7 @@ function downloadUserData() {
     },
     saved_business_profile: u.savedProfile || null,
     underwriting_reports: (u.reports || []).map(r => ({
+      report_id: r.id || null,
       created_at: new Date(r.createdAt).toISOString(),
       business_name: r.merchant.businessName,
       industry: r.merchant.industry,
@@ -4667,17 +4112,20 @@ function downloadUserData() {
         conditional_count: r.conditionalCount,
         denied_count: r.deniedCount,
       },
+      // Full per-processor decisions (server-side eval results). Null for reports
+      // generated before our server-side migration in May 2026.
+      processor_decisions: r.decisions || null,
     })),
     data_NOT_held_by_us: {
       note: 'We do NOT collect, store, or have access to:',
       items: [
         'Your full payment card number (handled exclusively by Stripe when subscribed)',
-        'Your IP address (not logged)',
         'Your browsing history outside our site',
         'Any biometric or device data',
         'Any third-party social media data',
       ],
     },
+    data_processors_note: 'Our infrastructure providers (Supabase for database/auth, Stripe for payments, GitHub Pages for hosting, Resend for email) may log standard request metadata such as IP addresses, user-agent strings, and timestamps for the purpose of security, abuse prevention, and service operation. We do not access these logs except for incident response. Consult their respective privacy policies for retention details.',
     your_rights: {
       gdpr_rights: ['Right to Access', 'Right to Rectification', 'Right to Erasure', 'Right to Restrict Processing', 'Right to Data Portability', 'Right to Object'],
       ccpa_rights: ['Right to Know', 'Right to Delete', 'Right to Correct', 'Right to Opt Out of Sale', 'Right to Non-Discrimination'],
@@ -4723,7 +4171,7 @@ async function deleteAccountFlow() {
     '• Your business profile\n' +
     `• ${(currentUser.reports || []).length} saved underwriting report${(currentUser.reports||[]).length === 1 ? '' : 's'}\n` +
     '• All consent records and email preferences\n' +
-    (currentUser.subscribed ? `• Your active ${PLANS[currentUser.subscriptionPlan]?.name || ''} subscription will be cancelled immediately\n` : '') +
+    (currentUser.subscribed ? `• Your active ${PLANS[currentUser.subscriptionPlan]?.name || ''} subscription will be cancelled immediately (no proration, no refund for current period)\n` : '') +
     '\nThis action CANNOT BE UNDONE.\n\n' +
     'Continue?'
   );
@@ -4748,69 +4196,58 @@ async function deleteAccountFlow() {
   );
   if (!step3) return;
 
-  // Execute deletion
   const deletedEmail = currentUser.email;
-  const userId = currentUser.id;
 
   if (!window._authToken) {
     alert('Session expired. Please sign in again to delete your account.');
     return;
   }
 
-  const withTimeout = (promise, ms, label) => Promise.race([
-    promise,
-    new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timed out')), ms))
-  ]);
-
-  const directDelete = async (path) => {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-      method: 'DELETE',
+  // Call the delete-user-account Edge Function. The function (server-side) handles:
+  //   1. Cancelling the Stripe subscription (if any) — service role + Stripe secret key
+  //   2. Deleting auth.users — Postgres ON DELETE CASCADE clears profiles, subscriptions,
+  //      reports, and renewal_reminders automatically.
+  let res, body;
+  try {
+    res = await fetch(`${SUPABASE_URL}/functions/v1/delete-user-account`, {
+      method: 'POST',
       headers: {
-        'apikey': SUPABASE_ANON_KEY,
         'Authorization': `Bearer ${window._authToken}`,
-        'Prefer': 'return=minimal',
+        'apikey': SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
       },
     });
-    if (!r.ok) {
-      const errBody = await r.text().catch(() => '');
-      throw new Error(`Delete ${path} returned ${r.status}: ${errBody}`);
-    }
-    return true;
-  };
-
-  try {
-    // Delete user-owned rows. The auth.users row itself can only be deleted by service_role
-    // (server-side), and is cleaned up by a backend job once Stripe webhooks are wired up.
-    await Promise.all([
-      withTimeout(directDelete(`reports?user_id=eq.${userId}`), 6000, 'Reports delete'),
-      withTimeout(directDelete(`subscriptions?user_id=eq.${userId}`), 6000, 'Subscriptions delete'),
-      withTimeout(directDelete(`profiles?id=eq.${userId}`), 6000, 'Profile delete'),
-    ]);
-    console.log('[DELETE ACCOUNT] All user data deleted');
+    body = await res.json().catch(() => null);
   } catch (err) {
-    console.error('Account deletion error:', err);
-    alert('There was a problem deleting your account. Please contact support@processorhelp.com.');
+    console.error('[DELETE ACCOUNT] Network error:', err);
+    alert('Network error. Please check your connection and try again, or contact support@processorhelp.com.');
     return;
   }
 
-  // Server-side logout via direct fetch (bypass broken JS client)
-  try {
-    await withTimeout(
-      fetch(`${SUPABASE_URL}/auth/v1/logout`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${window._authToken}`,
-        },
-      }),
-      3000,
-      'Logout'
-    );
-  } catch (e) {
-    console.warn('[DELETE ACCOUNT] Logout request failed (non-blocking):', e.message);
+  if (!res.ok) {
+    console.error('[DELETE ACCOUNT] Server returned', res.status, body);
+    const errCode = body && body.error;
+
+    if (errCode === 'stripe_cancel_failed') {
+      alert(
+        'We could not cancel your Stripe subscription, so we did not delete your account.\n\n' +
+        'No data was deleted. Please contact support@processorhelp.com so we can sort this out manually.'
+      );
+    } else if (errCode === 'not_authenticated') {
+      alert('Your session has expired. Please sign in again and retry.');
+      go('signin');
+    } else {
+      const detail = (body && (body.details || body.error)) || `Server returned ${res.status}.`;
+      alert(
+        'There was a problem deleting your account: ' + detail + '\n\n' +
+        'Please contact support@processorhelp.com if this persists.'
+      );
+    }
+    return;
   }
 
-  // Clean up local state regardless
+  // Success — auth.users row is gone, all our tokens are now invalid.
+  // Clean up local state.
   currentUser = null;
   window._authToken = null;
   window._refreshToken = null;
@@ -4823,7 +4260,6 @@ async function deleteAccountFlow() {
     '✓ Account Deleted\n\n' +
     `The account for ${deletedEmail} and all associated data has been permanently deleted from our systems.\n\n` +
     'Some data may persist briefly in encrypted backups for up to 30 days as required for security and fraud prevention, after which it will be permanently destroyed.\n\n' +
-    'A confirmation email will be sent to your address.\n\n' +
     'Thank you for using Processor Help.'
   );
   go('landing');
@@ -4848,11 +4284,15 @@ async function updateBusiness() {
 }
 
 async function changePasswordPrompt() {
-  const newPw = prompt('Enter new password (minimum 8 characters):');
-  if (!newPw) return;
-  if (newPw.length < 8) { alert('Password must be at least 8 characters.'); return; }
-  const confirmPw = prompt('Confirm new password:');
-  if (newPw !== confirmPw) { alert('Passwords do not match.'); return; }
+  const newPw = await promptPassword({
+    title: 'Change password',
+    subtitle: 'Enter your new password. Minimum 8 characters.',
+    inputLabel: 'New password',
+    submitLabel: 'Update password',
+    requireConfirm: true,
+    minLength: 8,
+  });
+  if (newPw === null) return; // user cancelled
 
   if (!window._authToken) {
     alert('Session expired. Please sign in again.');
@@ -4977,38 +4417,6 @@ function changePlan(newPlanId, isUpgrade) {
 // Legacy alias - kept for backwards compatibility with any code still calling upgradePlan()
 function upgradePlan(newPlanId) {
   changePlan(newPlanId, true);
-}
-
-function switchToAnnual() {
-  if (!confirm('Switch to annual billing? You\'ll save 2 months and be charged for the full year today.')) return;
-  billingPeriod = 'annual';
-  go('subscribe');
-}
-
-async function cancelSub() {
-  // The user cancels through Stripe's hosted Customer Portal.
-  // The webhook (customer.subscription.deleted / .updated) will sync the status to Supabase.
-  await openBillingPortal();
-}
-
-async function downgradeToExplore() {
-  if (!confirm('Downgrade to the free Explore tier? Your subscription will end and you\'ll lose access to underwriting reports. You\'ll keep your account, business profile, and report history. You can reactivate anytime.')) return;
-  // Capture previous state in case we need to revert
-  const prevSubscribed = currentUser.subscribed;
-  const prevStatus = currentUser.subscriptionStatus;
-  currentUser.subscribed = false;
-  currentUser.subscriptionStatus = 'canceled';
-  // Don't clear subscriptionPlanName - we want to remember what plan they had so reactivation can suggest it
-  const ok = await saveCurrentUser(currentUser);
-  if (ok) {
-    alert('You\'ve been downgraded to the free Explore tier. You can reactivate anytime from your dashboard.');
-    go('dashboard');
-  } else {
-    // Revert in-memory state
-    currentUser.subscribed = prevSubscribed;
-    currentUser.subscriptionStatus = prevStatus;
-    alert('There was a problem processing your downgrade. Please try again or contact support@processorhelp.com.');
-  }
 }
 
 // =============== REPORTS HISTORY RENDER ===============
@@ -5347,8 +4755,15 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
     if (session && session.access_token) {
       window._authToken = session.access_token;
     }
-    const newPw = prompt('Enter your new password (minimum 8 characters):');
-    if (newPw && newPw.length >= 8 && window._authToken) {
+    const newPw = await promptPassword({
+      title: 'Set new password',
+      subtitle: 'You\'re resetting your password from a recovery email link. Enter a new password below.',
+      inputLabel: 'New password',
+      submitLabel: 'Set new password',
+      requireConfirm: true,
+      minLength: 8,
+    });
+    if (newPw !== null && window._authToken) {
       try {
         const withTimeout = (promise, ms) => Promise.race([
           promise,
