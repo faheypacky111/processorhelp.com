@@ -2627,6 +2627,7 @@ const PLANS = {
     monthly: 29,
     annual: 290,  // 2 months free
     annualMonthly: 24,  // shows as $24/mo when annual
+    reportsPerMonth: 3,
   },
   growth: {
     id: 'growth',
@@ -2635,6 +2636,7 @@ const PLANS = {
     monthly: 99,
     annual: 990,  // 2 months free
     annualMonthly: 82,
+    reportsPerMonth: 6,
   },
   enterprise: {
     id: 'enterprise',
@@ -2643,6 +2645,7 @@ const PLANS = {
     monthly: 299,
     annual: 2990,  // 2 months free
     annualMonthly: 249,
+    reportsPerMonth: null,  // null = unlimited
   },
 };
 
@@ -3388,6 +3391,21 @@ function renderDashboard() {
   const reportCount = (u.reports || []).length;
   const latestReport = reportCount > 0 ? u.reports[u.reports.length - 1] : null;
 
+  // Reports run THIS calendar month (server enforces limits per calendar month, resets on the 1st).
+  // Counted client-side from the already-loaded reports array — no extra DB call needed.
+  const monthStart = (() => {
+    const d = new Date();
+    return new Date(d.getFullYear(), d.getMonth(), 1).getTime();
+  })();
+  const reportsThisMonth = (u.reports || []).filter(r => r.createdAt >= monthStart).length;
+
+  // Tier-aware quota display. null = unlimited (Enterprise).
+  // Only meaningful for subscribed users — unsubscribed see lifetime count only.
+  const planQuota = u.subscribed ? PLANS[u.subscriptionPlan]?.reportsPerMonth : undefined;
+  const isUnlimited = u.subscribed && planQuota === null;
+  const hasQuota = u.subscribed && typeof planQuota === 'number';
+  const remaining = hasQuota ? Math.max(0, planQuota - reportsThisMonth) : null;
+
   // Defensive accessors for subscription fields (handle missing data gracefully)
   const isCanceled = !u.subscribed && (u.subscriptionStatus === 'canceled' || u.subscriptionPlanName);
   const planName = u.subscribed
@@ -3439,8 +3457,20 @@ function renderDashboard() {
 
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:48px;">
         <div style="background:var(--bg-card);padding:28px;">
-          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Reports Run</div>
-          <div class="display" style="font-size:40px;font-weight:500;line-height:1;">${reportCount}</div>
+          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Reports This Month</div>
+          ${isUnlimited ? `
+            <div class="display" style="font-size:40px;font-weight:500;line-height:1;">${reportsThisMonth}</div>
+            <div style="font-size:12px;color:var(--fg-muted);margin-top:6px;">Unlimited on Enterprise</div>
+          ` : hasQuota ? `
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span class="display" style="font-size:40px;font-weight:500;line-height:1;${remaining === 0 ? 'color:var(--conditional);' : ''}">${reportsThisMonth}</span>
+              <span style="font-size:18px;color:var(--fg-muted);font-weight:400;">/ ${planQuota}</span>
+            </div>
+            <div style="font-size:12px;color:${remaining === 0 ? 'var(--conditional)' : 'var(--fg-muted)'};margin-top:6px;">${remaining === 0 ? 'Limit reached — resets on the 1st' : `${remaining} remaining this month`}</div>
+          ` : `
+            <div class="display" style="font-size:40px;font-weight:500;line-height:1;">${reportCount}</div>
+            <div style="font-size:12px;color:var(--fg-muted);margin-top:6px;">Subscribe to track monthly limits</div>
+          `}
         </div>
         <div style="background:var(--bg-card);padding:28px;">
           <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Subscription</div>
@@ -4811,6 +4841,30 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
     // Only hydrate if we don't already have a user (e.g. magic link sign-in from another tab)
     if (!currentUser) {
       currentUser = await hydrateCurrentUser(session);
+
+      // Defense-in-depth fallback for the email-confirmation signup path:
+      // If the profile's business_name is empty but auth.users.raw_user_meta_data has it
+      // (signup intent captured at submit time), upsert it now. The SQL trigger
+      // handle_new_user() should make this redundant, but if the trigger ever fails
+      // or hasn't been deployed yet, this catches it on first sign-in.
+      if (currentUser && (!currentUser.business || !currentUser.business.trim())) {
+        const metadataBusiness = (session && session.user && session.user.user_metadata && session.user.user_metadata.business_name) || null;
+        if (metadataBusiness && metadataBusiness.trim()) {
+          console.log('[AUTH STATE] Backfilling missing business_name from user_metadata');
+          const ok = await persistProfileFields({
+            email: currentUser.email,
+            business_name: metadataBusiness,
+            full_name: metadataBusiness,
+            updated_at: new Date().toISOString(),
+          });
+          if (ok) {
+            currentUser.business = metadataBusiness;
+            // If we're already on a view that displays the business name, re-render it.
+            if (currentView === 'dashboard') renderDashboard();
+            else if (currentView === 'settings') renderSettings();
+          }
+        }
+      }
     }
   } else if (event === 'PASSWORD_RECOVERY') {
     // User clicked password recovery email link. Supabase has set a temporary session for them.
