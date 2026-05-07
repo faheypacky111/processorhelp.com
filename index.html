@@ -4318,35 +4318,38 @@ async function deleteAccountFlow() {
 
   const deletedEmail = currentUser.email;
 
-  if (!window._authToken) {
-    alert('Session expired. Please sign in again to delete your account.');
-    return;
-  }
-
-  // Call the delete-user-account Edge Function. The function (server-side) handles:
+  // Call the delete-user-account Edge Function via the Supabase client. Using
+  // supabaseClient.functions.invoke() (not raw fetch) is required because the Supabase
+  // gateway strips custom CORS headers from raw fetch on Edge Functions, breaking the
+  // preflight. The client handles auth + headers + preflight correctly.
+  // Server-side, the function handles:
   //   1. Cancelling the Stripe subscription (if any) — service role + Stripe secret key
   //   2. Deleting auth.users — Postgres ON DELETE CASCADE clears profiles, subscriptions,
   //      reports, and renewal_reminders automatically.
-  let res, body;
+  let data, error;
   try {
-    res = await fetch(`${SUPABASE_URL}/functions/v1/delete-user-account`, {
+    const result = await supabaseClient.functions.invoke('delete-user-account', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${window._authToken}`,
-        'apikey': SUPABASE_ANON_KEY,
-        'Content-Type': 'application/json',
-      },
     });
-    body = await res.json().catch(() => null);
+    data = result.data;
+    error = result.error;
   } catch (err) {
     console.error('[DELETE ACCOUNT] Network error:', err);
     alert('Network error. Please check your connection and try again, or contact support@processorhelp.com.');
     return;
   }
 
-  if (!res.ok) {
-    console.error('[DELETE ACCOUNT] Server returned', res.status, body);
-    const errCode = body && body.error;
+  if (error) {
+    console.error('[DELETE ACCOUNT] Function returned error:', error);
+    // Try to extract structured error code from the response body if present.
+    // FunctionsHttpError exposes the raw Response on .context for non-2xx responses.
+    let errBody = null;
+    try {
+      if (error.context && typeof error.context.json === 'function') {
+        errBody = await error.context.json();
+      }
+    } catch (e) {}
+    const errCode = errBody && errBody.error;
 
     if (errCode === 'stripe_cancel_failed') {
       alert(
@@ -4357,7 +4360,7 @@ async function deleteAccountFlow() {
       alert('Your session has expired. Please sign in again and retry.');
       go('signin');
     } else {
-      const detail = (body && (body.details || body.error)) || `Server returned ${res.status}.`;
+      const detail = (errBody && (errBody.details || errBody.error)) || error.message || 'Unknown error.';
       alert(
         'There was a problem deleting your account: ' + detail + '\n\n' +
         'Please contact support@processorhelp.com if this persists.'
