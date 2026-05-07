@@ -98,6 +98,15 @@
     background: var(--bg-elevated);
     border-color: var(--accent);
   }
+  /* Expand theme toggle hit area on mobile (visual stays 36px, tap area becomes 56px) */
+  @media (max-width: 768px) {
+    .theme-toggle { position: relative; }
+    .theme-toggle::before {
+      content: "";
+      position: absolute;
+      top: -10px; left: -10px; right: -10px; bottom: -10px;
+    }
+  }
   .theme-toggle svg {
     width: 16px;
     height: 16px;
@@ -131,6 +140,13 @@
   .billing-label[data-active="true"] {
     color: var(--accent);
     font-weight: 600;
+  }
+  /* Expand toggle hit area to meet 44px touch target without changing visual size */
+  #billing-toggle { position: relative; }
+  #billing-toggle::before {
+    content: "";
+    position: absolute;
+    top: -10px; left: -10px; right: -10px; bottom: -10px;
   }
   /* Stabilize price/note display - tabular numbers prevent digit-width shifts */
   .starter-price, .growth-price, .enterprise-price,
@@ -344,6 +360,7 @@
     main { padding-left: 32px !important; padding-right: 32px !important; }
     header { padding-left: 32px !important; padding-right: 32px !important; }
     footer { padding-left: 32px !important; padding-right: 32px !important; }
+    .progress-wrapper { padding-left: 32px !important; padding-right: 32px !important; }
     /* Footer 5-col -> 2-col on tablet */
     footer > div.footer-top { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
     /* Pricing 4-col -> 2-col on tablet */
@@ -409,6 +426,7 @@
     section { padding: 48px 20px !important; }
     main { padding: 32px 20px !important; }
     footer { padding-left: 20px !important; padding-right: 20px !important; }
+    .progress-wrapper { padding: 20px !important; }
 
     /* Convert ALL multi-column grids to single column */
     .two-col { grid-template-columns: 1fr !important; gap: 16px !important; }
@@ -436,6 +454,13 @@
     /* Subscribe checkout 2-col -> stack */
     #subscribe-content div[style*="1fr 1fr"] { grid-template-columns: 1fr !important; gap: 32px !important; }
 
+    /* Touch target sizing for plan-switcher and billing-period buttons (currently ~38-42px on mobile) */
+    #subscribe-content button[onclick^="switchPlan"],
+    #subscribe-content button[onclick^="switchBilling"] {
+      padding: 14px 16px !important;
+      font-size: 13px !important;
+    }
+
     /* About Us "Who We Serve" and "Principles" 2-col -> stack */
     section div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; gap: 24px !important; }
 
@@ -459,6 +484,9 @@
     footer > div:first-child[style*="2fr 1fr 1fr 1fr"] { grid-template-columns: 1fr !important; gap: 32px !important; }
     footer > div:last-child { flex-direction: column !important; gap: 8px; text-align: center; }
 
+    /* Touch-target sizing for footer column links + contact links (was 13px text + 10px gap = ~25px tap area) */
+    footer .footer-top a { padding: 8px 0 !important; }
+
     /* Typography scale-down */
     h1.display { font-size: clamp(32px, 9vw, 56px) !important; }
     h2.display { font-size: clamp(26px, 6vw, 36px) !important; }
@@ -466,10 +494,13 @@
 
     /* Form fields */
     .field { margin-bottom: 20px; }
-    input, select, textarea { font-size: 16px; padding: 12px 14px; } /* 16px prevents iOS zoom */
+    /* 16px prevents iOS zoom on focus — !important to override inline styles like password modal's font-size:14px */
+    input, select, textarea { font-size: 16px !important; padding: 12px 14px; }
 
     /* Buttons */
-    .btn-primary, .btn-ghost { padding: 14px 24px; font-size: 12px; }
+    .btn-primary, .btn-ghost { padding: 14px 24px !important; font-size: 13px !important; }
+    /* Exception: full-width pricing card CTAs already get padding via inline style */
+    .pricing-grid .btn-primary, .pricing-grid .btn-ghost { padding: 14px 24px !important; }
 
     /* Progress bar in intake form */
     #progress-bar { flex-wrap: wrap; gap: 12px !important; }
@@ -478,15 +509,29 @@
     /* Intake form footer nav */
     #view-application footer { max-width: 100% !important; padding: 16px 20px !important; }
 
-    /* Results page processor rows - 6-col grid -> mobile-friendly stacked layout */
-    #results-list > div > div[style*="grid-template-columns:60px 1fr 180px 140px 120px 40px"],
-    #results-list > div > div[style*="60px 1fr 180px 140px 40px"] {
-      grid-template-columns: 40px 1fr 40px !important;
+    /* Results page processor rows - 5-col grid -> mobile-friendly stacked layout
+       Keep: row# / name / chip (status pill) / chevron — hide score-bar to preserve key info */
+    #results-list > div > div[style*="grid-template-columns:60px 1fr 180px 140px 40px"] {
+      grid-template-columns: 40px 1fr auto 40px !important;
       gap: 12px !important;
+      padding: 16px !important;
     }
-    #results-list > div > div > *:nth-child(3),
-    #results-list > div > div > *:nth-child(4) {
+    #results-list > div > div[style*="60px 1fr 180px 140px 40px"] > *:nth-child(3) {
       display: none !important;
+    }
+    #results-list > div > div[style*="60px 1fr 180px 140px 40px"] > .chip {
+      font-size: 10px !important;
+      padding: 4px 8px !important;
+    }
+    #results-list .display[style*="font-size:24px"] {
+      font-size: 16px !important;
+    }
+    #results-list div > div > .mono.display {
+      font-size: 18px !important;
+    }
+    /* Expanded panel padding */
+    #results-list div[id^="expand-"] {
+      padding: 0 16px 16px !important;
     }
 
     /* Results expanded detail - 2fr 1fr -> stack */
@@ -511,14 +556,24 @@
       padding: 12px 16px !important;
     }
 
-    /* Report history rows - collapse columns */
+    /* Report history rows - keep summary chips visible on mobile (key info), just shrink */
     #reports-content div[style*="grid-template-columns:60px 1fr auto auto"] {
-      grid-template-columns: 40px 1fr !important;
+      grid-template-columns: 32px 1fr auto !important;
       gap: 12px !important;
+      padding: 16px !important;
     }
-    #reports-content div[style*="60px 1fr auto auto"] > div:nth-child(3),
     #reports-content div[style*="60px 1fr auto auto"] > div:nth-child(4) {
       display: none !important;
+    }
+    #reports-content .mono.display[style*="font-size:24px"] {
+      font-size: 16px !important;
+    }
+    #reports-content div[style*="60px 1fr auto auto"] .chip {
+      font-size: 10px !important;
+      padding: 3px 6px !important;
+    }
+    #reports-content div[style*="60px 1fr auto auto"] > div:nth-child(3) {
+      gap: 6px !important;
     }
 
     /* Subscribe/dashboard banner horizontal -> stack */
@@ -536,6 +591,7 @@
     main { padding: 24px 16px !important; }
     header { padding: 12px 16px !important; }
     footer { padding-left: 16px !important; padding-right: 16px !important; }
+    .progress-wrapper { padding: 16px !important; }
 
     /* Hero stats 4-col -> 1 column for tiny phones */
     section > div[style*="repeat(4,1fr)"] { grid-template-columns: 1fr !important; }
@@ -551,10 +607,6 @@
     /* Even smaller typography */
     h1.display { font-size: clamp(28px, 8vw, 40px) !important; }
 
-    /* Hide some nav items on tiny screens (landing nav only — auth header uses hamburger) */
-    nav > div:last-child a { display: none; }
-    nav > div:last-child a:last-of-type { display: inline; } /* Keep only the last link visible */
-
     /* Cookie banner: tighter padding for tiny phones */
     #cookie-banner { padding: 14px 16px !important; }
 
@@ -565,6 +617,18 @@
     }
     #settings-content div[style*="display:flex"][style*="justify-content:space-between"][style*="align-items:center"][style*="gap:16px"] button {
       width: 100% !important;
+    }
+
+    /* Billing page label/value rows: allow value to wrap below label on tiny screens
+       so long dates like "December 15, 2026" don't overflow */
+    #billing-content div[style*="justify-content:space-between"] {
+      flex-wrap: wrap !important;
+      gap: 6px !important;
+    }
+    /* Review step rows in intake form: same wrap behavior so long volumes/values don't overflow */
+    #form-content > div > div[style*="display:flex"][style*="justify-content:space-between"] {
+      flex-wrap: wrap !important;
+      gap: 6px !important;
     }
   }
 
@@ -949,7 +1013,7 @@
     <!-- Middle section: Disclaimers -->
     <div style="max-width:1400px;margin:0 auto;padding-top:24px;">
       <div style="font-size:11px;color:var(--fg-dim);line-height:1.7;margin-bottom:14px;">
-        <strong style="color:var(--fg-muted);">Trademark Notice:</strong> All third-party payment processor names, logos, and trademarks referenced on this site (including but not limited to Stripe, PayPal, Adyen, Checkout.com, Mollie, PaymentCloud, PayKings, Worldline, Worldpay, Authorize.Net, Elavon, Shopify Payments, Durango, Flutterwave, Pay.com, SoarPay, WooPayments, HubSpot Payments, HighRiskPay.com, Easy Pay Direct, Total Processing, NMI, EmerchantPay, Nomupay, Square, QuickPay, Pepper Pay, Braintree, eMerchantBroker, Visa, and Mastercard) are the property of their respective owners. Their use here is solely for informational and comparative purposes under the principle of nominative fair use. No endorsement, affiliation, sponsorship, or partnership is implied or should be inferred.
+        <strong style="color:var(--fg-muted);">Trademark Notice:</strong> All third-party payment processor names, logos, and trademarks referenced on this site (including but not limited to Stripe, PayPal, Adyen, Checkout.com, Mollie, PaymentCloud, PayKings, Worldline, Worldpay, Authorize.Net, Elavon, Shopify Payments, Durango, Flutterwave, Pay.com, SoarPay, WooPayments, HubSpot Payments, HighRiskPay.com, Easy Pay Direct, NMI, EmerchantPay, Nomupay, Square, QuickPay, Pepper Pay, Braintree, eMerchantBroker, Visa, and Mastercard) are the property of their respective owners. Their use here is solely for informational and comparative purposes under the principle of nominative fair use. No endorsement, affiliation, sponsorship, or partnership is implied or should be inferred.
       </div>
       <div style="font-size:11px;color:var(--fg-dim);line-height:1.7;margin-bottom:20px;">
         <strong style="color:var(--fg-muted);">Disclaimer:</strong> Processor Help provides informational guidance only. Nothing on this site constitutes financial, legal, tax, accounting, regulatory, or professional advice. All approval predictions are non-binding estimates. Each payment processor makes final underwriting decisions independently. Consult qualified professionals for specific business guidance.
@@ -1039,7 +1103,7 @@
   <section style="padding:64px 48px 32px;max-width:1400px;margin:0 auto;">
     <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Resources · Legal</div>
     <h1 class="display" style="font-size:clamp(42px, 5vw, 64px);line-height:1.05;font-weight:400;margin-bottom:16px;">Legal Center.</h1>
-    <p style="color:var(--fg-muted);font-size:17px;max-width:700px;">Our complete legal documentation in one place. Select a document from the sidebar to read its contents. All policies are current as of April 23, 2026.</p>
+    <p style="color:var(--fg-muted);font-size:17px;max-width:700px;">Our complete legal documentation in one place. Select a document from the sidebar to read its contents. All policies were last updated May 6, 2026.</p>
   </section>
 
   <section style="padding:32px 48px 120px;max-width:1400px;margin:0 auto;">
@@ -1055,10 +1119,10 @@
       <div style="min-width:0;">
       <div class="legal-content" id="legal-privacy" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">Privacy Policy</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: April 23, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 6, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
-      <strong style="color:var(--fg);">Plain-language summary:</strong> We collect the business information you provide to generate your underwriting report. We charge a monthly or annual subscription fee for access to underwriting reports (the number of reports per month varies by plan). We don't sell your data. We don't share it with payment processors without your action. You're always in control.
+      <strong style="color:var(--fg);">Plain-language summary:</strong> We collect the business information you provide to generate your underwriting report. We charge a monthly or annual subscription fee for access to underwriting reports (the number of reports per month varies by plan). We don't sell your data. We don't share your intake form with the payment processors listed in your report — you apply to those directly. We do share data with the service providers we use to run the platform (like Stripe and Supabase), as described in Section 4a. You're always in control.
     </p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:40px;">1. Who We Are</h2>
@@ -1080,8 +1144,10 @@
     </ul>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4. Information Sharing</h2>
-    <p><strong style="color:var(--fg);">We do not sell your personal information.</strong> We do not share your business profile with payment processors. When you click "Apply" on any processor in your report, you are redirected to that processor's own website, where you apply directly. Processor Help does not submit applications on your behalf.</p>
-    <p style="margin-top:16px;">We may share information with our service providers as described in Section 4a below, and with legal authorities if required by law.</p>
+    <p><strong style="color:var(--fg);">We do not sell your personal information.</strong></p>
+    <p style="margin-top:16px;"><strong style="color:var(--fg);">We do not share your business profile with the payment processors listed in our underwriting engine.</strong> When you click "Apply" on any processor in your report, you are redirected to that processor's own website where you apply directly. Processor Help does not submit applications on your behalf.</p>
+    <p style="margin-top:16px;"><strong style="color:var(--fg);">We do share data with the third-party service providers we use to operate Processor Help</strong> (such as Stripe for subscription billing and Supabase for database hosting). These providers are listed in Section 4a below. Stripe is our subscription payment processor and is technically distinct from the payment processors listed in your underwriting report — though Stripe also appears in our underwriting engine, the data Stripe receives in its role as our PSP comes only from your subscription checkout, not from your intake form.</p>
+    <p style="margin-top:16px;">We may also share information with legal authorities if required by law.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4a. Third-Party Service Providers</h2>
     <p>We use carefully selected third-party services to operate Processor Help. These providers receive only the data necessary to perform their function, are bound by data protection agreements, and may not use your information for their own purposes.</p>
@@ -1092,12 +1158,12 @@
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">GitHub, Inc.</strong> — Hosts our public-facing website (GitHub Pages). May log basic technical information (IP address, browser type, request timestamps) for service operation.</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Analytics providers (with your consent)</strong> — Used to understand usage patterns and improve the service. Active only if you accept analytics cookies in our cookie banner.</li>
     </ul>
-    <p style="margin-top:16px;">We do not sell, rent, or trade your personal information to any third party. We do not share your data with payment processors listed in our underwriting engine — when you click "Apply at [Processor]," you are redirected to their website to apply directly.</p>
+    <p style="margin-top:16px;">We do not sell, rent, or trade your personal information to any third party. We do not share the business profile you submit in our intake form with the payment processors listed in our underwriting report — when you click "Apply at [Processor]," you are redirected to their website to apply directly.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4b. Data Breach Notification</h2>
     <p>In the event of a confirmed data breach affecting your personal information, we will:</p>
     <ul style="margin-top:12px;padding-left:24px;">
-      <li style="margin-bottom:8px;">Notify affected users via email within <strong style="color:var(--fg);">72 hours</strong> of confirming the breach (in line with GDPR requirements)</li>
+      <li style="margin-bottom:8px;">Notify affected users via email <strong style="color:var(--fg);">without undue delay</strong>, and consistent with applicable law (typically aligned with the 72-hour regulator notification window under GDPR Article 33)</li>
       <li style="margin-bottom:8px;">Provide details about the nature of the breach, the data potentially affected, and the steps we are taking</li>
       <li style="margin-bottom:8px;">Offer guidance on protective steps you can take</li>
       <li style="margin-bottom:8px;">Notify applicable regulatory authorities as required by federal and state law (including all 50 US state breach notification laws)</li>
@@ -1105,10 +1171,10 @@
     </ul>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4c. Free Account Data Practices</h2>
-    <p>Free accounts (users who have signed up but not subscribed) are subject to the same privacy protections as paid accounts. We collect only the information you provide (business name, email, password) and store it securely. Free accounts that remain inactive for 12 consecutive months may be archived; we will email you 30 days before any data removal.</p>
+    <p>Free accounts (users who have signed up but not subscribed) are subject to the same privacy protections as paid accounts. We collect only the information you provide (business name, email, password) and store it securely. You may delete your free account at any time from your Settings page.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">5. Data Retention</h2>
-    <p>We retain your account data and reports for as long as your subscription remains active so you can re-access your reports anytime. Free accounts that remain inactive for 12 consecutive months may be archived (see Section 4c). You may export all your data or permanently delete your account at any time from your Settings page. Payment records are retained per applicable financial and tax regulations regardless of account status.</p>
+    <p>We retain your account data and reports for as long as your account remains active so you can re-access your reports anytime. You may export all your data or permanently delete your account at any time from your Settings page. When you delete your account, your business profile, reports, and subscription records are permanently removed (with a brief retention window for fraud-prevention and audit purposes). Payment records are retained per applicable financial and tax regulations regardless of account status.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">6. Your Rights</h2>
     <p>Depending on your jurisdiction, you may have the right to access, correct, delete, or export your personal information. To exercise any of these rights, contact us at privacy@processorhelp.com.</p>
@@ -1123,13 +1189,13 @@
     <p>Questions about this Privacy Policy? Email <strong style="color:var(--fg);">privacy@processorhelp.com</strong>.</p>
 
     <div style="margin-top:64px;padding:20px;background:var(--bg-elevated);border:1px solid var(--border);font-size:13px;">
-      <strong style="color:var(--fg);">Disclaimer:</strong> This Privacy Policy is a standard operational policy and not a substitute for legal advice. Processor Help recommends consulting a qualified attorney to customize this policy for your specific jurisdiction and use cases before going to production.
+      <strong style="color:var(--fg);">Updates:</strong> This Privacy Policy is reviewed periodically and updated as our practices evolve. Material changes will be communicated via email and reflected in the "Last Updated" date above. For specific questions, contact <a href="mailto:privacy@processorhelp.com" style="color:var(--accent);text-decoration:underline;">privacy@processorhelp.com</a>.
     </div>
         </div>
       </div>
       <div class="legal-content" id="legal-tos" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">Terms of Service</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: April 23, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 6, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
       <strong style="color:var(--fg);">Plain-language summary:</strong> Processor Help is an advisory tool, not a payment processor or broker. We charge a subscription fee (monthly or annual, varies by plan) for access to underwriting reports across 28 payment processors. The number of reports per month varies by plan; the Enterprise tier includes unlimited reports. Results are informational — processors make their own final decisions. Don't misrepresent your business on the form.
@@ -1165,36 +1231,29 @@
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">6. Payment, Subscription & Refunds</h2>
     <p><strong style="color:var(--fg);">Subscription billing.</strong> Subscription fees vary by plan: Starter ($29/month), Growth ($99/month), Enterprise ($299/month). Annual plans are also available with two months free. Your subscription fee is automatically charged to your card on file at the start of each billing period and grants access to the report quota associated with your plan during that period. The subscription continues until you cancel.</p>
-    <p style="margin-top:12px;"><strong style="color:var(--fg);">Cancellation.</strong> You may cancel your subscription at any time from your Billing page. Cancellation is effective immediately — no phone calls, no retention pressure, no waiting periods. You retain full access until the end of your current paid billing period (e.g., if you cancel on day 5 of a 30-day cycle, you keep access through day 30).</p>
-    <p style="margin-top:12px;"><strong style="color:var(--fg);">Refund policy.</strong> All subscription fees are final upon charge. Refunds are issued in two specific situations:</p>
+    <p style="margin-top:12px;"><strong style="color:var(--fg);">Cancellation.</strong> You may cancel your subscription at any time from your Billing page — no phone calls, no retention pressure, no waiting periods. Cancellation stops future renewal billing immediately. You retain full access until the end of your current paid billing period (e.g., if you cancel on day 5 of a 30-day cycle, you keep access through day 30). After that period ends, your subscription expires and you will not be charged again unless you reactivate.</p>
+    <p style="margin-top:12px;"><strong style="color:var(--fg);">Refund policy.</strong> Refunds are issued in three specific scenarios:</p>
     <ul style="margin-top:8px;padding-left:24px;">
-      <li style="margin-bottom:8px;">A verified technical failure prevents service delivery (the engine is broken, your account is inaccessible, etc.)</li>
-      <li style="margin-bottom:8px;">You were erroneously charged after a verified cancellation</li>
+      <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Technical failure or service delivery failure:</strong> if the service was inaccessible, the underwriting engine was broken, or your account was unusable. Submit refund requests to <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a> within <strong>7 days</strong> of the failed charge.</li>
+      <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Erroneous billing:</strong> if you were charged after a verified cancellation, or charged in error. Submit refund requests within <strong>7 days</strong> of the erroneous charge.</li>
+      <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Annual plan satisfaction window:</strong> annual subscriptions are eligible for a prorated refund of the unused portion if requested within <strong>14 days</strong> of the initial annual purchase.</li>
     </ul>
-    <p style="margin-top:12px;">Submit refund requests to <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a> within 7 days of the charge. We aim to respond within 2 business days. We do not provide prorated refunds for unused portions of a billing cycle.</p>
+    <p style="margin-top:12px;">Outside of these three scenarios, all subscription fees are final upon charge. We do not provide prorated refunds for unused portions of a monthly billing cycle. We aim to respond to refund requests within 2 business days.</p>
     <p style="margin-top:12px;"><strong style="color:var(--fg);">Failed payments.</strong> If a recurring payment fails, we will attempt to charge again over the following 7 days. If payment is not received, your subscription will be paused until you update your payment method.</p>
     <p style="margin-top:12px;"><strong style="color:var(--fg);">Price changes.</strong> Existing subscribers will not see price increases on their current plan. If we introduce new pricing tiers in the future, existing customers will be grandfathered at their current rate. We will provide at least 30 days' notice of any price changes that would affect your subscription.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">7. Intellectual Property</h2>
-    <p>All content, code, design, underwriting algorithms, and brand assets on Processor Help are owned by us. You may not copy, reproduce, redistribute, or create derivative works without written permission.</p>
+    <p>All content, code, design, underwriting algorithms, and brand assets on Processor Help are owned by Processor Help. You may not copy, reproduce, redistribute, or create derivative works without written permission.</p>
+    <p style="margin-top:12px;"><strong style="color:var(--fg);">Public source code:</strong> Our website is hosted on GitHub Pages, which means the client-side HTML, CSS, and JavaScript that runs in your browser is publicly viewable in our GitHub repository. This visibility is a property of the hosting platform and is intended for transparency. <strong style="color:var(--fg);">It does not grant a license to copy, modify, redistribute, or commercialize our code beyond what U.S. copyright law's fair use provisions permit.</strong> Server-side code, underwriting algorithms, database schemas, and proprietary business logic are not publicly disclosed.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">7a. Age Restriction</h2>
     <p>You must be at least <strong style="color:var(--fg);">18 years of age</strong> to create an account or use Processor Help. By creating an account, you represent and warrant that you are 18 or older and authorized to enter into agreements on behalf of any business you represent. Processor Help is not intended for use by minors and we do not knowingly collect personal information from individuals under 18.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">7b. Service Availability</h2>
     <p>Processor Help is provided on an "as available" basis. We do not guarantee uninterrupted access. The service may be temporarily unavailable due to scheduled maintenance, technical failures, force majeure, or other circumstances outside our control.</p>
-    <p style="margin-top:12px;">We may modify, suspend, or discontinue any aspect of the service at any time, with or without notice. We may also restrict access in certain geographic regions due to legal or regulatory requirements. We are not liable for any losses arising from service unavailability or modification.</p>
+    <p style="margin-top:12px;">We may modify, suspend, or discontinue any aspect of the service at any time. For material changes that affect functionality, we will provide reasonable advance notice. For full discontinuation of the service, we will provide at least 30 days' notice and will honor any refund obligations in accordance with Section 6. We may also restrict access in certain geographic regions due to legal or regulatory requirements. Except as otherwise required by law, we are not liable for losses arising from service unavailability or modification.</p>
 
-    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">7c. Early Access / Pre-Production Notice</h2>
-    <p>Processor Help is currently in early access. While we have built the service with care and intend it for production use, certain features may be subject to refinement based on user feedback. We commit to:</p>
-    <ul style="margin-top:12px;padding-left:24px;">
-      <li style="margin-bottom:8px;">Maintaining the integrity and security of your data</li>
-      <li style="margin-bottom:8px;">Honoring all subscription commitments and refund policies</li>
-      <li style="margin-bottom:8px;">Notifying you of any material changes to features or service</li>
-      <li style="margin-bottom:8px;">Providing 30+ days' notice before any service discontinuation</li>
-    </ul>
-
-    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">7d. Email Communications</h2>
+    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">7c. Email Communications</h2>
     <p><strong style="color:var(--fg);">Transactional emails (always sent):</strong> account confirmations, password resets, payment receipts, subscription notifications, security alerts, service announcements, and policy updates. These are required for account operation and cannot be opted out of while you maintain an account.</p>
     <p style="margin-top:12px;"><strong style="color:var(--fg);">Marketing emails (opt-in only):</strong> product updates, industry insights, payment processor news, and promotional content. These require your explicit consent at signup or in your settings. You can unsubscribe at any time using the link in any marketing email or by emailing <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a>.</p>
 
@@ -1217,13 +1276,13 @@
     <p>Questions about these Terms? Email <strong style="color:var(--fg);">legal@processorhelp.com</strong>.</p>
 
     <div style="margin-top:64px;padding:20px;background:var(--bg-elevated);border:1px solid var(--border);font-size:13px;">
-      <strong style="color:var(--fg);">Disclaimer:</strong> These Terms of Service are a standard operational template and not a substitute for legal advice. Processor Help recommends consulting a qualified attorney to customize these terms for your specific jurisdiction and operations before going to production.
+      <strong style="color:var(--fg);">Updates:</strong> These Terms are reviewed periodically and updated as our service evolves. Material changes will be communicated via email and reflected in the "Last Updated" date above. For specific questions, contact <a href="mailto:legal@processorhelp.com" style="color:var(--accent);text-decoration:underline;">legal@processorhelp.com</a>.
     </div>
         </div>
       </div>
       <div class="legal-content" id="legal-cookies" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">Cookie Policy</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: April 23, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 6, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
       <strong style="color:var(--fg);">Plain-language summary:</strong> We use cookies to keep you signed in, remember your preferences, and improve our service. You can choose "Essential Only" to use just what's needed, or "Accept All" to include analytics that help us build a better product.
@@ -1235,8 +1294,9 @@
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">2. Cookies We Use</h2>
     <p><strong style="color:var(--fg);">Essential Cookies (always active):</strong></p>
     <ul style="margin-top:12px;padding-left:24px;">
-      <li style="margin-bottom:8px;"><code>ph_session</code> — Keeps you signed in</li>
-      <li style="margin-bottom:8px;"><code>ph_users</code> — Stores your account data</li>
+      <li style="margin-bottom:8px;"><code>sb-*</code> — Supabase auth tokens that maintain your authenticated session via our database provider</li>
+      <li style="margin-bottom:8px;"><code>ph_session</code> — Maintains your active session</li>
+      <li style="margin-bottom:8px;"><code>ph_users</code> — Stores your account data locally for performance</li>
       <li style="margin-bottom:8px;"><code>ph_cookies</code> — Remembers your cookie consent choice</li>
     </ul>
     <p style="margin-top:16px;"><strong style="color:var(--fg);">Analytics Cookies (optional — only with "Accept All"):</strong></p>
@@ -1258,13 +1318,13 @@
     <p>Questions about our Cookie Policy? Email <strong style="color:var(--fg);">privacy@processorhelp.com</strong>.</p>
 
     <div style="margin-top:64px;padding:20px;background:var(--bg-elevated);border:1px solid var(--border);font-size:13px;">
-      <strong style="color:var(--fg);">Disclaimer:</strong> This Cookie Policy is a standard operational template and not a substitute for legal advice. Processor Help recommends consulting a qualified attorney to customize this policy for your specific jurisdiction and operations before going to production.
+      <strong style="color:var(--fg);">Updates:</strong> This Cookie Policy is reviewed periodically. If we materially change which cookies we use, we will request renewed consent. For specific questions, contact <a href="mailto:privacy@processorhelp.com" style="color:var(--accent);text-decoration:underline;">privacy@processorhelp.com</a>.
     </div>
         </div>
       </div>
       <div class="legal-content" id="legal-ccpa" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">California Privacy Rights</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: April 23, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 6, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
       <strong style="color:var(--fg);">Plain-language summary:</strong> California residents have specific rights over their personal information under the California Consumer Privacy Act (CCPA) and California Privacy Rights Act (CPRA). Processor Help does NOT sell your personal information. You have the right to know, delete, correct, and opt out.
@@ -1313,13 +1373,13 @@
     <p>Email <strong style="color:var(--fg);">privacy@processorhelp.com</strong> with any CCPA/CPRA questions or requests.</p>
 
     <div style="margin-top:64px;padding:20px;background:var(--bg-elevated);border:1px solid var(--border);font-size:13px;">
-      <strong style="color:var(--fg);">Disclaimer:</strong> This California Privacy Rights notice is a standard operational template and not a substitute for legal advice. California privacy law is complex and evolving. Consult a qualified privacy attorney before going to production to ensure full CCPA/CPRA compliance for your specific operations.
+      <strong style="color:var(--fg);">Updates:</strong> California privacy law continues to evolve. We review this notice regularly to align with current CCPA/CPRA requirements. For specific privacy requests, contact <a href="mailto:privacy@processorhelp.com" style="color:var(--accent);text-decoration:underline;">privacy@processorhelp.com</a>.
     </div>
         </div>
       </div>
       <div class="legal-content" id="legal-dmca" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">DMCA & Copyright Policy</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: April 23, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 6, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
       <strong style="color:var(--fg);">Plain-language summary:</strong> We respect intellectual property rights. If you believe content on Processor Help infringes your copyright, we have a formal takedown process under the Digital Millennium Copyright Act (DMCA).
@@ -1369,13 +1429,13 @@
     <p>Filing a false DMCA notice may result in liability for damages under 17 U.S.C. §512(f). If you are unsure whether your content rights have been infringed, consult an attorney before filing.</p>
 
     <div style="margin-top:64px;padding:20px;background:var(--bg-elevated);border:1px solid var(--border);font-size:13px;">
-      <strong style="color:var(--fg);">Disclaimer:</strong> This DMCA Policy is a standard operational template and not a substitute for legal advice. Consult a qualified intellectual property attorney before going to production to ensure full DMCA compliance for your specific operations.
+      <strong style="color:var(--fg);">Updates:</strong> This Policy is reviewed periodically. For copyright concerns, contact <a href="mailto:dmca@processorhelp.com" style="color:var(--accent);text-decoration:underline;">dmca@processorhelp.com</a>. For other intellectual property questions, contact <a href="mailto:legal@processorhelp.com" style="color:var(--accent);text-decoration:underline;">legal@processorhelp.com</a>.
     </div>
         </div>
       </div>
       <div class="legal-content" id="legal-accessibility" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">Accessibility Statement</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: April 23, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 6, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
       <strong style="color:var(--fg);">Plain-language summary:</strong> We're committed to making Processor Help usable for everyone. If you experience accessibility barriers, let us know and we'll work with you to provide equivalent access.
@@ -1427,7 +1487,7 @@
     <p>If you are not satisfied with our response to an accessibility concern, you may contact the U.S. Department of Justice Civil Rights Division at <strong style="color:var(--fg);">ada.gov</strong>.</p>
 
     <div style="margin-top:64px;padding:20px;background:var(--bg-elevated);border:1px solid var(--border);font-size:13px;">
-      <strong style="color:var(--fg);">Disclaimer:</strong> This Accessibility Statement describes our current commitments and practices. While we strive to meet WCAG 2.1 AA standards, we acknowledge that full compliance is an ongoing effort. Consult a qualified ADA/WCAG compliance attorney or auditor to certify formal compliance before representing this to regulators.
+      <strong style="color:var(--fg);">Updates:</strong> This Accessibility Statement describes our current commitments and practices. Accessibility is an ongoing effort, and we continuously work to improve. To report a barrier or request alternative access, contact <a href="mailto:accessibility@processorhelp.com" style="color:var(--accent);text-decoration:underline;">accessibility@processorhelp.com</a>.
     </div>
         </div>
       </div>
@@ -1663,7 +1723,7 @@
     <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);" id="step-indicator">Step 1 of 4</div>
   </header>
 
-  <div style="padding:32px 48px;border-bottom:1px solid var(--border);">
+  <div class="progress-wrapper" style="padding:32px 48px;border-bottom:1px solid var(--border);">
     <div style="max-width:900px;margin:0 auto;display:flex;justify-content:space-between;gap:16px;" id="progress-bar"></div>
   </div>
 
@@ -3649,7 +3709,7 @@ function renderSubscribe() {
             <div>
               <strong style="color:var(--fg);">Recurring subscription disclosure:</strong> By clicking Subscribe, you authorize Processor Help to automatically charge your payment method <strong>$${billedAmount}.00 USD every ${isAnnual ? 'year' : 'month'}</strong> starting today. Your subscription will continue and renew automatically until you cancel.
               <br><br>
-              <strong style="color:var(--fg);">Easy cancellation:</strong> Cancel anytime in 2 clicks from your Billing dashboard — no phone calls, no retention pressure, no hoops. Cancellation is effective immediately and you retain full access through your current paid period. (NY GBL §527-a, CA BPC §17602, IL 815 ILCS 605 compliant.)
+              <strong style="color:var(--fg);">Easy cancellation:</strong> Cancel anytime in 2 clicks from your Billing dashboard — no phone calls, no retention pressure, no hoops. Cancellation stops future renewal billing immediately, and you retain full access through your current paid period. (NY GBL §527-a, CA BPC §17602, IL 815 ILCS 605 compliant.)
               <br><br>
               <strong style="color:var(--fg);">${isAnnual ? 'Annual refund window:' : 'No partial-month refunds:'}</strong> ${isAnnual ? 'Annual plans are eligible for a prorated refund within 14 days of purchase.' : 'If you cancel mid-cycle, you retain access until the end of your current billing period. No prorated refunds.'}
             </div>
