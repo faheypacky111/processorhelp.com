@@ -676,10 +676,11 @@
   <div style="max-width:1400px;margin:0 auto;display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
     <div style="flex:1;min-width:280px;font-size:13px;color:var(--fg);line-height:1.6;">
       <strong style="color:var(--fg);">Cookies & Privacy</strong><br>
-      <span style="color:var(--fg-muted);">We use only essential cookies to keep you signed in and remember your preferences. We do not use tracking, advertising, or third-party analytics cookies. See our <a onclick="go('cookies');dismissCookies()" style="color:var(--accent);cursor:pointer;text-decoration:underline;">Cookie Policy</a> for details.</span>
+      <span style="color:var(--fg-muted);">We use essential cookies to keep you signed in and remember your preferences. With your consent, we also use privacy-respecting analytics (Google Analytics 4 and Microsoft Clarity) to understand how the site is used. See our <a onclick="go('cookies');dismissCookies()" style="color:var(--accent);cursor:pointer;text-decoration:underline;">Cookie Policy</a> for details.</span>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button onclick="handleCookies('essential')" class="btn-primary" style="padding:12px 22px;font-size:11px;">Got it</button>
+      <button onclick="handleCookies('essential')" class="btn-ghost" style="padding:12px 22px;font-size:11px;">Essential Only</button>
+      <button onclick="handleCookies('all')" class="btn-primary" style="padding:12px 22px;font-size:11px;">Accept All</button>
     </div>
   </div>
 </div>
@@ -1142,7 +1143,7 @@
       <div style="min-width:0;">
       <div class="legal-content" id="legal-privacy" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">Privacy Policy</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 6, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 13, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
       <strong style="color:var(--fg);">Plain-language summary:</strong> We collect the business information you provide to generate your underwriting report. We charge a monthly or annual subscription fee for access to underwriting reports (the number of reports per month varies by plan). We don't sell your data. We don't share your intake form with the payment processors listed in your report — you apply to those directly. We do share data with the service providers we use to run the platform (like Stripe and Supabase), as described in Section 4a. You're always in control.
@@ -1154,7 +1155,7 @@
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">2. Information We Collect</h2>
     <p><strong style="color:var(--fg);">Business Information:</strong> Legal business name, entity type, years in business, country of registration, product type, monthly processing volume, average ticket size, industry vertical, subscription status, chargeback ratio, refund ratio, prior processor terminations, MATCH list status, and credit tier — all as provided by you during the intake form process.</p>
     <p style="margin-top:16px;"><strong style="color:var(--fg);">Payment Information:</strong> Email address, cardholder name, and payment card details submitted during checkout. Payment processing is handled by our third-party payment provider. We do not store full card numbers on our servers.</p>
-    <p style="margin-top:16px;"><strong style="color:var(--fg);">Technical Information:</strong> Basic technical metadata associated with your requests (IP address, browser user-agent, request timestamps) collected by our infrastructure providers (GitHub Pages, Supabase) for service operation, security, and abuse prevention. We do not run third-party tracking or web analytics on Processor Help.</p>
+    <p style="margin-top:16px;"><strong style="color:var(--fg);">Technical Information:</strong> Basic technical metadata associated with your requests (IP address, browser user-agent, request timestamps) collected by our infrastructure providers (GitHub Pages, Supabase) for service operation, security, and abuse prevention. With your consent (selected via our cookie banner), we also use privacy-respecting analytics — Google Analytics 4 and Microsoft Clarity — to understand site usage patterns. We configure these tools to anonymize IP addresses and disable advertising signals. If you do not consent, no analytics scripts are loaded.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">3. How We Use Your Information</h2>
     <p>We use the information you provide to:</p>
@@ -1179,6 +1180,8 @@
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Stripe, Inc.</strong> — Payment processing for your subscription. Stripe receives your name, email, billing address, and payment card details. Stripe is PCI-DSS Level 1 certified. Their <a href="https://stripe.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Resend</strong> — Delivers transactional emails (account confirmations, password resets, receipts, account notifications). Resend receives your email address and the message content for each transactional email we send you. Their <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">GitHub, Inc.</strong> — Hosts our public-facing website (GitHub Pages). May log basic technical information (IP address, browser type, request timestamps) for service operation.</li>
+      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Google LLC — Google Analytics 4 (consent-gated)</strong> — Loaded only after you choose "Accept All" in our cookie banner. Receives anonymized usage data (page views, session source, device type, anonymized IP) to help us understand which features and pages are being used. Configured with IP anonymization on, Google Signals off, and ad personalization off. Their <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of data.</li>
+      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Microsoft Corporation — Microsoft Clarity (consent-gated)</strong> — Loaded only after you choose "Accept All" in our cookie banner. Records anonymized session interactions (mouse movement, clicks, scroll behavior) and aggregate heatmaps to help us identify usability issues. Clarity automatically masks text input fields and sensitive content. Their <a href="https://privacy.microsoft.com/privacystatement" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Statement</a> governs their use of data.</li>
     </ul>
     <p style="margin-top:16px;">We do not sell, rent, or trade your personal information to any third party. We do not share the business profile you submit in our intake form with the payment processors listed in our underwriting report — when you click "Apply at [Processor]," you are redirected to their website to apply directly.</p>
 
@@ -1304,10 +1307,10 @@
       </div>
       <div class="legal-content" id="legal-cookies" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">Cookie Policy</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 6, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 13, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
-      <strong style="color:var(--fg);">Plain-language summary:</strong> We use only essential cookies to keep you signed in and remember your preferences. We do not run third-party tracking, advertising, or web analytics on Processor Help.
+      <strong style="color:var(--fg);">Plain-language summary:</strong> We use essential cookies to keep you signed in and remember your preferences. With your consent, we also use privacy-respecting analytics (Google Analytics 4 and Microsoft Clarity) to understand how the site is used. You can choose "Essential Only" or "Accept All" from our cookie banner.
     </p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:40px;">1. What Are Cookies?</h2>
@@ -1321,16 +1324,20 @@
       <li style="margin-bottom:8px;"><code>ph_users</code> — Stores your account data locally for performance</li>
       <li style="margin-bottom:8px;"><code>ph_cookies</code> — Remembers your cookie consent choice</li>
     </ul>
-    <p style="margin-top:16px;">We do not currently use analytics, tracking, or advertising cookies. If we add any in the future, we will update this policy and request renewed consent before activating them.</p>
+    <p style="margin-top:16px;"><strong style="color:var(--fg);">Analytics Cookies (optional — only loaded with "Accept All"):</strong></p>
+    <ul style="margin-top:12px;padding-left:24px;">
+      <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Google Analytics 4</strong> (<code>_ga</code>, <code>_ga_*</code>) — Anonymized session and page-view data. Configured with IP anonymization on, Google Signals off, and ad personalization off.</li>
+      <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Microsoft Clarity</strong> (<code>_clck</code>, <code>_clsk</code>) — Anonymized session recordings and heatmaps. Text input is automatically masked.</li>
+    </ul>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">3. Managing Your Preferences</h2>
-    <p>You can withdraw or change your consent at any time by clearing your browser's local storage for processorhelp.com. You can also configure your browser to reject all cookies, though this may prevent certain features (like staying signed in) from working.</p>
+    <p>You can change your consent at any time. To switch from "Accept All" back to "Essential Only" (or vice versa), clear your browser's local storage for processorhelp.com — the cookie banner will reappear on your next visit so you can make a new choice. You can also configure your browser to reject all cookies, though this may prevent certain features (like staying signed in) from working.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4. Third-Party Cookies</h2>
-    <p>We do not currently use third-party cookies for advertising or marketing. If this changes, we will update this policy and request renewed consent.</p>
+    <p>The analytics cookies described in Section 2 are set by Google and Microsoft, our analytics providers. We do not use third-party cookies for advertising or marketing.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">5. Do Not Track</h2>
-    <p>We respect Do Not Track signals sent by your browser. Because we do not currently use analytics or tracking cookies, no additional action is required when DNT is detected. If we add such cookies in the future, we will honor DNT by not loading them regardless of your stated preference.</p>
+    <p>We respect Do Not Track signals sent by your browser. When a DNT signal is detected, we will not load optional analytics cookies regardless of your stated cookie consent preference.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">6. Contact</h2>
     <p>Questions about our Cookie Policy? Email <strong style="color:var(--fg);">privacy@processorhelp.com</strong>.</p>
@@ -4655,12 +4662,65 @@ function closeAppNavOnNav() {
 })();
 
 // ============ COOKIE CONSENT ============
+// Two analytics tools, both consent-gated. Loaded only after user picks "Accept All".
+// IDs:
+//   GA4 Measurement ID:    G-6Q0SVE4N9F
+//   Clarity Project ID:    wq6ly1igzl
+// Both scripts are inert until loadAnalytics() runs.
+const GA4_ID = 'G-6Q0SVE4N9F';
+const CLARITY_ID = 'wq6ly1igzl';
+let _analyticsLoaded = false;
+
+function loadAnalytics() {
+  if (_analyticsLoaded) return;
+
+  // Respect Do Not Track. Standardized signal varies by browser/version, hence the OR list.
+  // Our Cookie Policy commits to honoring DNT — keep this enforcement aligned with the policy.
+  try {
+    const dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+    if (dnt === '1' || dnt === 'yes') {
+      console.warn('[Analytics] DNT enabled — skipping analytics load per Cookie Policy.');
+      _analyticsLoaded = true;  // don't keep retrying
+      return;
+    }
+  } catch(e) {}
+
+  _analyticsLoaded = true;
+
+  // ---- Google Analytics 4 ----
+  try {
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    // anonymize_ip + no Google Signals = lower-PII posture appropriate for fintech advisory
+    window.gtag('config', GA4_ID, {
+      anonymize_ip: true,
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false
+    });
+  } catch(e) { console.error('GA4 load failed:', e); }
+
+  // ---- Microsoft Clarity ----
+  try {
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", CLARITY_ID);
+  } catch(e) { console.error('Clarity load failed:', e); }
+}
+
 function handleCookies(choice) {
   try {
     localStorage.setItem('ph_cookies', JSON.stringify({ choice, at: Date.now() }));
   } catch(e) {
     console.error('Failed to save cookie preference:', e);
   }
+  if (choice === 'all') loadAnalytics();
   dismissCookies();
 }
 function dismissCookies() {
@@ -4668,7 +4728,7 @@ function dismissCookies() {
   if (banner) banner.style.display = 'none';
   document.body.classList.remove('has-cookie-banner');
 }
-// Show banner if not yet decided
+// On page load: show banner if no decision yet; auto-load analytics if user previously chose 'all'.
 (function initCookies() {
   try {
     const saved = localStorage.getItem('ph_cookies');
@@ -4680,6 +4740,9 @@ function dismissCookies() {
           document.body.classList.add('has-cookie-banner');
         }
       }, 1200);
+    } else {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed.choice === 'all') loadAnalytics();
     }
   } catch(e) {}
 })();
