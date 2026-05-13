@@ -2844,9 +2844,19 @@ function selectPlan(planId) {
 function renderProcessorsGrid() {
   const grid = document.getElementById('processors-grid');
   if (!grid) return;
+
+  // Randomize order on each load so Stripe/PayPal don't always anchor the rotation.
+  // Fisher-Yates shuffle on a *copy* — must not mutate the source PROCESSORS array since
+  // other render paths (full directory, eval results) depend on a consistent order.
+  const shuffled = PROCESSORS.slice();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
   // Render cards once. We duplicate the list so the CSS animation can loop seamlessly:
   // when the track has translated -50%, the second copy is exactly where the first started.
-  const cards = PROCESSORS.map((p, i) => `
+  const cards = shuffled.map((p, i) => `
     <div>
       <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-dim);margin-bottom:16px;">${String(i+1).padStart(2,'0')}</div>
       <div class="display" style="font-size:24px;font-weight:500;margin-bottom:8px;">${escapeHtml(p.name)}</div>
