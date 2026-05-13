@@ -398,6 +398,10 @@
     nav { padding: 16px 20px; flex-wrap: wrap; gap: 12px; }
     nav a { font-size: 13px; }
     nav > div:first-child span { font-size: 18px !important; }
+    /* Right-side nav: tighten 32px gap (set inline on landing) so items fit one row instead of wrapping */
+    #landing-nav-right { gap: 12px !important; }
+    /* Shrink Start For Free button on mobile so it fits next to brand */
+    #landing-nav-right > button.btn-primary { padding: 10px 14px !important; font-size: 11px !important; }
     nav > div:last-child { gap: 12px !important; flex-wrap: wrap; justify-content: flex-end; }
 
     /* Headers (dashboard, settings, billing, reports) */
@@ -641,8 +645,21 @@
     footer { padding-left: 16px !important; padding-right: 16px !important; }
     .progress-wrapper { padding: 16px !important; }
 
-    /* How It Works 2-col -> 1-col on tiny phones (2-col cramps paragraph text) */
-    section#how-it-works-section > div[style*="repeat(4,1fr)"] { grid-template-columns: 1fr !important; gap: 32px !important; }
+    /* Tiny phones: hide "Sign In" link in landing nav (Start For Free button covers the path) */
+    #landing-nav-right > a { display: none !important; }
+    /* Brand text down to 16px so header definitely fits one row on iPhone widths */
+    nav > div:first-child span { font-size: 16px !important; }
+
+    /* How It Works 2-col -> 1-col on tiny phones, but TIGHTER gap (was 32px, each step then adds its own bottom margin = too much) */
+    section#how-it-works-section > div[style*="repeat(4,1fr)"] { grid-template-columns: 1fr !important; gap: 16px !important; }
+    /* Reduce vertical space within each step block — numeral was 48px font + 20px margin-bottom */
+    #how-it-works-section .display[style*="font-size:48px"] { font-size: 36px !important; line-height: 1 !important; margin-bottom: 4px !important; }
+    /* H3 margin tighten within step */
+    #how-it-works-section h3.display { margin-bottom: 6px !important; }
+    /* Section top padding reduce so it doesn't sit so low after stats */
+    #how-it-works-section { padding-top: 32px !important; padding-bottom: 32px !important; }
+    /* Section header margin compression */
+    #how-it-works-section > h2.display { margin-bottom: 24px !important; }
 
     /* Hero stats 4-col -> 2-col stays on tiny phones (1-col wastes vertical) */
     section > div[style*="repeat(4,1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
