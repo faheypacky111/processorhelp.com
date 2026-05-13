@@ -543,10 +543,16 @@
     .pricing-grid > div { padding: 24px 20px !important; }
     .pricing-grid > div > p[style*="min-height:40px"] { min-height: 0 !important; margin-bottom: 16px !important; }
     .pricing-grid > div > div[style*="min-height:80px"] { min-height: 0 !important; margin-bottom: 16px !important; }
-    .pricing-grid > div > div[style*="margin-bottom:32px"] { margin-bottom: 20px !important; }
+    .pricing-grid > div > div[style*="margin-bottom:32px"] { margin-bottom: 16px !important; }
     .pricing-grid h3.display { font-size: 26px !important; }
-    /* Reset full-width CHOOSE buttons to inline auto-size on mobile so they don't look heavy */
-    .pricing-grid .btn-primary, .pricing-grid .btn-ghost { padding: 14px 24px !important; }
+    /* Shrink price ($0/$29/etc) — was 48px, dominates the card on mobile */
+    .pricing-grid > div span.display[style*="font-size:48px"] { font-size: 36px !important; }
+    /* Kill flex:1 that pushes button to bottom — in 1-col there's no other card to align against, just wasted space */
+    .pricing-grid > div > div[style*="flex:1"] { flex: 0 0 auto !important; }
+    /* CTA button: make it visually stronger so it doesn't look like a placeholder */
+    .pricing-grid .btn-primary, .pricing-grid .btn-ghost { padding: 14px 24px !important; font-size: 12px !important; }
+    /* "No credit card required" / "Best for solopreneurs" caption: pull tighter to button */
+    .pricing-grid > div > div[style*="text-align:center"][style*="margin-top:10px"] { margin-top: 8px !important; }
     /* Pricing section intro: compress vertical spacing */
     #pricing-section { padding-top: 56px !important; padding-bottom: 48px !important; }
     #pricing-section > div[style*="text-align:center"] { margin-bottom: 24px !important; }
