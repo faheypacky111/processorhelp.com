@@ -448,13 +448,18 @@
     }
 
     /* Sections / main containers */
-    section { padding: 48px 20px !important; }
+    section { padding: 40px 20px !important; }
     main { padding: 32px 20px !important; }
     footer { padding-left: 20px !important; padding-right: 20px !important; }
     .progress-wrapper { padding: 20px !important; }
 
     /* Convert ALL multi-column grids to single column */
     .two-col { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+    /* Tighten huge top margins that work on desktop but cause acres of empty space on mobile */
+    .stats-row { margin-top: 56px !important; }
+    .hero-ctas { margin-top: 32px !important; }
+    #view-landing section h2.display { margin-bottom: 24px !important; }
 
     /* Hero stats 4-col -> 2-col on mobile */
     section > div[style*="repeat(4,1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
@@ -491,6 +496,8 @@
 
     /* "Built for every business stage" section 1fr 2fr -> stack */
     section div[style*="1fr 2fr"] { grid-template-columns: 1fr !important; gap: 24px !important; }
+    /* Button container in business-stage: tighten gap (32px → 20px) */
+    #business-stage-section button[onclick="startCTA()"] { margin-top: 12px; }
 
     /* Pricing grid 4-col -> stack on mobile */
     .pricing-grid { grid-template-columns: 1fr !important; }
@@ -503,13 +510,16 @@
     /* How It Works compact 4-col on landing -> 2-col on tablet, 1-col mobile */
     section#how-it-works-section > div[style*="repeat(4,1fr)"] { grid-template-columns: repeat(2, 1fr) !important; gap: 24px !important; }
 
-    /* Footer 5-col -> stack cleanly on mobile */
+    /* Footer 5-col -> stack cleanly on mobile, with tighter padding + gap */
+    footer { padding: 40px 20px 24px !important; }
     footer > div.footer-top[style*="1.8fr 1fr 1fr 1fr 1.2fr"],
-    footer > div:first-child[style*="1.8fr 1fr 1fr 1fr 1.2fr"] { grid-template-columns: 1fr !important; gap: 32px !important; }
-    footer > div:first-child[style*="2fr 1fr 1fr 1fr"] { grid-template-columns: 1fr !important; gap: 32px !important; }
+    footer > div:first-child[style*="1.8fr 1fr 1fr 1fr 1.2fr"] { grid-template-columns: 1fr !important; gap: 24px !important; margin-bottom: 28px !important; }
+    footer > div:first-child[style*="2fr 1fr 1fr 1fr"] { grid-template-columns: 1fr !important; gap: 24px !important; }
     footer > div:last-child { flex-direction: column !important; gap: 8px; text-align: center; }
 
-    /* Touch-target sizing for footer column links + contact links (was 13px text + 10px gap = ~25px tap area) */
+    /* Footer column links: tighter than desktop (was gap:10px between items, too much on mobile) */
+    footer .footer-top > div > div[style*="flex-direction:column"] { gap: 4px !important; }
+    /* Touch-target sizing for footer column links + contact links */
     footer .footer-top a { padding: 8px 0 !important; }
 
     /* Typography scale-down */
@@ -525,7 +535,20 @@
     /* Buttons */
     .btn-primary, .btn-ghost { padding: 14px 24px !important; font-size: 13px !important; }
     /* Exception: full-width pricing card CTAs already get padding via inline style */
+    /* Pricing cards: compress on mobile (min-heights only matter for desktop column alignment) */
+    .pricing-grid > div { padding: 24px 20px !important; }
+    .pricing-grid > div > p[style*="min-height:40px"] { min-height: 0 !important; margin-bottom: 16px !important; }
+    .pricing-grid > div > div[style*="min-height:80px"] { min-height: 0 !important; margin-bottom: 16px !important; }
+    .pricing-grid > div > div[style*="margin-bottom:32px"] { margin-bottom: 20px !important; }
+    .pricing-grid h3.display { font-size: 26px !important; }
+    /* Reset full-width CHOOSE buttons to inline auto-size on mobile so they don't look heavy */
     .pricing-grid .btn-primary, .pricing-grid .btn-ghost { padding: 14px 24px !important; }
+    /* Pricing section intro: compress vertical spacing */
+    #pricing-section { padding-top: 56px !important; padding-bottom: 48px !important; }
+    #pricing-section > div[style*="text-align:center"] { margin-bottom: 24px !important; }
+    #pricing-section > div[style*="text-align:center"] > div.mono { margin-bottom: 16px !important; }
+    #pricing-section > div[style*="text-align:center"] > h2 { margin-bottom: 12px !important; }
+    #pricing-section > div[style*="justify-content:center"] { margin-bottom: 28px !important; }
 
     /* Progress bar in intake form */
     #progress-bar { flex-wrap: wrap; gap: 12px !important; }
@@ -612,18 +635,25 @@
   /* ============ SMALL MOBILE (480px and down) ============ */
   @media (max-width: 480px) {
     nav { padding: 12px 16px; }
-    section { padding: 40px 16px !important; }
+    section { padding: 32px 16px !important; }
     main { padding: 24px 16px !important; }
     header { padding: 12px 16px !important; }
     footer { padding-left: 16px !important; padding-right: 16px !important; }
     .progress-wrapper { padding: 16px !important; }
 
-    /* Hero stats 4-col -> 1 column for tiny phones */
-    section > div[style*="repeat(4,1fr)"] { grid-template-columns: 1fr !important; }
+    /* How It Works 2-col -> 1-col on tiny phones (2-col cramps paragraph text) */
+    section#how-it-works-section > div[style*="repeat(4,1fr)"] { grid-template-columns: 1fr !important; gap: 32px !important; }
 
-    /* When stat cells fully stack, hide all right borders + use bottom borders for separation */
-    .stats-row .stat-cell { border-right: none !important; border-bottom: 1px solid var(--border); }
-    .stats-row .stat-cell:last-child { border-bottom: none !important; }
+    /* Hero stats 4-col -> 2-col stays on tiny phones (1-col wastes vertical) */
+    section > div[style*="repeat(4,1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
+    /* Tighten stat cell padding for tiny screens */
+    .stats-row .stat-cell { padding: 20px 14px !important; }
+    .stats-row .stat-cell .stat-number { font-size: 36px !important; }
+
+    /* 2-col stat layout: right border on first column only, bottom border on first row only */
+    .stats-row .stat-cell { border-right: none !important; }
+    .stats-row .stat-cell:nth-child(2n+1) { border-right: 1px solid var(--border) !important; }
+    .stats-row .stat-cell:nth-child(-n+2) { border-bottom: 1px solid var(--border) !important; }
 
     /* Hero CTAs full-width on tiny phones to prevent overflow */
     .hero-ctas { flex-direction: column !important; }
@@ -761,7 +791,7 @@
     </div>
   </section>
 
-  <section style="padding:80px 48px;max-width:1400px;margin:0 auto;">
+  <section id="business-stage-section" style="padding:80px 48px;max-width:1400px;margin:0 auto;">
     <div style="display:grid;grid-template-columns:1fr 2fr;gap:80px;">
       <div>
         <h2 class="display" style="font-size:42px;line-height:1.05;font-weight:400;">Built for every business stage.</h2>
@@ -859,7 +889,7 @@
           <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Free account</span></div>
           <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Browse all 28 processors</span></div>
           <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Save business profile</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;color:var(--fg-dim);"><span style="color:var(--fg-dim);font-weight:700;flex-shrink:0;">✕</span><span>Underwriting reports</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;color:var(--fg-dim);opacity:0.6;"><span style="color:var(--fg-dim);font-weight:400;flex-shrink:0;">—</span><span style="text-decoration:line-through;">Underwriting reports</span></div>
         </div>
 
         <button class="btn-ghost" onclick="go('signup')" style="width:100%;justify-content:center;font-size:11px;padding:12px;">Create account →</button>
