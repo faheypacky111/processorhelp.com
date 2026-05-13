@@ -531,6 +531,20 @@
     h2.display { font-size: clamp(26px, 6vw, 36px) !important; }
     h3.display { font-size: clamp(20px, 5vw, 26px) !important; }
 
+    /* GLOBAL mobile type scale-down for inline-styled body text — roughly 15% reduction.
+       Only targets inline font-sizes used for body copy, not display sizes (28+).
+       Inputs are forced back to 16px below to prevent iOS zoom-on-focus. */
+    [style*="font-size:20px"] { font-size: 17px !important; }
+    [style*="font-size:18px"] { font-size: 15px !important; }
+    [style*="font-size:17px"] { font-size: 15px !important; }
+    [style*="font-size:16px"] { font-size: 14px !important; }
+    [style*="font-size:15px"] { font-size: 13px !important; }
+    [style*="font-size:14px"] { font-size: 13px !important; }
+    [style*="font-size:13px"] { font-size: 12px !important; }
+    [style*="font-size:12px"] { font-size: 11px !important; }
+    /* Force inputs back to 16px regardless of inline size (prevents iOS zoom on focus) */
+    input[style*="font-size"], select[style*="font-size"], textarea[style*="font-size"] { font-size: 16px !important; }
+
     /* Form fields */
     .field { margin-bottom: 20px; }
     /* 16px prevents iOS zoom on focus — !important to override inline styles like password modal's font-size:14px */
