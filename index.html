@@ -42,11 +42,11 @@
   } catch(e) {}
 })();
 </script>
-<!-- Supabase JS SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Supabase JS SDK — pinned to 2.106.0 for stable SRI. defer prevents render block. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.106.0/dist/umd/supabase.min.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=JetBrains+Mono:wght@500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #ffffff;
@@ -436,17 +436,18 @@
     color: var(--fg);
     white-space: nowrap;
     overflow: hidden;
-    width: 0;
+    max-width: 0;
     letter-spacing: -0.01em;
+    vertical-align: middle;
   }
   .hero-form-row:nth-of-type(1) .hero-typed { animation: hero-type-1 10s linear infinite; }
   .hero-form-row:nth-of-type(2) .hero-typed { animation: hero-type-2 10s linear infinite; }
   .hero-form-row:nth-of-type(3) .hero-typed { animation: hero-type-3 10s linear infinite; }
   .hero-form-row:nth-of-type(4) .hero-typed { animation: hero-type-4 10s linear infinite; }
-  @keyframes hero-type-1 { 0%, 2%  { width: 0; } 7%  { width: 100%; } 36%, 100% { width: 100%; } }
-  @keyframes hero-type-2 { 0%, 7%  { width: 0; } 12% { width: 100%; } 36%, 100% { width: 100%; } }
-  @keyframes hero-type-3 { 0%, 12% { width: 0; } 18% { width: 100%; } 36%, 100% { width: 100%; } }
-  @keyframes hero-type-4 { 0%, 18% { width: 0; } 24% { width: 100%; } 36%, 100% { width: 100%; } }
+  @keyframes hero-type-1 { 0%, 2%  { max-width: 0; } 7%  { max-width: 100%; } 36%, 100% { max-width: 100%; } }
+  @keyframes hero-type-2 { 0%, 7%  { max-width: 0; } 12% { max-width: 100%; } 36%, 100% { max-width: 100%; } }
+  @keyframes hero-type-3 { 0%, 12% { max-width: 0; } 18% { max-width: 100%; } 36%, 100% { max-width: 100%; } }
+  @keyframes hero-type-4 { 0%, 18% { max-width: 0; } 24% { max-width: 100%; } 36%, 100% { max-width: 100%; } }
   .hero-form-cta {
     background: var(--accent);
     color: white;
@@ -580,7 +581,7 @@
       animation: none !important;
       opacity: 1 !important;
       transform: none !important;
-      width: 100% !important;
+      max-width: 100% !important;
     }
     .hero-results-phase { display: none; }
   }
@@ -1135,7 +1136,7 @@
     <div style="display:flex;gap:32px;align-items:center;" id="landing-nav-right">
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
-      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Buy a Report →</button>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start intake form →</button>
     </div>
   </nav>
 
@@ -1472,7 +1473,7 @@
     <div style="display:flex;gap:32px;align-items:center;">
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
-      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Buy a Report →</button>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start intake form →</button>
     </div>
   </nav>
 
@@ -1504,7 +1505,7 @@
     <div style="display:flex;gap:32px;align-items:center;">
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
-      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Buy a Report →</button>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start intake form →</button>
     </div>
   </nav>
 
@@ -1530,7 +1531,7 @@
       <a onclick="document.getElementById('pricing-section')?.scrollIntoView({behavior:'smooth'}) || go('landing')">Pricing</a>
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
-      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Buy a Report →</button>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start intake form →</button>
     </div>
   </nav>
 
@@ -2502,7 +2503,6 @@ async function hydrateCurrentUser(passedSession) {
         }
       }
     } catch (e) {
-      console.warn('[HYDRATE] Could not read session from storage:', e.message);
     }
   } else if (session.access_token) {
     accessToken = session.access_token;
@@ -2538,7 +2538,6 @@ async function hydrateCurrentUser(passedSession) {
     const rows = await withTimeout(directQuery(`profiles?id=eq.${userId}&select=*`), 6000, 'Profile fetch');
     if (rows && rows.length) profile = rows[0];
   } catch (e) {
-    console.warn('[HYDRATE] Profile fetch failed:', e.message);
   }
 
   try {
@@ -2562,7 +2561,6 @@ async function hydrateCurrentUser(passedSession) {
       }));
     }
   } catch (e) {
-    console.warn('[HYDRATE] Purchases fetch failed:', e.message);
   }
 
   try {
@@ -2579,7 +2577,6 @@ async function hydrateCurrentUser(passedSession) {
       }));
     }
   } catch (e) {
-    console.warn('[HYDRATE] Reports fetch failed:', e.message);
   }
 
   // Make sure global token is set so subsequent operations (logout, persist) have it
@@ -2612,7 +2609,6 @@ async function persistProfileFields(fields) {
   // Uses direct fetch with the stored access token because the Supabase JS client deadlocks.
   if (!currentUser) return false;
   if (!window._authToken) {
-    console.error('[PERSIST PROFILE] No auth token available');
     return false;
   }
 
@@ -2638,12 +2634,10 @@ async function persistProfileFields(fields) {
     );
     if (!res.ok) {
       const errBody = await res.text().catch(() => '');
-      console.error('[PERSIST PROFILE] Failed:', res.status, errBody);
       return false;
     }
     return true;
   } catch (err) {
-    console.error('[PERSIST PROFILE] Error:', err.message);
     return false;
   }
 }
@@ -2781,12 +2775,10 @@ async function handleSignup() {
         );
         if (!profileRes.ok) {
           const errBody = await profileRes.text().catch(() => '');
-          console.error('[SIGNUP] Profile create failed:', profileRes.status, errBody);
           // Don't block signup on this — the row may have been auto-created by a trigger
         } else {
         }
       } catch (e) {
-        console.error('[SIGNUP] Profile create error:', e.message);
       }
     }
 
@@ -2827,7 +2819,6 @@ async function handleSignup() {
     }
     go('dashboard');
   } catch (err) {
-    console.error('Signup error:', err);
     window._signinInProgress = false;
     errorEl.textContent = 'Unable to create account. Please try again.';
     errorEl.style.display = 'block';
@@ -2919,7 +2910,6 @@ async function handleSignin() {
         'setSession'
       );
     } catch (e) {
-      console.warn('[SIGNIN] setSession failed, will use direct fetch for queries:', e.message);
     }
 
     // Store access token globally so direct-fetch helpers (logout, persist, edge functions) can use it
@@ -2948,7 +2938,6 @@ async function handleSignin() {
     }
     go('dashboard');
   } catch (err) {
-    console.error('[SIGNIN] Caught error:', err);
     errorEl.textContent = err.message || 'Unable to sign in. Please try again.';
     errorEl.style.display = 'block';
     resetButton();
@@ -2978,7 +2967,6 @@ async function handleLogout() {
         'Logout request'
       );
     } catch (err) {
-      console.warn('[LOGOUT] Server logout failed (continuing anyway):', err.message);
     }
   }
 
@@ -2988,7 +2976,6 @@ async function handleLogout() {
       if (k.startsWith('sb-') || k.includes('supabase')) localStorage.removeItem(k);
     });
   } catch (e) {
-    console.warn('[LOGOUT] Storage cleanup error:', e.message);
   }
 
   // Clear in-memory state
@@ -3002,7 +2989,7 @@ async function handleLogout() {
     navRight.innerHTML = `
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
-      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Buy a Report →</button>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start intake form →</button>
     `;
   }
 
@@ -3035,7 +3022,6 @@ async function handleForgot() {
         6000
       );
     } catch (err) {
-      console.error('Password reset error:', err);
     }
   }
 
@@ -3238,7 +3224,6 @@ async function startPurchase(opts) {
 
     window.location.href = url;
   } catch (e) {
-    console.error('[PURCHASE] Failed to start checkout:', e);
     showAlertToast('Could not start checkout: ' + (e.message || 'Unknown error') + ' Please try again or email support@processorhelp.com.', 'error');
     if (triggerEl) {
       triggerEl.disabled = false;
@@ -3582,14 +3567,12 @@ async function renderResults() {
       });
       body = await res.json().catch(() => null);
     } catch (err) {
-      console.error('[RUN REPORT] Network error:', err);
       renderResultsError('Network error. Please check your connection and try again.');
       return;
     }
 
     // Handle non-200 responses
     if (!res.ok) {
-      console.error('[RUN REPORT] Server returned', res.status, body);
 
       if (res.status === 402 && body && body.error === 'limit_reached') {
         renderLimitReached(body);
@@ -3611,7 +3594,6 @@ async function renderResults() {
 
     // 200 OK — persist to in-memory user record and render
     if (!body || !Array.isArray(body.decisions)) {
-      console.error('[RUN REPORT] Malformed response:', body);
       renderResultsError('Unexpected response from server. Please try again.');
       return;
     }
@@ -3639,7 +3621,7 @@ async function renderResults() {
       email: currentUser.email,
       saved_profile: currentUser.savedProfile,
       updated_at: new Date().toISOString(),
-    }).catch(err => console.warn('[RUN REPORT] saved_profile persist failed:', err));
+    }).catch(() => {});
 
     paintResults(decisions, approvedCount, conditionalCount, deniedCount);
     return;
@@ -4217,7 +4199,6 @@ async function openBillingPortal(triggerEl) {
     // Get current Supabase session
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session || !session.access_token) {
-      console.warn('[BILLING PORTAL] No active session — redirecting to signin');
       restoreButton();
       go('signin');
       return;
@@ -4237,7 +4218,6 @@ async function openBillingPortal(triggerEl) {
 
     if (!res.ok || !data) {
       const errMsg = (data && data.error) ? data.error : `Portal request failed (HTTP ${res.status})`;
-      console.error('[BILLING PORTAL] Edge function error:', errMsg);
 
       // Friendlier copy for the most common error: user has never subscribed
       if (errMsg && /no stripe customer|customer not found|no customer/i.test(errMsg)) {
@@ -4250,7 +4230,6 @@ async function openBillingPortal(triggerEl) {
     }
 
     if (!data.url) {
-      console.error('[BILLING PORTAL] No URL returned:', data);
       showAlertToast('Could not open billing portal. Please try again or contact support@processorhelp.com.', 'error');
       restoreButton();
       return;
@@ -4259,7 +4238,6 @@ async function openBillingPortal(triggerEl) {
     // Redirect to Stripe-hosted portal
     window.location.href = data.url;
   } catch (err) {
-    console.error('[BILLING PORTAL] Unexpected error:', err);
     showAlertToast('Could not open billing portal. Please try again or contact support@processorhelp.com.', 'error');
     restoreButton();
   }
@@ -4301,7 +4279,6 @@ async function processSubscription() {
     // 2. Get the current Supabase session token. If missing, redirect to signin.
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session || !session.access_token) {
-      console.warn('[STRIPE CHECKOUT] No active session — redirecting to signin');
       go('signin');
       return;
     }
@@ -4319,14 +4296,12 @@ async function processSubscription() {
 
     if (!res.ok) {
       const errBody = await res.text().catch(() => '');
-      console.error('[STRIPE CHECKOUT] Edge function returned non-OK:', res.status, errBody);
       showActivationError('We could not start checkout. Please try again or contact support@processorhelp.com.');
       return;
     }
 
     const data = await res.json().catch(() => null);
     if (!data || !data.url) {
-      console.error('[STRIPE CHECKOUT] Edge function returned no URL:', data);
       showActivationError('Checkout URL was not returned. Please try again or contact support@processorhelp.com.');
       return;
     }
@@ -4334,7 +4309,6 @@ async function processSubscription() {
     // 4. Redirect to Stripe-hosted checkout
     window.location.href = data.url;
   } catch (err) {
-    console.error('[STRIPE CHECKOUT] Unexpected error:', err);
     showActivationError(err && err.message ? err.message : 'Unexpected error. Please try again.');
   }
 }
@@ -4736,13 +4710,11 @@ async function deleteAccountFlow() {
     data = result.data;
     error = result.error;
   } catch (err) {
-    console.error('[DELETE ACCOUNT] Network error:', err);
     showAlertToast('Network error. Please check your connection and try again, or contact support@processorhelp.com.', 'error');
     return;
   }
 
   if (error) {
-    console.error('[DELETE ACCOUNT] Function returned error:', error);
     // Try to extract structured error code from the response body if present.
     // FunctionsHttpError exposes the raw Response on .context for non-2xx responses.
     let errBody = null;
@@ -4849,7 +4821,6 @@ async function changePasswordPrompt() {
     }
     showAlertToast('Password updated.', 'success');
   } catch (err) {
-    console.error('Password change error:', err);
     showAlertToast('Unable to update password. Please try again.', 'error');
   }
 }
@@ -4904,7 +4875,7 @@ function renderBilling() {
           <div style="font-size:15px;color:var(--fg);font-weight:500;">$149 one-time · No subscription</div>
           <div style="font-size:13px;color:var(--fg-muted);margin-top:4px;">Each report evaluates your business across all 30 payment processors.</div>
         </div>
-        <button class="btn-primary" onclick="go('subscribe')" style="padding:14px 28px;font-size:12px;flex-shrink:0;">Buy a Report →</button>
+        <button class="btn-primary" onclick="go('subscribe')" style="padding:14px 28px;font-size:12px;flex-shrink:0;">Start intake form →</button>
       </div>
 
       ${purchases.length > 0 ? `
@@ -5065,7 +5036,6 @@ function loadAnalytics() {
   try {
     const dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
     if (dnt === '1' || dnt === 'yes') {
-      console.warn('[Analytics] DNT enabled — skipping analytics load per Cookie Policy.');
       _analyticsLoaded = true;  // don't keep retrying
       return;
     }
@@ -5088,7 +5058,7 @@ function loadAnalytics() {
       allow_google_signals: false,
       allow_ad_personalization_signals: false
     });
-  } catch(e) { console.error('GA4 load failed:', e); }
+  } catch(e) { /* GA4 load failed silently */ }
 
   // ---- Microsoft Clarity ----
   try {
@@ -5097,14 +5067,13 @@ function loadAnalytics() {
       t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
       y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", CLARITY_ID);
-  } catch(e) { console.error('Clarity load failed:', e); }
+  } catch(e) { /* Clarity load failed silently */ }
 }
 
 function handleCookies(choice) {
   try {
     localStorage.setItem('ph_cookies', JSON.stringify({ choice, at: Date.now() }));
   } catch(e) {
-    console.error('Failed to save cookie preference:', e);
   }
   if (choice === 'all') loadAnalytics();
   dismissCookies();
@@ -5232,7 +5201,6 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
         try {
           currentUser = await hydrateCurrentUser();
         } catch (e) {
-          console.error('[STRIPE CHECKOUT] Re-hydrate failed:', e);
         }
         if (processingToast && processingToast.parentNode) processingToast.remove();
         if (currentUser) {
@@ -5285,7 +5253,6 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
         try {
           currentUser = await hydrateCurrentUser();
         } catch (e) {
-          console.error('[BILLING PORTAL] Re-hydrate failed:', e);
         }
         const t = document.getElementById('billing-return-toast');
         if (t) t.remove();
@@ -5295,7 +5262,6 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
       }, 2000);
     }
   } catch (e) {
-    console.error('[STRIPE CHECKOUT] Post-redirect handler error:', e);
   }
 
   if (currentUser) {
@@ -5313,7 +5279,7 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
         } else {
           navRight.innerHTML = `
             <a onclick="go('dashboard')" style="color:var(--fg-muted);font-size:14px;text-decoration:none;cursor:pointer;">Dashboard</a>
-            <button class="btn-primary" onclick="go('subscribe')" style="padding:10px 20px;font-size:12px;">Buy a Report →</button>
+            <button class="btn-primary" onclick="go('subscribe')" style="padding:10px 20px;font-size:12px;">Start intake form →</button>
           `;
         }
       }
@@ -5408,7 +5374,6 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
           showAlertToast('Password updated. Please sign in with your new password.', 'success', 6000);
         }
       } catch (err) {
-        console.error('Password recovery error:', err);
         showAlertToast('Unable to update password. Please try again.', 'error');
       }
     }
