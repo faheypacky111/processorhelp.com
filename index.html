@@ -278,6 +278,313 @@
     }
   }
 
+  /* ============ HERO PRODUCT WINDOW ============ */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: 96px;
+    align-items: center;
+  }
+  .hero-copy { position: relative; }
+  .hero-eyebrow-frame {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .hero-eyebrow-frame::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .hero-meta {
+    margin-top: 28px;
+    font-size: 12px;
+    color: var(--fg-dim);
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-meta-pulse {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--approved);
+    box-shadow: 0 0 0 0 rgba(47,107,47,0.5);
+    animation: hero-pulse 2s infinite;
+  }
+  @keyframes hero-pulse {
+    0%   { box-shadow: 0 0 0 0   rgba(47,107,47,0.5); }
+    70%  { box-shadow: 0 0 0 8px rgba(47,107,47,0); }
+    100% { box-shadow: 0 0 0 0   rgba(47,107,47,0); }
+  }
+  .hero-stage { position: relative; max-width: 600px; width: 100%; margin-left: auto; }
+  .hero-stage::before {
+    content: '';
+    position: absolute;
+    inset: -40px -20px -60px -40px;
+    background: radial-gradient(ellipse at center, rgba(166,124,46,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-window {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.5) inset,
+      0 40px 100px -20px rgba(20,15,5,0.25),
+      0 16px 40px -8px rgba(20,15,5,0.12),
+      0 4px 12px -2px rgba(20,15,5,0.06);
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    width: 100%;
+    position: relative;
+    border-radius: 3px;
+    z-index: 1;
+  }
+  .hero-window::after {
+    content: '';
+    position: absolute;
+    top: 36px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.4;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .hero-chrome {
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+    padding: 11px 16px;
+    display: flex; align-items: center; gap: 8px;
+    height: 36px;
+  }
+  .hero-chrome-dot { width: 11px; height: 11px; border-radius: 50%; background: var(--border-strong); }
+  .hero-chrome-url {
+    margin-left: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--fg-dim);
+    letter-spacing: 0.08em;
+  }
+  .hero-chrome-url .accent { color: var(--accent); }
+  .hero-body { padding: 32px; height: calc(100% - 36px); position: relative; }
+  .hero-section-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .hero-section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+    line-height: 1.1;
+  }
+  /* Phase 1: form */
+  .hero-form-phase {
+    position: absolute;
+    inset: 32px;
+    opacity: 1;
+    animation: hero-form-life 10s ease-in-out infinite;
+  }
+  @keyframes hero-form-life {
+    0%, 30%   { opacity: 1; transform: translateY(0); }
+    36%, 100% { opacity: 0; transform: translateY(-16px); }
+  }
+  .hero-form-row { margin-bottom: 18px; }
+  .hero-form-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .hero-form-input {
+    background: var(--bg-elevated);
+    border-left: 2px solid var(--accent);
+    padding: 12px 16px;
+    min-height: 42px;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero-form-input::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(166,124,46,0.04));
+    pointer-events: none;
+  }
+  .hero-typed {
+    display: inline-block;
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--fg);
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+    letter-spacing: -0.01em;
+  }
+  .hero-form-row:nth-of-type(1) .hero-typed { animation: hero-type-1 10s linear infinite; }
+  .hero-form-row:nth-of-type(2) .hero-typed { animation: hero-type-2 10s linear infinite; }
+  .hero-form-row:nth-of-type(3) .hero-typed { animation: hero-type-3 10s linear infinite; }
+  .hero-form-row:nth-of-type(4) .hero-typed { animation: hero-type-4 10s linear infinite; }
+  @keyframes hero-type-1 { 0%, 2%  { width: 0; } 7%  { width: 100%; } 36%, 100% { width: 100%; } }
+  @keyframes hero-type-2 { 0%, 7%  { width: 0; } 12% { width: 100%; } 36%, 100% { width: 100%; } }
+  @keyframes hero-type-3 { 0%, 12% { width: 0; } 18% { width: 100%; } 36%, 100% { width: 100%; } }
+  @keyframes hero-type-4 { 0%, 18% { width: 0; } 24% { width: 100%; } 36%, 100% { width: 100%; } }
+  .hero-form-cta {
+    background: var(--accent);
+    color: white;
+    padding: 14px 22px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 16px;
+    display: inline-block;
+    opacity: 0;
+    box-shadow: 0 1px 0 var(--accent-dim);
+    animation: hero-cta-fade 10s ease-in-out infinite;
+  }
+  @keyframes hero-cta-fade {
+    0%, 24%   { opacity: 0; transform: translateY(4px); }
+    28%, 32%  { opacity: 1; transform: translateY(0); }
+    34%, 100% { opacity: 0; }
+  }
+  /* Phase 2: results */
+  .hero-results-phase {
+    position: absolute;
+    inset: 32px;
+    opacity: 0;
+    pointer-events: none;
+    animation: hero-results-show 10s ease-in-out infinite;
+  }
+  @keyframes hero-results-show {
+    0%, 34%   { opacity: 0; transform: translateY(16px); }
+    40%, 92%  { opacity: 1; transform: translateY(0); }
+    96%, 100% { opacity: 0; }
+  }
+  .hero-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border: 1px solid var(--border);
+    margin-bottom: 22px;
+    background: var(--bg-card);
+  }
+  .hero-summary-cell {
+    padding: 18px 12px 16px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .hero-summary-cell:last-child { border-right: none; }
+  .hero-summary-cell::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .hero-summary-cell:nth-child(1)::before { background: var(--approved); }
+  .hero-summary-cell:nth-child(2)::before { background: var(--conditional); }
+  .hero-summary-cell:nth-child(3)::before { background: var(--denied); }
+  .hero-summary-num {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+  .hero-summary-num.approved    { color: var(--approved); }
+  .hero-summary-num.conditional { color: var(--conditional); }
+  .hero-summary-num.denied      { color: var(--denied); }
+  .hero-summary-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    font-weight: 500;
+  }
+  .hero-result-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    animation: hero-row-in 10s ease-out infinite;
+  }
+  .hero-result-row:last-child { border-bottom: none; }
+  .hero-result-row:nth-of-type(1) { animation-delay: 0.00s; }
+  .hero-result-row:nth-of-type(2) { animation-delay: 0.08s; }
+  .hero-result-row:nth-of-type(3) { animation-delay: 0.16s; }
+  .hero-result-row:nth-of-type(4) { animation-delay: 0.24s; }
+  .hero-result-row:nth-of-type(5) { animation-delay: 0.32s; }
+  .hero-result-row:nth-of-type(6) { animation-delay: 0.40s; }
+  .hero-result-row:nth-of-type(7) { animation-delay: 0.48s; }
+  @keyframes hero-row-in {
+    0%, 38%   { opacity: 0; transform: translateX(10px); }
+    44%, 92%  { opacity: 1; transform: translateX(0); }
+    96%, 100% { opacity: 0; }
+  }
+  .hero-result-name {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--fg);
+    letter-spacing: -0.01em;
+  }
+  .hero-result-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .hero-result-status .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .hero-result-status.approved        { color: var(--approved); }
+  .hero-result-status.approved .dot   { background: var(--approved); box-shadow: 0 0 0 3px var(--approved-bg); }
+  .hero-result-status.conditional      { color: var(--conditional); }
+  .hero-result-status.conditional .dot { background: var(--conditional); box-shadow: 0 0 0 3px var(--conditional-bg); }
+  .hero-result-status.denied          { color: var(--denied); }
+  .hero-result-status.denied .dot     { background: var(--denied); box-shadow: 0 0 0 3px var(--denied-bg); }
+  /* Mobile: stack copy above product window */
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .hero-stage { max-width: 100%; margin: 0 auto; }
+  }
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-form-phase, .hero-results-phase, .hero-form-cta, .hero-typed,
+    .hero-result-row, .hero-meta-pulse {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      width: 100% !important;
+    }
+    .hero-results-phase { display: none; }
+  }
+
   input, select, textarea {
     background: var(--bg-elevated); border: 1px solid var(--border);
     color: var(--fg); padding: 14px 16px; border-radius: 2px;
@@ -832,19 +1139,121 @@
     </div>
   </nav>
 
-  <section style="padding:120px 48px 80px;max-width:1400px;margin:0 auto;">
-    <h1 class="display fade-up" style="font-size:clamp(48px, 7vw, 96px);line-height:0.95;font-weight:400;animation-delay:0.1s;">
-      Know your payment<br>
-      <span style="font-style:italic;color:var(--accent);">processor matches.</span>
-    </h1>
+  <section style="padding:96px 48px 64px;max-width:1400px;margin:0 auto;">
+    <div class="hero-grid fade-up" style="animation-delay:0.1s;">
 
-    <p class="fade-up" style="font-size:20px;max-width:680px;margin-top:40px;color:var(--fg-muted);line-height:1.5;animation-delay:0.2s;">
-      One intake form. Real-time approval insights in 90 seconds across 30 payment processors.
-    </p>
+      <div class="hero-copy">
+        <div class="hero-eyebrow-frame">
+          <span class="hero-eyebrow">Payment Processing Solutions</span>
+        </div>
+        <h1 class="display" style="font-size:clamp(48px, 6.5vw, 88px);line-height:0.98;font-weight:400;letter-spacing:-0.025em;margin-bottom:32px;">
+          Know your payment<br>
+          <span style="font-style:italic;color:var(--accent);">processor matches.</span>
+        </h1>
 
-    <div class="fade-up hero-ctas" style="display:flex;gap:16px;margin-top:48px;animation-delay:0.3s;flex-wrap:wrap;">
-      <button class="btn-primary" onclick="go('application')">Start intake form →</button>
-      <button class="btn-ghost" onclick="document.getElementById('processors-section').scrollIntoView({behavior:'smooth'})">View payment processors</button>
+        <p style="font-size:18px;color:var(--fg-muted);line-height:1.55;margin-bottom:40px;max-width:520px;">
+          One intake form. Real-time approval insights in 90 seconds across 30 payment processors.
+        </p>
+
+        <div class="hero-ctas" style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;">
+          <button class="btn-primary" onclick="go('application')">Start intake form →</button>
+          <button class="btn-ghost" onclick="document.getElementById('processors-section').scrollIntoView({behavior:'smooth'})">View payment processors</button>
+        </div>
+
+        <div class="hero-meta">
+          <span class="hero-meta-pulse"></span>
+          <span>Decision engine live · 30 processors integrated</span>
+        </div>
+      </div>
+
+      <div class="hero-stage">
+        <div class="hero-window">
+          <div class="hero-chrome">
+            <div class="hero-chrome-dot"></div>
+            <div class="hero-chrome-dot"></div>
+            <div class="hero-chrome-dot"></div>
+            <div class="hero-chrome-url"><span class="accent">processorhelp.com</span>/application</div>
+          </div>
+
+          <div class="hero-body">
+
+            <div class="hero-form-phase">
+              <div class="hero-section-eyebrow">Step 2 of 4 · Business Profile</div>
+              <div class="hero-section-title">Your business</div>
+
+              <div class="hero-form-row">
+                <div class="hero-form-label">Industry</div>
+                <div class="hero-form-input"><span class="hero-typed">Supplements &amp; Nutraceuticals</span></div>
+              </div>
+              <div class="hero-form-row">
+                <div class="hero-form-label">Monthly Volume</div>
+                <div class="hero-form-input"><span class="hero-typed">$45,000</span></div>
+              </div>
+              <div class="hero-form-row">
+                <div class="hero-form-label">Chargeback Ratio</div>
+                <div class="hero-form-input"><span class="hero-typed">0.8%</span></div>
+              </div>
+              <div class="hero-form-row">
+                <div class="hero-form-label">Country</div>
+                <div class="hero-form-input"><span class="hero-typed">United States</span></div>
+              </div>
+
+              <div class="hero-form-cta">Run underwriting report →</div>
+            </div>
+
+            <div class="hero-results-phase">
+              <div class="hero-section-eyebrow">Decision report · 30 processors</div>
+
+              <div class="hero-summary">
+                <div class="hero-summary-cell">
+                  <div class="hero-summary-num approved">12</div>
+                  <div class="hero-summary-label">Approved</div>
+                </div>
+                <div class="hero-summary-cell">
+                  <div class="hero-summary-num conditional">8</div>
+                  <div class="hero-summary-label">Conditional</div>
+                </div>
+                <div class="hero-summary-cell">
+                  <div class="hero-summary-num denied">10</div>
+                  <div class="hero-summary-label">Denied</div>
+                </div>
+              </div>
+
+              <div class="hero-result-row">
+                <div class="hero-result-name">PaymentCloud</div>
+                <div class="hero-result-status approved"><span class="dot"></span>Approved</div>
+              </div>
+              <div class="hero-result-row">
+                <div class="hero-result-name">EmerchantPay</div>
+                <div class="hero-result-status approved"><span class="dot"></span>Approved</div>
+              </div>
+              <div class="hero-result-row">
+                <div class="hero-result-name">PayKings</div>
+                <div class="hero-result-status approved"><span class="dot"></span>Approved</div>
+              </div>
+              <div class="hero-result-row">
+                <div class="hero-result-name">Authorize.Net</div>
+                <div class="hero-result-status conditional"><span class="dot"></span>Conditional</div>
+              </div>
+              <div class="hero-result-row">
+                <div class="hero-result-name">Adyen</div>
+                <div class="hero-result-status conditional"><span class="dot"></span>Conditional</div>
+              </div>
+              <div class="hero-result-row">
+                <div class="hero-result-name">Stripe</div>
+                <div class="hero-result-status denied"><span class="dot"></span>Denied</div>
+              </div>
+              <div class="hero-result-row">
+                <div class="hero-result-name">Square</div>
+                <div class="hero-result-status denied"><span class="dot"></span>Denied</div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div class="fade-up stats-row" style="margin-top:96px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;animation-delay:0.4s;">
