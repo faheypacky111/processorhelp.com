@@ -795,7 +795,7 @@
     <div style="display:flex;gap:32px;align-items:center;" id="landing-nav-right">
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
-      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start For Free →</button>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Buy a Report →</button>
     </div>
   </nav>
 
@@ -867,8 +867,8 @@
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:32px;">
       <div>
         <div class="display" style="font-size:48px;font-weight:400;color:var(--accent);line-height:1;margin-bottom:20px;">01</div>
-        <h3 class="display" style="font-size:22px;font-weight:500;margin-bottom:12px;">Subscribe.</h3>
-        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;">Subscribe to unlock underwriting reports across all 30 payment processors. Plans starting at $29/month. Cancel anytime.</p>
+        <h3 class="display" style="font-size:22px;font-weight:500;margin-bottom:12px;">Purchase.</h3>
+        <p style="color:var(--fg-muted);font-size:14px;line-height:1.6;">Pay $149 once to unlock an underwriting report across all 30 payment processors. No subscription, no recurring billing.</p>
       </div>
       <div>
         <div class="display" style="font-size:48px;font-weight:400;color:var(--accent);line-height:1;margin-bottom:20px;">02</div>
@@ -890,161 +890,56 @@
 
   <!-- =============== PRICING SECTION =============== -->
   <section id="pricing-section" style="padding:120px 48px 80px;max-width:1400px;margin:0 auto;">
-    <div style="text-align:center;margin-bottom:40px;">
+    <div style="text-align:center;margin-bottom:48px;">
       <div class="mono" style="display:inline-block;padding:6px 14px;border:1px solid var(--border-strong);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:24px;">Pricing</div>
       <h2 class="display" style="font-size:clamp(40px, 5vw, 64px);line-height:1.05;font-weight:400;margin-bottom:20px;">
-        Built for <span style="font-style:italic;color:var(--accent);">every</span> stage.
+        One report. <span style="font-style:italic;color:var(--accent);">One price.</span>
       </h2>
       <p style="font-size:18px;color:var(--fg-muted);max-width:640px;margin:0 auto;line-height:1.5;">
-        From solopreneurs to enterprise. Pay only for what your business needs. No setup fees. Cancel anytime.
+        $149 per evaluation. No subscription. Nothing recurring. Need another report later? Buy another.
       </p>
     </div>
 
-    <!-- Billing toggle -->
-    <div style="display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:48px;flex-wrap:wrap;">
-      <span id="billing-monthly-label" class="billing-label" data-active="true" style="min-width:64px;text-align:right;">Monthly</span>
-      <button id="billing-toggle" onclick="toggleBilling()" style="position:relative;width:56px;height:28px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:14px;cursor:pointer;padding:0;transition:background-color 0.2s ease, border-color 0.2s ease;flex-shrink:0;" aria-label="Toggle billing period">
-        <span id="billing-toggle-dot" style="position:absolute;top:2px;left:2px;width:22px;height:22px;background:var(--accent);border-radius:50%;transition:transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);will-change:transform;"></span>
-      </button>
-      <div style="display:flex;align-items:center;gap:10px;min-width:180px;">
-        <span id="billing-annual-label" class="billing-label" data-active="false">Annual</span>
-        <span id="billing-savings-chip" style="font-size:11px;font-weight:600;background:var(--approved-bg);color:var(--approved);padding:4px 10px;border-radius:12px;letter-spacing:0.05em;opacity:0;transition:opacity 0.25s ease;pointer-events:none;">Save 2 months</span>
-      </div>
-    </div>
+    <!-- Single $149 product card -->
+    <div class="pricing-grid" style="display:flex;justify-content:center;max-width:560px;margin:0 auto;">
 
-    <div class="pricing-grid" style="display:grid;grid-template-columns:repeat(4, 1fr);gap:16px;max-width:1400px;margin:0 auto;">
+      <div style="border:2px solid var(--accent);background:var(--bg-card);padding:48px 40px;display:flex;flex-direction:column;width:100%;position:relative;">
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">Processor Help</div>
+        <h3 class="display" style="font-size:32px;font-weight:500;margin-bottom:8px;">Evaluation Report</h3>
+        <p style="font-size:14px;color:var(--fg-muted);margin-bottom:32px;line-height:1.5;">One-time payment. No subscription. The report is yours forever.</p>
 
-      <!-- ============ FREE TIER ============ -->
-      <div style="border:1px solid var(--border);background:var(--bg-card);padding:32px 28px;display:flex;flex-direction:column;">
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:12px;">Free</div>
-        <h3 class="display" style="font-size:28px;font-weight:500;margin-bottom:6px;">Explore</h3>
-        <p style="color:var(--fg-muted);font-size:13px;line-height:1.5;margin-bottom:24px;min-height:40px;">Browse the platform. No payment required.</p>
-
-        <div style="margin-bottom:24px;min-height:80px;">
-          <div style="display:flex;align-items:baseline;gap:6px;">
-            <span class="display" style="font-size:48px;font-weight:500;line-height:1;">$0</span>
-            <span style="font-size:14px;color:var(--fg-muted);">/forever</span>
-          </div>
-          <div style="font-size:12px;color:var(--fg-muted);margin-top:8px;">Account creation only.</div>
+        <div style="margin-bottom:32px;">
+          <span class="display" style="font-size:64px;font-weight:500;line-height:1;">$149</span>
+          <span style="font-size:14px;color:var(--fg-muted);margin-left:8px;">per report</span>
         </div>
 
-        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;flex:1;font-size:13px;">
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Free account</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Browse all 30 processors</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Save business profile</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;color:var(--fg-dim);opacity:0.6;"><span style="color:var(--fg-dim);font-weight:400;flex-shrink:0;">—</span><span style="text-decoration:line-through;">Underwriting reports</span></div>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:40px;font-size:14px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Underwriting verdict across <strong>all 30</strong> payment processors</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Match score + reasoning for every processor</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Direct apply links to approved processors</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Saved to your account permanently</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Email support, 48hr response</span></div>
         </div>
 
-        <button class="btn-ghost" onclick="go('signup')" style="width:100%;justify-content:center;font-size:11px;padding:12px;">Create account →</button>
-        <div style="text-align:center;margin-top:10px;font-size:10px;color:var(--fg-dim);">No credit card required</div>
+        <button class="btn-primary" onclick="startPurchase()" style="padding:18px 24px;font-size:13px;width:100%;">Buy Report — $149 →</button>
+        <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--fg-dim);">Secure checkout via Stripe · Cancel before report runs for full refund</div>
       </div>
 
-      <!-- ============ STARTER TIER ============ -->
-      <div style="border:1px solid var(--border);background:var(--bg-card);padding:32px 28px;display:flex;flex-direction:column;">
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:12px;">Starter</div>
-        <h3 class="display" style="font-size:28px;font-weight:500;margin-bottom:6px;">Solopreneur</h3>
-        <p style="color:var(--fg-muted);font-size:13px;line-height:1.5;margin-bottom:24px;min-height:40px;">First-time founders and side projects. Get it right the first time.</p>
-
-        <div style="margin-bottom:24px;min-height:80px;">
-          <div style="display:flex;align-items:baseline;gap:6px;">
-            <span class="display starter-price" style="font-size:48px;font-weight:500;line-height:1;">$29</span>
-            <span class="starter-period" style="font-size:14px;color:var(--fg-muted);">/month</span>
-          </div>
-          <div class="starter-billing-note" style="font-size:12px;color:var(--fg-muted);margin-top:8px;">Billed monthly. Cancel anytime.</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;flex:1;font-size:13px;">
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:var(--fg);">3 reports</strong> per month</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>All 30 processors evaluated</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Match scores & reasoning</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Direct apply links</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Report history</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Email support (48hr)</span></div>
-        </div>
-
-        <button class="btn-ghost" onclick="selectPlan('starter')" style="width:100%;justify-content:center;font-size:11px;padding:12px;">Choose Starter →</button>
-        <div style="text-align:center;margin-top:10px;font-size:10px;color:var(--fg-dim);">Best for solopreneurs</div>
-      </div>
-
-      <!-- ============ GROWTH TIER (RECOMMENDED) ============ -->
-      <div style="border:2px solid var(--accent);background:var(--bg-card);padding:32px 28px;display:flex;flex-direction:column;position:relative;box-shadow:0 4px 20px rgba(166,124,46,0.1);">
-        <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:9px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;padding:5px 12px;white-space:nowrap;">Most Popular</div>
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Growth</div>
-        <h3 class="display" style="font-size:28px;font-weight:500;margin-bottom:6px;">Scaling Brand</h3>
-        <p style="color:var(--fg-muted);font-size:13px;line-height:1.5;margin-bottom:24px;min-height:40px;">$50K-$500K monthly volume. Multi-MID strategy. Quarterly guidance.</p>
-
-        <div style="margin-bottom:24px;min-height:80px;">
-          <div style="display:flex;align-items:baseline;gap:6px;">
-            <span class="display growth-price" style="font-size:48px;font-weight:500;line-height:1;">$99</span>
-            <span class="growth-period" style="font-size:14px;color:var(--fg-muted);">/month</span>
-          </div>
-          <div class="growth-billing-note" style="font-size:12px;color:var(--fg-muted);margin-top:8px;">Billed monthly. Cancel anytime.</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;flex:1;font-size:13px;">
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:var(--fg);">6 reports</strong> per month</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Everything in Starter, plus:</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Multi-MID strategy guidance</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Quarterly check-in calls</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Priority support (24hr)</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Volume tier optimization</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Backup processor planning</span></div>
-        </div>
-
-        <button class="btn-primary" onclick="selectPlan('growth')" style="width:100%;justify-content:center;font-size:11px;padding:12px;">Choose Growth →</button>
-        <div style="text-align:center;margin-top:10px;font-size:10px;color:var(--fg-dim);">Best for scaling brands</div>
-      </div>
-
-      <!-- ============ ENTERPRISE TIER ============ -->
-      <div style="border:1px solid var(--border-strong);background:var(--bg-elevated);padding:32px 28px;display:flex;flex-direction:column;">
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg);margin-bottom:12px;">Enterprise</div>
-        <h3 class="display" style="font-size:28px;font-weight:500;margin-bottom:6px;">Operator</h3>
-        <p style="color:var(--fg-muted);font-size:13px;line-height:1.5;margin-bottom:24px;min-height:40px;">$500K+ monthly volume. Dedicated advisor. White-glove coverage.</p>
-
-        <div style="margin-bottom:24px;min-height:80px;">
-          <div style="display:flex;align-items:baseline;gap:6px;">
-            <span class="display enterprise-price" style="font-size:48px;font-weight:500;line-height:1;">$299</span>
-            <span class="enterprise-period" style="font-size:14px;color:var(--fg-muted);">/month</span>
-          </div>
-          <div class="enterprise-billing-note" style="font-size:12px;color:var(--fg-muted);margin-top:8px;">Billed monthly. Cancel anytime.</div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;flex:1;font-size:13px;">
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span><strong style="color:var(--fg);">Unlimited</strong> reports</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Everything in Growth, plus:</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Dedicated payments advisor</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Custom underwriting deep-dives</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>High-risk specialist coordination</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Monthly strategy calls</span></div>
-          <div style="display:flex;gap:8px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Premium support (4hr)</span></div>
-        </div>
-
-        <button class="btn-ghost" onclick="selectPlan('enterprise')" style="width:100%;justify-content:center;font-size:11px;padding:12px;">Choose Enterprise →</button>
-        <div style="text-align:center;margin-top:10px;font-size:10px;color:var(--fg-dim);">Best for $500K+ operators</div>
-      </div>
-
-    </div>
-
-    <!-- Custom / Contact -->
-    <div style="margin-top:32px;text-align:center;padding:24px;border:1px dashed var(--border-strong);background:transparent;max-width:900px;margin-left:auto;margin-right:auto;">
-      <span style="color:var(--fg-muted);font-size:13px;">Need a custom solution? Multi-entity, white-label, or API access?</span>
-      <a href="mailto:support@processorhelp.com?subject=Custom%20Plan%20Inquiry" style="color:var(--accent);text-decoration:underline;font-size:13px;font-weight:500;margin-left:8px;cursor:pointer;">Contact us →</a>
     </div>
 
     <!-- Refund Policy -->
-    <div style="margin-top:48px;max-width:900px;margin-left:auto;margin-right:auto;padding:24px 28px;background:var(--bg-elevated);border:1px solid var(--border);">
-      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Refund & Cancellation Policy</div>
+    <div style="margin-top:48px;max-width:760px;margin-left:auto;margin-right:auto;padding:24px 28px;background:var(--bg-elevated);border:1px solid var(--border);">
+      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Refund Policy</div>
       <div style="font-size:13px;color:var(--fg-muted);line-height:1.7;">
-        <strong style="color:var(--fg);">Cancel anytime.</strong> Cancel your subscription from your billing dashboard in two clicks — no phone calls, no retention pitches, no hoops. You retain full access through the end of your current billing period.
-        <br><br>
-        <strong style="color:var(--fg);">Refund eligibility.</strong> Subscription fees are final, with three exceptions: <strong style="color:var(--fg);">(1) technical failure</strong> that prevented service delivery (request within 7 days of the charge); <strong style="color:var(--fg);">(2) erroneous billing</strong> — for example, a charge after a verified cancellation (request within 7 days); <strong style="color:var(--fg);">(3) annual plan satisfaction</strong> — annual subscriptions are eligible for a prorated refund of the unused portion within 14 days of the initial annual purchase. Email refund requests to <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a>. Read full terms in our <a onclick="go('tos')" style="color:var(--accent);cursor:pointer;text-decoration:underline;">Terms of Service</a>.
+        <strong style="color:var(--fg);">Full refund within 7 days</strong> if you have not yet generated your report. Once you generate your report, the purchase is non-refundable because the work has been delivered. Email refund requests to <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a>. Read full terms in our <a onclick="go('tos')" style="color:var(--accent);cursor:pointer;text-decoration:underline;">Terms of Service</a>.
       </div>
     </div>
 
     <div style="text-align:center;margin-top:32px;font-size:13px;color:var(--fg-muted);max-width:600px;margin-left:auto;margin-right:auto;line-height:1.7;">
-      Have questions about pricing? Read our <a onclick="go('faq')" style="color:var(--accent);cursor:pointer;text-decoration:underline;">FAQ</a> or email <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a>.
+      Have questions? Read our <a onclick="go('faq')" style="color:var(--accent);cursor:pointer;text-decoration:underline;">FAQ</a> or email <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a>.
     </div>
   </section>
+
 
   <section style="padding:120px 48px 160px;max-width:1400px;margin:0 auto;text-align:center;">
     <h2 class="display" style="font-size:clamp(40px, 5vw, 64px);line-height:1.05;font-weight:400;">
@@ -1135,7 +1030,7 @@
     <div style="display:flex;gap:32px;align-items:center;">
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
-      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start For Free →</button>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Buy a Report →</button>
     </div>
   </nav>
 
@@ -1167,7 +1062,7 @@
     <div style="display:flex;gap:32px;align-items:center;">
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
-      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start For Free →</button>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Buy a Report →</button>
     </div>
   </nav>
 
@@ -1193,7 +1088,7 @@
       <a onclick="document.getElementById('pricing-section')?.scrollIntoView({behavior:'smooth'}) || go('landing')">Pricing</a>
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
-      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start For Free →</button>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Buy a Report →</button>
     </div>
   </nav>
 
@@ -1219,14 +1114,14 @@
         <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 14, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
-      <strong style="color:var(--fg);">Plain-language summary:</strong> We collect the business information you provide to generate your underwriting report. We charge a monthly or annual subscription fee for access to underwriting reports (the number of reports per month varies by plan). We don't sell your data. We don't share your intake form with the payment processors listed in your report — you apply to those directly. We do share data with the service providers we use to run the platform (like Stripe and Supabase), as described in Section 4a. You're always in control.
+      <strong style="color:var(--fg);">Plain-language summary:</strong> We collect the business information you provide to generate your underwriting report. We charge a one-time $149 fee per underwriting report. We don't sell your data. We don't share your intake form with the payment processors listed in your report — you apply to those directly. We do share data with the service providers we use to run the platform (like Stripe and Supabase), as described in Section 4a. You're always in control.
     </p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:40px;">1. Who We Are</h2>
     <p>Processor Help ("we", "us", "our") is a payment processing solutions company operating processorhelp.com — a payment processor matching and advisory platform. We are an independent service and are not affiliated with any payment processor listed on our platform.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">2. Information We Collect</h2>
-    <p><strong style="color:var(--fg);">Business Information:</strong> Legal business name, entity type, years in business, country of registration, product type, monthly processing volume, average ticket size, industry vertical, subscription status, chargeback ratio, refund ratio, prior processor terminations, MATCH list status, and credit tier — all as provided by you during the intake form process.</p>
+    <p><strong style="color:var(--fg);">Business Information:</strong> Legal business name, entity type, years in business, country of registration, product type, monthly processing volume, average ticket size, industry vertical, chargeback ratio, refund ratio, prior processor terminations, MATCH list status, and credit tier — all as provided by you during the intake form process.</p>
     <p style="margin-top:16px;"><strong style="color:var(--fg);">Payment Information:</strong> Email address, cardholder name, and payment card details submitted during checkout. Payment processing is handled by our third-party payment provider. We do not store full card numbers on our servers.</p>
     <p style="margin-top:16px;"><strong style="color:var(--fg);">Technical Information:</strong> Basic technical metadata associated with your requests (IP address, browser user-agent, request timestamps) collected by our infrastructure providers (GitHub Pages, Supabase) for service operation, security, and abuse prevention. With your consent (selected via our cookie banner), we also use privacy-respecting analytics — Google Analytics 4 and Microsoft Clarity — to understand site usage patterns. We configure these tools to anonymize IP addresses and disable advertising signals. If you do not consent, no analytics scripts are loaded.</p>
 
@@ -1234,7 +1129,7 @@
     <p>We use the information you provide to:</p>
     <ul style="margin-top:12px;padding-left:24px;">
       <li style="margin-bottom:8px;">Generate your personalized underwriting report across our 30 payment processors</li>
-      <li style="margin-bottom:8px;">Process your subscription payment</li>
+      <li style="margin-bottom:8px;">Process your one-time report purchase</li>
       <li style="margin-bottom:8px;">Save your reports to your account for unlimited re-access</li>
       <li style="margin-bottom:8px;">Improve our underwriting algorithms through aggregated, anonymized analysis</li>
       <li style="margin-bottom:8px;">Respond to customer support inquiries</li>
@@ -1243,13 +1138,13 @@
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4. Information Sharing</h2>
     <p><strong style="color:var(--fg);">We do not sell your personal information.</strong></p>
     <p style="margin-top:16px;"><strong style="color:var(--fg);">We do not share your business profile with the payment processors listed in our underwriting engine.</strong> When you click "Apply" on any processor in your report, you are redirected to that processor's own website where you apply directly. Processor Help does not submit applications on your behalf.</p>
-    <p style="margin-top:16px;"><strong style="color:var(--fg);">We do share data with the third-party service providers we use to operate Processor Help</strong> (such as Stripe for subscription billing and Supabase for database hosting). These providers are listed in Section 4a below. Stripe is our subscription payment processor and is technically distinct from the payment processors listed in your underwriting report — though Stripe also appears in our underwriting engine, the data Stripe receives in its role as our PSP comes only from your subscription checkout, not from your intake form.</p>
+    <p style="margin-top:16px;"><strong style="color:var(--fg);">We do share data with the third-party service providers we use to operate Processor Help</strong> (such as Stripe for payment processing and Supabase for database hosting). These providers are listed in Section 4a below. Stripe is our payment processor and is technically distinct from the payment processors listed in your underwriting report — though Stripe also appears in our underwriting engine, the data Stripe receives in its role as our PSP comes only from your checkout transaction, not from your intake form.</p>
     <p style="margin-top:16px;">We may also share information with legal authorities if required by law.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4a. Third-Party Service Providers</h2>
     <p>We use carefully selected third-party services to operate Processor Help. These providers receive only the data necessary to perform their function, are bound by data protection agreements, and may not use your information for their own purposes.</p>
     <ul style="margin-top:16px;padding-left:24px;">
-      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Supabase, Inc.</strong> — Hosts our database, authentication, and serverless backend functions. Supabase stores your account credentials, business profile, subscription state, and saved reports. May log standard request metadata (IP address, user-agent, request timestamps) for security and abuse prevention. Their <a href="https://supabase.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
+      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Supabase, Inc.</strong> — Hosts our database, authentication, and serverless backend functions. Supabase stores your account credentials, business profile, purchase history, and saved reports. May log standard request metadata (IP address, user-agent, request timestamps) for security and abuse prevention. Their <a href="https://supabase.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Stripe, Inc.</strong> — Payment processing for your subscription. Stripe receives your name, email, billing address, and payment card details. Stripe is PCI-DSS Level 1 certified. Their <a href="https://stripe.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Resend</strong> — Delivers transactional emails (account confirmations, password resets, receipts, account notifications). Resend receives your email address and the message content for each transactional email we send you. Their <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">GitHub, Inc.</strong> — Hosts our public-facing website (GitHub Pages). May log basic technical information (IP address, browser type, request timestamps) for service operation.</li>
@@ -1269,10 +1164,10 @@
     </ul>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4c. Free Account Data Practices</h2>
-    <p>Free accounts (users who have signed up but not subscribed) are subject to the same privacy protections as paid accounts. We collect only the information you provide (business name, email, password) and store it securely. You may delete your free account at any time from your Settings page.</p>
+    <p>Free accounts (users who have signed up but not yet purchased a report) are subject to the same privacy protections as paying users. We collect only the information you provide (business name, email, password) and store it securely. You may delete your free account at any time from your Settings page.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">5. Data Retention</h2>
-    <p>We retain your account data and reports for as long as your account remains active so you can re-access your reports anytime. You may export all your data or permanently delete your account at any time from your Settings page. When you delete your account, your business profile, reports, and subscription records are permanently removed (with a brief retention window for fraud-prevention and audit purposes). Payment records are retained per applicable financial and tax regulations regardless of account status.</p>
+    <p>We retain your account data and reports for as long as your account remains active so you can re-access your reports anytime. You may export all your data or permanently delete your account at any time from your Settings page. When you delete your account, your business profile, reports, and purchase records are permanently removed (with a brief retention window for fraud-prevention and audit purposes). Payment records are retained per applicable financial and tax regulations regardless of account status.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">6. Your Rights</h2>
     <p>Depending on your jurisdiction, you may have the right to access, correct, delete, or export your personal information. To exercise any of these rights, contact us at privacy@processorhelp.com.</p>
@@ -1296,7 +1191,7 @@
         <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 14, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
-      <strong style="color:var(--fg);">Plain-language summary:</strong> Processor Help is an advisory tool, not a payment processor or broker. We charge a subscription fee (monthly or annual, varies by plan) for access to underwriting reports across 30 payment processors. The number of reports per month varies by plan; the Enterprise tier includes unlimited reports. Results are informational — processors make their own final decisions. Don't misrepresent your business on the form.
+      <strong style="color:var(--fg);">Plain-language summary:</strong> Processor Help is an advisory tool, not a payment processor or broker. We charge a one-time fee of $149 per underwriting report across 30 payment processors. No subscription, no recurring billing. Results are informational — processors make their own final decisions. Don't misrepresent your business on the form.
     </p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:40px;">1. Acceptance of Terms</h2>
@@ -1313,7 +1208,7 @@
     </ul>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">3. The Service</h2>
-    <p>For a monthly or annual subscription fee (varies by plan), we provide you with monthly underwriting reports showing likely approval, conditional approval, or denial outcomes across 30 payment processors based on the business information you provide and our proprietary underwriting logic modeled on publicly available processor criteria. The number of reports per month is determined by your subscription tier: Starter (3 reports/month), Growth (6 reports/month), Enterprise (unlimited). Limits reset on the first day of each calendar month. Cancel anytime.</p>
+    <p>For a one-time fee of $149 USD per report, we provide you with an underwriting report showing likely approval, conditional approval, or denial outcomes across all 30 payment processors based on the business information you provide and our proprietary underwriting logic modeled on publicly available processor criteria. There is no subscription, no recurring billing, and no auto-renewal. Each report is a single discrete purchase. If you need another report at any point in the future, you may purchase another at the same price.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">4. No Guarantee of Approval</h2>
     <p><strong style="color:var(--fg);">Our reports are predictive, not binding.</strong> Each payment processor performs its own independent underwriting using criteria, data sources, and policies that change over time. A "Likely Approved" result is not a guarantee. A "Likely Denied" result is not final — you may still apply. Approval decisions rest solely with each payment processor.</p>
@@ -1327,18 +1222,18 @@
       <li style="margin-bottom:8px;">Be authorized to submit business information on behalf of your company</li>
     </ul>
 
-    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">6. Payment, Subscription & Refunds</h2>
-    <p><strong style="color:var(--fg);">Subscription billing.</strong> Subscription fees vary by plan: Starter ($29/month), Growth ($99/month), Enterprise ($299/month). Annual plans are also available with two months free. Your subscription fee is automatically charged to your card on file at the start of each billing period and grants access to the report quota associated with your plan during that period. The subscription continues until you cancel.</p>
-    <p style="margin-top:12px;"><strong style="color:var(--fg);">Cancellation.</strong> You may cancel your subscription at any time from your Billing page — no phone calls, no retention pressure, no waiting periods. Cancellation stops future renewal billing immediately. You retain full access until the end of your current paid billing period (e.g., if you cancel on day 5 of a 30-day cycle, you keep access through day 30). After that period ends, your subscription expires and you will not be charged again unless you reactivate.</p>
+    <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">6. Payment & Refunds</h2>
+    <p><strong style="color:var(--fg);">One-time purchase billing.</strong> Each underwriting report is a one-time charge of $149 USD. There is no subscription, no recurring billing, and no auto-renewal. You authorize a single charge to your payment method at the moment of purchase. If you need another report in the future, you may purchase another at the then-current price.</p>
+    <p style="margin-top:12px;"><strong style="color:var(--fg);">No cancellation needed.</strong> Each purchase is a single, discrete transaction. There is no subscription to cancel. You will not be charged again unless you choose to purchase another report.</p>
     <p style="margin-top:12px;"><strong style="color:var(--fg);">Refund policy.</strong> Refunds are issued in three specific scenarios:</p>
     <ul style="margin-top:8px;padding-left:24px;">
       <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Technical failure or service delivery failure:</strong> if the service was inaccessible, the underwriting engine was broken, or your account was unusable. Submit refund requests to <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a> within <strong>7 days</strong> of the failed charge.</li>
       <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Erroneous billing:</strong> if you were charged after a verified cancellation, or charged in error. Submit refund requests within <strong>7 days</strong> of the erroneous charge.</li>
-      <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Annual plan satisfaction window:</strong> annual subscriptions are eligible for a prorated refund of the unused portion if requested within <strong>14 days</strong> of the initial annual purchase.</li>
+      <li style="margin-bottom:8px;"><strong style="color:var(--fg);">7-day no-use refund window:</strong> if you have not yet run your report, we issue a full refund within <strong>7 days</strong> of purchase. Once the report has been generated and delivered, the charge is final.</li>
     </ul>
-    <p style="margin-top:12px;">Outside of these three scenarios, all subscription fees are final upon charge. We do not provide prorated refunds for unused portions of a monthly billing cycle. We aim to respond to refund requests within 2 business days.</p>
-    <p style="margin-top:12px;"><strong style="color:var(--fg);">Failed payments.</strong> If a recurring payment fails, we will attempt to charge again over the following 7 days. If payment is not received, your subscription will be paused until you update your payment method.</p>
-    <p style="margin-top:12px;"><strong style="color:var(--fg);">Price changes.</strong> Existing subscribers will not see price increases on their current plan. If we introduce new pricing tiers in the future, existing customers will be grandfathered at their current rate. We will provide at least 30 days' notice of any price changes that would affect your subscription.</p>
+    <p style="margin-top:12px;">Outside of these scenarios, all purchase fees are final once the report has been generated. We aim to respond to refund requests within 2 business days.</p>
+    <p style="margin-top:12px;"><strong style="color:var(--fg);">Failed payments.</strong> If your card is declined at checkout, no charge is made and no report is generated. You may retry with a different payment method at any time.</p>
+    <p style="margin-top:12px;"><strong style="color:var(--fg);">Price changes.</strong> The price you pay for a report is the price displayed at the time of purchase. If we change pricing for future reports, your past purchases are unaffected. We will provide clear notice on the pricing page of any price changes before they take effect.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">7. Intellectual Property</h2>
     <p>All content, code, design, underwriting algorithms, and brand assets on Processor Help are owned by Processor Help. You may not copy, reproduce, redistribute, or create derivative works without written permission.</p>
@@ -1359,7 +1254,7 @@
     <p>The service is provided "as is" without warranties of any kind, express or implied. We do not warrant that results will be accurate, complete, or reflective of any processor's current underwriting policies.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">9. Limitation of Liability</h2>
-    <p>To the fullest extent permitted by law, Processor Help's total liability for any claim arising from your use of the service is limited to the subscription fees you paid in the 12 months preceding the claim. We are not liable for indirect, consequential, incidental, or punitive damages.</p>
+    <p>To the fullest extent permitted by law, Processor Help's total liability for any claim arising from your use of the service is limited to the purchase fees you paid in the 12 months preceding the claim. We are not liable for indirect, consequential, incidental, or punitive damages.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">10. Termination</h2>
     <p>We may suspend or terminate your access at any time for violation of these terms or for any reason, with or without notice.</p>
@@ -1429,7 +1324,7 @@
     </p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:40px;">1. We Do Not Sell Your Personal Information</h2>
-    <p>Processor Help does not sell, rent, or trade personal information to third parties for monetary or other valuable consideration. Our business model is subscription-based — we earn revenue exclusively from user subscription fees, not from data sales.</p>
+    <p>Processor Help does not sell, rent, or trade personal information to third parties for monetary or other valuable consideration. Our business model is one-time-purchase-based — we earn revenue exclusively from user report purchase fees ($149 per report), not from data sales.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">2. Your California Privacy Rights</h2>
     <p>If you are a California resident, you have the following rights:</p>
@@ -1459,7 +1354,7 @@
     <p>In the preceding 12 months, we have collected the following categories of personal information:</p>
     <ul style="margin-top:12px;padding-left:24px;">
       <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Identifiers:</strong> Email address, business name</li>
-      <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Commercial Information:</strong> Subscription status, billing records, transaction history</li>
+      <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Commercial Information:</strong> Purchase history, billing records, transaction history</li>
       <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Internet Activity:</strong> Pages visited, features used (with consent)</li>
       <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Professional Information:</strong> Business details provided in intake forms (industry, volume, etc.)</li>
     </ul>
@@ -1608,7 +1503,7 @@
     <div class="fade-up">
       <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Create Account</div>
       <h1 class="display" style="font-size:42px;font-weight:400;margin-bottom:12px;letter-spacing:-0.02em;">Start your<br>underwriting journey.</h1>
-      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:40px;">Free account. Subscribe to unlock payment processor underwriting reports — plans starting at $29/month.</p>
+      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:40px;">Free account. Buy a report ($149 one-time) to unlock your underwriting evaluation across 30 payment processors.</p>
       <div class="field"><label for="signup-business">Business name</label>
         <input id="signup-business" placeholder="Acme Commerce LLC" oninput="validateSignup()" />
       </div>
@@ -1659,7 +1554,7 @@
     <div class="fade-up">
       <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Welcome Back</div>
       <h1 class="display" style="font-size:42px;font-weight:400;margin-bottom:12px;letter-spacing:-0.02em;">Sign in to<br>Processor Help.</h1>
-      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:40px;">Access your dashboard, reports, and subscription.</p>
+      <p style="color:var(--fg-muted);font-size:16px;margin-bottom:40px;">Access your dashboard, reports, and purchase history.</p>
       <div class="field"><label for="signin-email">Email address</label>
         <input id="signin-email" type="email" placeholder="you@business.com" oninput="validateSignin()" />
       </div>
@@ -1889,22 +1784,16 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 });
 
 // =============== STRIPE CONFIG ===============
-const STRIPE_PUBLISHABLE_KEY = 'pk_live_51TOobLJDs9C6TPJufkQVpCYKZ6dKNBzEunMdy2AoxQ03pWdDAYISOI5pd4fVcYk600wE3HzMlayebVv1tcAejncP00YEophwmZ';
+const STRIPE_PUBLISHABLE_KEY = 'pk_test_51TOobLJDs9C6TPJu7Z36SXwGPhf3sSjnuayv7qPedaoxrvgXnR02d1nnX7jdjQheVwFOSFSpCe44ql6MN8DANmPl00uvldiQ2a';
 
-// Maps in-app plan + period to a Stripe lookup_key.
-// Stripe products are configured with these exact keys:
-//   starter_monthly | starter_annual | growth_monthly | growth_annual | enterprise_monthly | enterprise_annual
-function buildStripeLookupKey(planId, period) {
-  const validPlans = ['starter', 'growth', 'enterprise'];
-  const validPeriods = ['monthly', 'annual'];
-  if (!planId || !validPlans.includes(planId)) {
-    throw new Error(`Invalid plan id for Stripe lookup: "${planId}". Expected one of: ${validPlans.join(', ')}`);
-  }
-  if (!period || !validPeriods.includes(period)) {
-    throw new Error(`Invalid billing period for Stripe lookup: "${period}". Expected one of: ${validPeriods.join(', ')}`);
-  }
-  return `${planId}_${period}`;
-}
+// One-time purchase model. Single SKU, no tiers, no billing periods.
+const PURCHASE = {
+  lookupKey: 'report_single',
+  name: 'Processor Evaluation Report',
+  price: 149,                   // USD, one-time
+  priceDisplay: '$149',
+  description: 'One-time underwriting evaluation across all 30 payment processors.',
+};
 
 // =============== DATA ===============
 const INDUSTRY_RISK = {
@@ -2110,7 +1999,7 @@ const STEPS = [
 const PUBLIC_VIEWS = ['landing','processors-list','faq','legal','signup','signin','forgot'];
 const AUTH_REQUIRED_VIEWS = ['dashboard','settings','billing','reports','subscribe','application','results'];
 // Subscription is only required for RUNNING new reports (application).
-// Viewing historical results is allowed on the free tier — they earned those reports while subscribed.
+// Viewing historical results is always allowed — once a report is generated, it stays accessible.
 const SUBSCRIPTION_REQUIRED_VIEWS = ['application'];
 
 // =============== AUTH STORAGE (Supabase) ===============
@@ -2168,7 +2057,7 @@ async function hydrateCurrentUser(passedSession) {
   };
 
   let profile = {};
-  let sub = {};
+  let purchases = [];
   let reports = [];
 
   try {
@@ -2179,10 +2068,27 @@ async function hydrateCurrentUser(passedSession) {
   }
 
   try {
-    const rows = await withTimeout(directQuery(`subscriptions?user_id=eq.${userId}&select=*`), 6000, 'Subscription fetch');
-    if (rows && rows.length) sub = rows[0];
+    // Pull purchase history. The 'paid' rows represent unconsumed credits (purchased but
+    // report not yet run); 'consumed' = used; 'refunded' = refunded by us.
+    const rows = await withTimeout(
+      directQuery(`purchases?user_id=eq.${userId}&select=*&order=purchased_at.desc`),
+      6000,
+      'Purchases fetch'
+    );
+    if (rows && rows.length) {
+      purchases = rows.map(p => ({
+        id: p.id,
+        amountCents: p.amount_paid_cents,
+        currency: p.currency,
+        status: p.status,
+        purchasedAt: p.purchased_at ? new Date(p.purchased_at).getTime() : null,
+        consumedAt: p.consumed_at ? new Date(p.consumed_at).getTime() : null,
+        refundedAt: p.refunded_at ? new Date(p.refunded_at).getTime() : null,
+        reportId: p.report_id,
+      }));
+    }
   } catch (e) {
-    console.warn('[HYDRATE] Subscription fetch failed:', e.message);
+    console.warn('[HYDRATE] Purchases fetch failed:', e.message);
   }
 
   try {
@@ -2205,6 +2111,9 @@ async function hydrateCurrentUser(passedSession) {
   // Make sure global token is set so subsequent operations (logout, persist) have it
   if (!window._authToken) window._authToken = accessToken;
 
+  // Derived: count of 'paid' (unconsumed) purchases. Each one is good for exactly one report.
+  const availableCredits = purchases.filter(p => p.status === 'paid').length;
+
   return {
     id: userId,
     email: email,
@@ -2215,15 +2124,10 @@ async function hydrateCurrentUser(passedSession) {
     consentTimestamp: profile.consent_timestamp ? new Date(profile.consent_timestamp).getTime() : null,
     consentHistory: profile.consent_history || [],
     dataRequests: profile.data_requests || [],
-    subscribed: sub.status === 'active' || sub.status === 'trialing',
-    subscriptionStatus: sub.status || 'inactive',
-    subscriptionPlan: profile.subscription_plan || null,
-    subscriptionPlanName: profile.subscription_plan_name || null,
-    subscriptionBillingPeriod: profile.subscription_billing_period || null,
-    subscriptionAmount: profile.subscription_amount || null,
-    subscriptionStartDate: profile.subscription_start_date ? new Date(profile.subscription_start_date).getTime() : null,
-    subscriptionNextBilling: sub.current_period_end ? new Date(sub.current_period_end).getTime() : null,
-    paymentMethod: profile.payment_method || null,
+    stripeCustomerId: profile.stripe_customer_id || null,
+    purchases: purchases,
+    availableCredits: availableCredits,
+    hasEverPurchased: purchases.length > 0,
     savedProfile: profile.saved_profile || null,
     reports: reports,
   };
@@ -2608,7 +2512,7 @@ async function handleLogout() {
     navRight.innerHTML = `
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <a onclick="go('signin')">Sign In</a>
-      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Start For Free →</button>
+      <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Buy a Report →</button>
     `;
   }
 
@@ -2650,13 +2554,21 @@ async function handleForgot() {
   document.getElementById('forgot-sent').classList.remove('hidden');
 }
 
+// Main CTA from the landing hero. Routes through purchase flow.
+//   - Logged out → signup (purchase intent saved, completes after auth)
+//   - Logged in with unconsumed credit → straight to intake form
+//   - Logged in without credit → checkout
 function startCTA() {
-  if (currentUser) {
-    if (currentUser.subscribed) go('application');
-    else go('subscribe');
-  } else {
+  if (!currentUser) {
+    sessionStorage.setItem('ph_pending_purchase', '1');
     go('signup');
+    return;
   }
+  if (currentUser.availableCredits > 0) {
+    go('application');
+    return;
+  }
+  startPurchase();
 }
 
 // =============== NAVIGATION ===============
@@ -2684,7 +2596,7 @@ function go(view) {
   // Auth gating
   if (AUTH_REQUIRED_VIEWS.includes(view) && !currentUser) {
     view = 'signup';
-  } else if (SUBSCRIPTION_REQUIRED_VIEWS.includes(view) && currentUser && !currentUser.subscribed) {
+  } else if (SUBSCRIPTION_REQUIRED_VIEWS.includes(view) && currentUser && !((currentUser.purchases || []).some(p => p.status === 'paid'))) {
     view = 'subscribe';
   }
 
@@ -2764,89 +2676,84 @@ function goPricing() {
 }
 
 // =============== PLAN DATA ===============
-const PLANS = {
-  starter: {
-    id: 'starter',
-    name: 'Starter',
-    label: 'Solopreneur',
-    monthly: 29,
-    annual: 290,  // 2 months free
-    annualMonthly: 24,  // shows as $24/mo when annual
-    reportsPerMonth: 3,
-  },
-  growth: {
-    id: 'growth',
-    name: 'Growth',
-    label: 'Scaling Brand',
-    monthly: 99,
-    annual: 990,  // 2 months free
-    annualMonthly: 82,
-    reportsPerMonth: 6,
-  },
-  enterprise: {
-    id: 'enterprise',
-    name: 'Enterprise',
-    label: 'Operator',
-    monthly: 299,
-    annual: 2990,  // 2 months free
-    annualMonthly: 249,
-    reportsPerMonth: null,  // null = unlimited
-  },
+// One-time pay-per-report model. No subscriptions, no tiers, no billing periods.
+// PRODUCT.lookupKey is the Stripe Price lookup_key the Edge Function uses to find the live Price.
+const PRODUCT = {
+  id: 'report_single',
+  name: 'Processor Evaluation Report',
+  lookupKey: 'report_single',
+  price: 149,
+  description: 'One-time payment. No subscription.',
+  features: [
+    'Underwriting verdict across 30 payment processors',
+    'Match score + reasoning for every processor',
+    'Direct apply links to approved processors',
+    'Saved to your account permanently',
+    'Email support, 48hr response',
+  ],
 };
 
-let billingPeriod = 'monthly';  // 'monthly' or 'annual'
-let selectedPlanId = 'growth';  // default selection for checkout
+// =============== ONE-TIME PURCHASE FLOW ===============
+// Single entry point for all "buy a report" CTAs across the app.
+// Behavior:
+//   - Not logged in → save intent, route to signup, completes purchase after auth.
+//   - Logged in but has 'paid' unconsumed credit → route them to the intake form, not checkout.
+//   - Logged in, no unconsumed credit → call create-checkout-session, redirect to Stripe.
+async function startPurchase(opts) {
+  opts = opts || {};
+  const triggerEl = opts.triggerEl || null;
 
-function toggleBilling() {
-  billingPeriod = billingPeriod === 'monthly' ? 'annual' : 'monthly';
-  updateBillingDisplay();
-}
-
-function updateBillingDisplay() {
-  const isAnnual = billingPeriod === 'annual';
-  const dot = document.getElementById('billing-toggle-dot');
-  const monthlyLabel = document.getElementById('billing-monthly-label');
-  const annualLabel = document.getElementById('billing-annual-label');
-  const savingsChip = document.getElementById('billing-savings-chip');
-
-  // Toggle dot - smooth transform
-  if (dot) dot.style.transform = isAnnual ? 'translateX(28px)' : 'translateX(0)';
-
-  // Toggle active state via data attribute (CSS handles styling)
-  if (monthlyLabel) monthlyLabel.setAttribute('data-active', String(!isAnnual));
-  if (annualLabel) annualLabel.setAttribute('data-active', String(isAnnual));
-
-  // Fade chip in/out instead of display toggle (no layout shift)
-  if (savingsChip) savingsChip.style.opacity = isAnnual ? '1' : '0';
-
-  // Update each plan's price display
-  ['starter', 'growth', 'enterprise'].forEach(planKey => {
-    const plan = PLANS[planKey];
-    const priceEl = document.querySelector('.' + planKey + '-price');
-    const periodEl = document.querySelector('.' + planKey + '-period');
-    const noteEl = document.querySelector('.' + planKey + '-billing-note');
-    if (priceEl) priceEl.textContent = '$' + (isAnnual ? plan.annualMonthly : plan.monthly);
-    if (periodEl) periodEl.textContent = '/month';
-    if (noteEl) noteEl.textContent = isAnnual
-      ? `Billed $${plan.annual}/year. Save $${(plan.monthly * 12) - plan.annual}.`
-      : 'Billed monthly. Cancel anytime.';
-  });
-}
-
-function selectPlan(planId) {
-  selectedPlanId = planId;
-  if (currentUser) {
-    if (currentUser.subscribed) {
-      // Already subscribed - go to billing to change plan
-      alert('You already have an active subscription. To change plans, go to your Billing page.');
-      go('billing');
-    } else {
-      go('subscribe');
-    }
-  } else {
-    // Not logged in - send to signup, which will route to subscribe after
-    sessionStorage.setItem('ph_pending_plan', JSON.stringify({ planId, billingPeriod }));
+  if (!currentUser) {
+    sessionStorage.setItem('ph_pending_purchase', '1');
     go('signup');
+    return;
+  }
+
+  // If user already has an unconsumed paid purchase, they don't need to buy another.
+  // Send them to the intake form instead.
+  if (currentUser.availableCredits > 0) {
+    go('application');
+    return;
+  }
+
+  // Disable trigger button while we create the checkout session
+  if (triggerEl) {
+    triggerEl.disabled = true;
+    triggerEl.dataset._origText = triggerEl.textContent;
+    triggerEl.textContent = 'Creating checkout…';
+  }
+
+  try {
+    if (!window._authToken) {
+      throw new Error('No auth token. Please sign in again.');
+    }
+
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout-session`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${window._authToken}`,
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({ lookup_key: PRODUCT.lookupKey }),
+    });
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || `Checkout failed (${res.status})`);
+    }
+
+    const { url } = await res.json();
+    if (!url) throw new Error('No checkout URL returned');
+
+    window.location.href = url;
+  } catch (e) {
+    console.error('[PURCHASE] Failed to start checkout:', e);
+    alert('Could not start checkout: ' + (e.message || 'Unknown error') + '\n\nPlease try again or email support@processorhelp.com.');
+    if (triggerEl) {
+      triggerEl.disabled = false;
+      triggerEl.textContent = triggerEl.dataset._origText || 'Buy Report — $149 →';
+    }
   }
 }
 
@@ -3120,11 +3027,11 @@ function nextStep() {
     currentStep++;
     renderApplication();
   } else {
-    // Subscribed users go straight to results (they already have an active subscription)
-    if (currentUser && currentUser.subscribed) {
+    // Users with a paid purchase go straight to running the report
+    if (currentUser && (currentUser.purchases || []).some(p => p.status === 'paid')) {
       window._reportJustRan = true;
       go('results');
-    } else if (currentUser && !currentUser.subscribed) {
+    } else if (currentUser && !((currentUser.purchases || []).some(p => p.status === 'paid'))) {
       go('subscribe');
     } else {
       go('signup');
@@ -3199,7 +3106,7 @@ async function renderResults() {
         return;
       }
       if (res.status === 403) {
-        // No active subscription — back to subscribe page
+        // No paid purchase available — send to buy a report
         go('subscribe');
         return;
       }
@@ -3287,34 +3194,17 @@ function renderResultsError(message) {
   document.getElementById('results-list').innerHTML = '';
 }
 
-function renderLimitReached(body) {
-  // body shape from Edge Function: { error, code, used, limit, plan }
-  const used = typeof body.used === 'number' ? body.used : null;
-  const limit = typeof body.limit === 'number' ? body.limit : null;
-  const planId = body.plan || (currentUser && currentUser.subscriptionPlan) || 'starter';
-  const plan = PLANS[planId] || null;
-  const planName = plan ? plan.name : (planId.charAt(0).toUpperCase() + planId.slice(1));
-
-  // Recommend the next tier up
-  const nextTier = planId === 'starter' ? 'growth' : (planId === 'growth' ? 'enterprise' : null);
-  const nextPlan = nextTier ? PLANS[nextTier] : null;
-
-  const usageLine = (used !== null && limit !== null)
-    ? `You've used ${used} of ${limit} report${limit !== 1 ? 's' : ''} this month on the ${escapeHtml(planName)} plan.`
-    : `You've reached your monthly report limit on the ${escapeHtml(planName)} plan.`;
-
-  const upgradeBlock = nextPlan
-    ? `<button class="btn-primary" onclick="upgradePlan('${nextTier}')" style="padding:14px 24px;">Upgrade to ${escapeHtml(nextPlan.name)} ($${nextPlan.monthly}/mo)</button>`
-    : '';
-
+function renderLimitReached(_body) {
+  // One-time purchase model: "limit reached" means user has no unused paid purchase.
+  // Edge Function returns 'no_paid_purchase' for this case. We surface a buy-a-report prompt.
   document.getElementById('results-header').innerHTML = `
     <div class="fade-up" style="padding:48px 32px;text-align:center;border:1px solid var(--accent);background:var(--bg-card);">
-      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Monthly limit reached</div>
-      <h2 class="display" style="font-size:32px;font-weight:400;margin-bottom:12px;">You're out of reports for this month.</h2>
-      <p style="color:var(--fg-muted);font-size:15px;margin-bottom:8px;">${usageLine}</p>
-      ${nextPlan ? `<p style="color:var(--fg-muted);font-size:14px;margin-bottom:32px;">Upgrade to ${escapeHtml(nextPlan.name)} for ${nextTier === 'enterprise' ? 'unlimited' : nextPlan.monthly === 99 ? '6' : ''} reports per month.</p>` : `<p style="color:var(--fg-muted);font-size:14px;margin-bottom:32px;">Your limit resets at the start of the next month.</p>`}
+      <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Purchase required</div>
+      <h2 class="display" style="font-size:32px;font-weight:400;margin-bottom:12px;">Buy a report to continue.</h2>
+      <p style="color:var(--fg-muted);font-size:15px;margin-bottom:8px;">You don't have any unused paid reports. Purchase one to run this evaluation.</p>
+      <p style="color:var(--fg-muted);font-size:14px;margin-bottom:32px;">$149 one-time. No subscription. No recurring billing.</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        ${upgradeBlock}
+        <button class="btn-primary" onclick="go('subscribe')" style="padding:14px 24px;">Buy a Report — $149</button>
         <button class="btn-ghost" onclick="go('dashboard')" style="padding:14px 24px;">Back to dashboard</button>
       </div>
     </div>
@@ -3454,7 +3344,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'How much does Processor Help cost?',
-    a: 'We offer three subscription tiers based on your business stage: Starter at $29/month (3 reports per month), Growth at $99/month (6 reports per month), and Enterprise at $299/month (unlimited reports). All tiers evaluate your business across all 30 payment processors. Annual plans available with 2 months free. Cancel anytime from your billing page.'
+    a: 'Each underwriting report is a one-time $149 payment. There is no subscription, no monthly fee, and no auto-renewal. Every purchase evaluates your business across all 30 payment processors. If you need another report later (e.g., new business, new vertical, or pivot), buy another at the same price.'
   },
   {
     q: 'How accurate are your approval predictions?',
@@ -3490,7 +3380,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Do you offer refunds?',
-    a: 'Subscription fees are final once charged, with three exceptions: (1) a verified technical failure that prevented service delivery, refundable within 7 days of the charge; (2) erroneous billing — for example, a charge after a verified cancellation — refundable within 7 days; (3) annual plan satisfaction — annual subscriptions are eligible for a prorated refund of the unused portion if requested within 14 days of the initial annual purchase. To request a refund, email support@processorhelp.com. We aim to respond within 2 business days. We do not issue prorated refunds for unused portions of a monthly billing cycle — when you cancel, you retain full access until the end of your current paid period.'
+    a: 'Each report is a one-time $149 purchase. We offer a full refund within 7 days of purchase IF you have not yet run your report. Once the report has been generated and delivered, the underwriting evaluation has been provided, and the charge is final. To request a refund, email support@processorhelp.com. We aim to respond within 2 business days.'
   },
   {
     q: 'Can I use the tool more than once?',
@@ -3550,38 +3440,23 @@ function renderDashboard() {
   const content = document.getElementById('dashboard-content');
   const reportCount = (u.reports || []).length;
   const latestReport = reportCount > 0 ? u.reports[u.reports.length - 1] : null;
-
-  // Reports run THIS calendar month (server enforces limits per calendar month, resets on the 1st).
-  // Counted client-side from the already-loaded reports array — no extra DB call needed.
-  const monthStart = (() => {
-    const d = new Date();
-    return new Date(d.getFullYear(), d.getMonth(), 1).getTime();
-  })();
-  const reportsThisMonth = (u.reports || []).filter(r => r.createdAt >= monthStart).length;
-
-  // Tier-aware quota display. null = unlimited (Enterprise).
-  // Only meaningful for subscribed users — unsubscribed see lifetime count only.
-  const planQuota = u.subscribed ? PLANS[u.subscriptionPlan]?.reportsPerMonth : undefined;
-  const isUnlimited = u.subscribed && planQuota === null;
-  const hasQuota = u.subscribed && typeof planQuota === 'number';
-  const remaining = hasQuota ? Math.max(0, planQuota - reportsThisMonth) : null;
-
-  // Defensive accessors for subscription fields (handle missing data gracefully)
-  const isCanceled = !u.subscribed && (u.subscriptionStatus === 'canceled' || u.subscriptionPlanName);
-  const planName = u.subscribed
-    ? (PLANS[u.subscriptionPlan]?.name || 'Active')
-    : (isCanceled ? 'Canceled' : 'Inactive');
-  const subAmount = u.subscriptionAmount || (PLANS[u.subscriptionPlan]?.monthly) || 29;
-  const subPeriod = u.subscriptionBillingPeriod === 'annual' ? 'yr' : 'mo';
-  const nextBillingDate = u.subscriptionNextBilling
-    ? new Date(u.subscriptionNextBilling).toLocaleDateString()
-    : '—';
-  const subStatusLine = u.subscribed
-    ? `$${subAmount}/${subPeriod} · Next: ${nextBillingDate}`
-    : (isCanceled ? 'Reactivate to run reports' : 'Subscribe to run reports');
+  const credits = u.availableCredits || 0;
+  const lifetimePurchases = (u.purchases || []).length;
   const memberSince = u.createdAt
     ? new Date(u.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
     : '—';
+
+  // Welcome line varies by purchase state — first-time buyer vs returning user vs has-credit
+  let welcomeLine;
+  if (credits > 0) {
+    welcomeLine = credits === 1
+      ? `You have 1 report ready to run.`
+      : `You have ${credits} reports ready to run.`;
+  } else if (reportCount > 0) {
+    welcomeLine = 'Buy another report when you need a fresh evaluation.';
+  } else {
+    welcomeLine = 'Purchase your first $149 report to unlock underwriting across 30 payment processors.';
+  }
 
   content.innerHTML = `
     <div class="fade-up">
@@ -3590,63 +3465,39 @@ function renderDashboard() {
         Welcome, <span style="font-style:italic;color:var(--accent);">${escapeHtml(u.business)}</span>.
       </h1>
       <p style="color:var(--fg-muted);font-size:17px;margin-bottom:48px;">
-        ${u.subscribed ? 'Your subscription is active. Run underwriting reports anytime.' : (u.subscriptionStatus === 'canceled' || u.subscriptionPlanName) ? 'Your subscription is currently inactive. Reactivate to run underwriting reports.' : 'Subscribe to unlock underwriting reports across 30 payment processors.'}
+        ${welcomeLine}
       </p>
 
-      ${(u.subscriptionStatus === 'past_due' || u.subscriptionStatus === 'unpaid') ? `
-        <div style="padding:24px 28px;background:var(--bg-elevated);border:2px solid var(--denied);margin-bottom:32px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;">
+      ${credits === 0 ? `
+        <div style="padding:32px;background:var(--bg-card);border:2px solid var(--accent);margin-bottom:48px;display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;">
           <div>
-            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--denied);margin-bottom:8px;">Payment Failed</div>
-            <div class="display" style="font-size:22px;font-weight:500;margin-bottom:6px;">We couldn't process your latest payment.</div>
-            <div style="font-size:14px;color:var(--fg-muted);">Update your card to keep your subscription active. We'll retry automatically over the next 7 days. If payment isn't received, your subscription will be paused.</div>
+            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">${lifetimePurchases > 0 ? 'Buy Another Report' : 'Get Your First Report'}</div>
+            <div class="display" style="font-size:26px;font-weight:500;margin-bottom:6px;">${lifetimePurchases > 0 ? 'Ready for another underwriting report?' : 'One report. $149. No subscription.'}</div>
+            <div style="font-size:14px;color:var(--fg-muted);">Evaluated across 30 payment processors with match scores and apply links. Delivered instantly.</div>
           </div>
-          <button class="btn-primary" onclick="openBillingPortal(this)" style="flex-shrink:0;background:var(--denied);">Update card →</button>
+          <button class="btn-primary" onclick="startPurchase({triggerEl: this})" style="flex-shrink:0;">Buy report — $149 →</button>
         </div>
-      ` : ''}
-
-      ${!u.subscribed ? (
-        (u.subscriptionStatus === 'canceled' || u.subscriptionPlanName) ? `
-          <div style="padding:32px;background:var(--bg-card);border:1px solid var(--accent);margin-bottom:48px;display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;">
-            <div>
-              <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Reactivate Subscription</div>
-              <div class="display" style="font-size:26px;font-weight:500;margin-bottom:6px;">Welcome back${u.business ? ', ' + escapeHtml(u.business.split(/\s+/)[0]) : ''}.</div>
-              <div style="font-size:14px;color:var(--fg-muted);">${u.subscriptionPlanName ? `Your previous plan: ${escapeHtml(u.subscriptionPlanName)}. ` : ''}Pick up where you left off or choose a different plan.</div>
-            </div>
-            <button class="btn-primary" onclick="go('subscribe')" style="flex-shrink:0;">Reactivate now →</button>
+      ` : `
+        <div style="padding:32px;background:var(--bg-card);border:2px solid var(--approved);margin-bottom:48px;display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;">
+          <div>
+            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--approved);margin-bottom:8px;">Report Ready</div>
+            <div class="display" style="font-size:26px;font-weight:500;margin-bottom:6px;">You have ${credits} report${credits===1?'':'s'} ready to run.</div>
+            <div style="font-size:14px;color:var(--fg-muted);">Start the intake form to evaluate your business across 30 payment processors.</div>
           </div>
-        ` : `
-          <div style="padding:32px;background:var(--bg-card);border:1px solid var(--accent);margin-bottom:48px;display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;">
-            <div>
-              <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;">Subscription Required</div>
-              <div class="display" style="font-size:26px;font-weight:500;margin-bottom:6px;">Choose your plan to get started.</div>
-              <div style="font-size:14px;color:var(--fg-muted);">Starter $29 · Growth $99 · Enterprise $299 · Cancel anytime</div>
-            </div>
-            <button class="btn-primary" onclick="go('subscribe')" style="flex-shrink:0;">Subscribe now →</button>
-          </div>
-        `
-      ) : ''}
+          <button class="btn-primary" onclick="go('application')" style="flex-shrink:0;">Run report →</button>
+        </div>
+      `}
 
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:48px;">
         <div style="background:var(--bg-card);padding:28px;">
-          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Reports This Month</div>
-          ${isUnlimited ? `
-            <div class="display" style="font-size:40px;font-weight:500;line-height:1;">${reportsThisMonth}</div>
-            <div style="font-size:12px;color:var(--fg-muted);margin-top:6px;">Unlimited on Enterprise</div>
-          ` : hasQuota ? `
-            <div style="display:flex;align-items:baseline;gap:6px;">
-              <span class="display" style="font-size:40px;font-weight:500;line-height:1;${remaining === 0 ? 'color:var(--conditional);' : ''}">${reportsThisMonth}</span>
-              <span style="font-size:18px;color:var(--fg-muted);font-weight:400;">/ ${planQuota}</span>
-            </div>
-            <div style="font-size:12px;color:${remaining === 0 ? 'var(--conditional)' : 'var(--fg-muted)'};margin-top:6px;">${remaining === 0 ? 'Limit reached — resets on the 1st' : `${remaining} remaining this month`}</div>
-          ` : `
-            <div class="display" style="font-size:40px;font-weight:500;line-height:1;">${reportCount}</div>
-            <div style="font-size:12px;color:var(--fg-muted);margin-top:6px;">Subscribe to track monthly limits</div>
-          `}
+          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Reports Available</div>
+          <div class="display" style="font-size:40px;font-weight:500;line-height:1;${credits === 0 ? 'color:var(--fg-dim);' : 'color:var(--approved);'}">${credits}</div>
+          <div style="font-size:12px;color:var(--fg-muted);margin-top:6px;">${credits === 0 ? 'Buy a report to run another' : 'Ready to use'}</div>
         </div>
         <div style="background:var(--bg-card);padding:28px;">
-          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Subscription</div>
-          <div class="display" style="font-size:20px;font-weight:500;line-height:1.2;color:${u.subscribed ? 'var(--approved)' : 'var(--conditional)'};">${planName}</div>
-          <div style="font-size:12px;color:var(--fg-muted);margin-top:6px;">${subStatusLine}</div>
+          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Reports Run</div>
+          <div class="display" style="font-size:40px;font-weight:500;line-height:1;">${reportCount}</div>
+          <div style="font-size:12px;color:var(--fg-muted);margin-top:6px;">Lifetime reports generated</div>
         </div>
         <div style="background:var(--bg-card);padding:28px;">
           <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Member Since</div>
@@ -3657,9 +3508,11 @@ function renderDashboard() {
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:48px;">
         <div style="padding:32px;border:1px solid var(--border);background:var(--bg-card);">
           <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Quick Action</div>
-          <div class="display" style="font-size:24px;font-weight:500;margin-bottom:12px;">Run a new report</div>
-          <p style="color:var(--fg-muted);font-size:14px;margin-bottom:24px;line-height:1.6;">Evaluate your business across all 30 payment processors. Takes under 2 minutes.</p>
-          <button class="btn-primary" onclick="go('application')" style="padding:12px 24px;font-size:12px;">Start new report →</button>
+          <div class="display" style="font-size:24px;font-weight:500;margin-bottom:12px;">${credits > 0 ? 'Run a new report' : 'Buy a report'}</div>
+          <p style="color:var(--fg-muted);font-size:14px;margin-bottom:24px;line-height:1.6;">${credits > 0 ? 'Evaluate your business across all 30 payment processors. Takes under 2 minutes.' : '$149 one-time. Evaluated across all 30 payment processors.'}</p>
+          ${credits > 0
+            ? `<button class="btn-primary" onclick="go('application')" style="padding:12px 24px;font-size:12px;">Start new report →</button>`
+            : `<button class="btn-primary" onclick="startPurchase({triggerEl: this})" style="padding:12px 24px;font-size:12px;">Buy report — $149 →</button>`}
         </div>
         <div style="padding:32px;border:1px solid var(--border);background:var(--bg-card);">
           <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Report History</div>
@@ -3685,103 +3538,48 @@ function renderDashboard() {
   `;
 }
 
-// =============== SUBSCRIBE RENDER ===============
+// =============== PURCHASE RENDER ===============
+// One-time $149 purchase. No tiers, no billing periods, no plan switcher.
 function renderSubscribe() {
   const u = currentUser;
   if (!u) { go('signin'); return; }
 
-  // Restore pending plan from signup flow if present
-  try {
-    const pending = sessionStorage.getItem('ph_pending_plan');
-    if (pending) {
-      const parsed = JSON.parse(pending);
-      if (parsed.planId) selectedPlanId = parsed.planId;
-      if (parsed.billingPeriod) billingPeriod = parsed.billingPeriod;
-      sessionStorage.removeItem('ph_pending_plan');
-    }
-  } catch(e) {}
-
-  const plan = PLANS[selectedPlanId];
-  const isAnnual = billingPeriod === 'annual';
-  const displayPrice = isAnnual ? plan.annualMonthly : plan.monthly;
-  const billedAmount = isAnnual ? plan.annual : plan.monthly;
-  const billingLabel = isAnnual ? 'Annual' : 'Monthly';
-  const periodNote = isAnnual ? `Billed $${plan.annual} once per year` : 'Billed monthly';
-
-  // Plan-specific features (mapped to what each tier includes)
-  const features = {
-    starter: [
-      '3 underwriting reports per month across all 30 payment processors',
-      'Real-time approval, conditional, and denial decisions',
-      'Match scores and underwriting reasoning',
-      'Direct apply links to every processor',
-      'Full report history saved to your account',
-      'Email support (48-hour response)',
-    ],
-    growth: [
-      '6 underwriting reports per month across all 30 payment processors',
-      'Everything in Starter, plus:',
-      'Multi-MID strategy guidance',
-      'Quarterly check-in calls with our team',
-      'Volume tier optimization',
-      'Backup processor planning',
-      'Priority support (24-hour response)',
-    ],
-    enterprise: [
-      'Unlimited underwriting reports across all 30 payment processors',
-      'Everything in Growth, plus:',
-      'Dedicated payments advisor',
-      'Custom underwriting deep-dives',
-      'High-risk specialist coordination',
-      'Monthly strategy calls',
-      'Premium support (4-hour response)',
-    ],
-  };
+  const features = [
+    'One underwriting report across all 30 payment processors',
+    'Real-time approval, conditional, and denial decisions',
+    'Match scores and underwriting reasoning for every processor',
+    'Direct apply links to every processor',
+    'Permanently saved to your account',
+    'Email support (48-hour response)',
+  ];
 
   const content = document.getElementById('subscribe-content');
   content.innerHTML = `
     <div class="fade-up" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;" id="subscribe-checkout">
       <div>
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Activate Subscription</div>
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Purchase Report</div>
         <h2 class="display" style="font-size:40px;font-weight:400;margin-bottom:24px;">
-          Unlock your <span style="font-style:italic;color:var(--accent);">underwriting engine.</span>
+          One report. <span style="font-style:italic;color:var(--accent);">$149.</span> No subscription.
         </h2>
 
-        <!-- Plan switcher -->
-        <div style="margin-bottom:24px;">
-          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Selected Plan</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            ${['starter', 'growth', 'enterprise'].map(p => `
-              <button onclick="switchPlan('${p}')" style="padding:10px 16px;border:1px solid ${selectedPlanId === p ? 'var(--accent)' : 'var(--border)'};background:${selectedPlanId === p ? 'var(--bg-elevated)' : 'var(--bg-card)'};color:${selectedPlanId === p ? 'var(--accent)' : 'var(--fg)'};font-size:12px;font-weight:${selectedPlanId === p ? '600' : '400'};cursor:pointer;text-transform:capitalize;">${PLANS[p].name}</button>
-            `).join('')}
-          </div>
-        </div>
-
-        <!-- Billing period switcher -->
-        <div style="margin-bottom:32px;">
-          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Billing Period</div>
-          <div style="display:flex;gap:8px;">
-            <button onclick="switchBilling('monthly')" style="flex:1;padding:12px 16px;border:1px solid ${!isAnnual ? 'var(--accent)' : 'var(--border)'};background:${!isAnnual ? 'var(--bg-elevated)' : 'var(--bg-card)'};color:${!isAnnual ? 'var(--accent)' : 'var(--fg)'};font-size:12px;font-weight:${!isAnnual ? '600' : '400'};cursor:pointer;">Monthly</button>
-            <button onclick="switchBilling('annual')" style="flex:1;padding:12px 16px;border:1px solid ${isAnnual ? 'var(--accent)' : 'var(--border)'};background:${isAnnual ? 'var(--bg-elevated)' : 'var(--bg-card)'};color:${isAnnual ? 'var(--accent)' : 'var(--fg)'};font-size:12px;font-weight:${isAnnual ? '600' : '400'};cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-              Annual <span style="font-size:10px;background:var(--approved-bg);color:var(--approved);padding:2px 6px;border-radius:8px;font-weight:600;">Save 2 mo</span>
-            </button>
-          </div>
-        </div>
+        <p style="color:var(--fg-muted);font-size:15px;line-height:1.6;margin-bottom:32px;max-width:480px;">
+          Pay once. Get a complete underwriting evaluation across all 30 payment processors. No recurring billing, no auto-renewal, no surprises.
+        </p>
 
         <div style="border:1px solid var(--border);background:var(--bg-card);margin-bottom:24px;">
           <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
             <div>
-              <div style="font-size:15px;font-weight:500;">${plan.name} — ${plan.label}</div>
-              <div style="font-size:12px;color:var(--fg-muted);margin-top:4px;">${escapeHtml(u.business)} · ${billingLabel} subscription</div>
+              <div style="font-size:15px;font-weight:500;">${escapeHtml(PURCHASE.name)}</div>
+              <div style="font-size:12px;color:var(--fg-muted);margin-top:4px;">${escapeHtml(u.business)} · One-time purchase</div>
             </div>
             <div style="text-align:right;">
-              <div class="display" style="font-size:28px;font-weight:500;">$${displayPrice}</div>
-              <div style="font-size:11px;color:var(--fg-muted);">per month</div>
+              <div class="display" style="font-size:36px;font-weight:500;">$${PURCHASE.price}</div>
+              <div style="font-size:11px;color:var(--fg-muted);">one-time</div>
             </div>
           </div>
           <div style="padding:20px 24px;">
-            <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:14px;">What's included</div>
-            ${features[selectedPlanId].map(item => `
+            <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:14px;">What\'s included</div>
+            ${features.map(item => `
               <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:13px;line-height:1.5;">
                 <span style="color:var(--approved);font-weight:700;">✓</span>
                 <span>${item}</span>
@@ -3791,16 +3589,15 @@ function renderSubscribe() {
           <div style="padding:16px 24px;border-top:1px solid var(--border);background:var(--bg-elevated);display:flex;justify-content:space-between;align-items:center;">
             <div>
               <div class="mono" style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;">Total Due Today</div>
-              <div style="font-size:11px;color:var(--fg-muted);margin-top:2px;">${periodNote}</div>
+              <div style="font-size:11px;color:var(--fg-muted);margin-top:2px;">One-time charge. No subscription.</div>
             </div>
-            <div class="display" style="font-size:28px;font-weight:600;color:var(--accent);">$${billedAmount}.00</div>
+            <div class="display" style="font-size:28px;font-weight:600;color:var(--accent);">$${PURCHASE.price}.00</div>
           </div>
         </div>
 
         <div style="display:flex;gap:12px;align-items:flex-start;padding:16px;background:var(--bg-elevated);border:1px solid var(--border);">
-          <span style="color:var(--fg-muted);">🛡️</span>
           <div style="font-size:12px;color:var(--fg-muted);line-height:1.6;">
-            Billed ${isAnnual ? 'annually' : 'monthly'} to your card. Cancel anytime from your billing page. Processor Help is an independent advisory tool and not affiliated with any payment processor listed.
+            Single charge of $${PURCHASE.price}.00 USD to your card. No recurring billing. No auto-renewal. Need another report later? Buy another at the same price. Processor Help is an independent advisory tool and not affiliated with any payment processor listed.
           </div>
         </div>
       </div>
@@ -3809,11 +3606,10 @@ function renderSubscribe() {
 
         <div style="padding:24px;border:1px solid var(--border-strong);background:var(--bg-card);margin-bottom:16px;">
           <div style="display:flex;gap:14px;align-items:flex-start;">
-            <span style="color:var(--accent);font-size:24px;flex-shrink:0;">🔒</span>
             <div>
               <div style="font-size:15px;font-weight:600;color:var(--fg);margin-bottom:8px;">Payment processed by Stripe</div>
               <div style="font-size:13px;color:var(--fg-muted);line-height:1.55;">
-                When you click Subscribe, you'll be redirected to Stripe's secure checkout page to enter your payment details. We never see or store your card information directly — Stripe handles all payment processing on PCI-compliant infrastructure.
+                When you click Continue, you\'ll be redirected to Stripe\'s secure checkout page to enter your payment details. We never see or store your card information directly — Stripe handles all payment processing on PCI-compliant infrastructure.
               </div>
             </div>
           </div>
@@ -3821,13 +3617,10 @@ function renderSubscribe() {
 
         <div style="margin-top:16px;padding:16px;background:var(--bg-elevated);border:1px solid var(--border-strong);">
           <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--fg);line-height:1.6;">
-            <span style="color:var(--accent);font-weight:600;flex-shrink:0;">ⓘ</span>
             <div>
-              <strong style="color:var(--fg);">Recurring subscription disclosure:</strong> By clicking Subscribe, you authorize Processor Help to automatically charge your payment method <strong>$${billedAmount}.00 USD every ${isAnnual ? 'year' : 'month'}</strong> starting today. Your subscription will continue and renew automatically until you cancel.
+              <strong style="color:var(--fg);">One-time purchase disclosure:</strong> By clicking Continue, you authorize Processor Help to charge your payment method <strong>$${PURCHASE.price}.00 USD one time</strong>. There is no subscription, no recurring billing, and no auto-renewal. After payment, your report becomes available immediately and is permanently saved to your account.
               <br><br>
-              <strong style="color:var(--fg);">Easy cancellation:</strong> Cancel anytime in 2 clicks from your Billing dashboard — no phone calls, no retention pressure, no hoops. Cancellation stops future renewal billing immediately, and you retain full access through your current paid period. (NY GBL §527-a, CA BPC §17602, IL 815 ILCS 605 compliant.)
-              <br><br>
-              <strong style="color:var(--fg);">${isAnnual ? 'Annual refund window:' : 'No partial-month refunds:'}</strong> ${isAnnual ? 'Annual plans are eligible for a prorated refund within 14 days of purchase.' : 'If you cancel mid-cycle, you retain access until the end of your current billing period. No prorated refunds.'}
+              <strong style="color:var(--fg);">Refund window:</strong> Full refund within 7 days if you have not yet run your report. No refund once the report has been generated, as the underwriting evaluation has already been delivered.
             </div>
           </div>
         </div>
@@ -3835,7 +3628,7 @@ function renderSubscribe() {
           Continue to secure checkout →
         </button>
         <div style="margin-top:16px;text-align:center;font-size:11px;color:var(--fg-dim);line-height:1.6;">
-          By subscribing you agree to the Processor Help <a onclick="go('tos')" style="color:var(--fg-muted);cursor:pointer;text-decoration:underline;">Terms of Service</a> and <a onclick="go('privacy')" style="color:var(--fg-muted);cursor:pointer;text-decoration:underline;">Privacy Policy</a>.<br>
+          By purchasing you agree to the Processor Help <a onclick="go('tos')" style="color:var(--fg-muted);cursor:pointer;text-decoration:underline;">Terms of Service</a> and <a onclick="go('privacy')" style="color:var(--fg-muted);cursor:pointer;text-decoration:underline;">Privacy Policy</a>.<br>
           All transactions are encrypted and secure.
         </div>
         <div style="margin-top:24px;text-align:center;">
@@ -3846,15 +3639,10 @@ function renderSubscribe() {
   `;
 }
 
-function switchPlan(planId) {
-  selectedPlanId = planId;
-  renderSubscribe();
-}
-
-function switchBilling(period) {
-  billingPeriod = period;
-  renderSubscribe();
-}
+// switchPlan and switchBilling are no longer needed in the one-time purchase model.
+// Keeping no-op stubs prevents ReferenceError if any legacy code path tries to call them.
+function switchPlan(_planId) { /* no-op: single SKU */ }
+function switchBilling(_period) { /* no-op: no billing periods */ }
 
 function formatSubCard(el) {
   let v = el.value.replace(/\s/g, '').replace(/\D/g, '');
@@ -3963,7 +3751,7 @@ async function openBillingPortal(triggerEl) {
 
       // Friendlier copy for the most common error: user has never subscribed
       if (errMsg && /no stripe customer|customer not found|no customer/i.test(errMsg)) {
-        alert('You need an active subscription to manage billing. Subscribe to a plan first.');
+        alert('You have not made a purchase yet. Buy a report to manage billing.');
       } else {
         alert('Could not open billing portal. Please try again or contact support@processorhelp.com.');
       }
@@ -3992,14 +3780,14 @@ async function processSubscription() {
   // No more frontend mutation of subscription state — the Stripe webhook updates Supabase
   // directly, and hydrateCurrentUser() reflects the active subscription on return.
 
-  const wasSubscribed = currentUser && currentUser.subscribed;
+  const wasSubscribed = false; // legacy var; one-time purchase has no 'update' state
   const content = document.getElementById('subscribe-content');
 
   // Show loading state immediately
   content.innerHTML = `
     <div class="fade-up" style="text-align:center;padding:80px 0;">
       <div class="spinner" style="width:64px;height:64px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;margin:0 auto 32px;"></div>
-      <h2 class="display" style="font-size:32px;font-weight:400;margin-bottom:12px;">${wasSubscribed ? 'Updating subscription…' : 'Activating subscription…'}</h2>
+      <h2 class="display" style="font-size:32px;font-weight:400;margin-bottom:12px;">'Preparing your purchase…'</h2>
       <p style="color:var(--fg-muted);font-size:15px;">Redirecting to secure checkout. Do not close this window.</p>
     </div>
   `;
@@ -4018,7 +3806,7 @@ async function processSubscription() {
 
   try {
     // 1. Build the lookup key for the selected plan + billing period
-    const lookupKey = buildStripeLookupKey(selectedPlanId, billingPeriod);
+    const lookupKey = PURCHASE.lookupKey;
 
     // 2. Get the current Supabase session token. If missing, redirect to signin.
     const { data: { session } } = await supabaseClient.auth.getSession();
@@ -4119,7 +3907,7 @@ function renderSettings() {
             </div>
             <label style="display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;">
               <input type="checkbox" id="marketing-toggle" ${u.marketingConsent ? 'checked' : ''} onchange="toggleMarketingConsent()" style="width:18px;height:18px;cursor:pointer;accent-color:var(--accent);" />
-              <span style="font-size:13px;font-weight:500;">${u.marketingConsent ? 'Subscribed' : 'Unsubscribed'}</span>
+              <span style="font-size:13px;font-weight:500;">${u.marketingConsent ? 'Opted in' : 'Opted out'}</span>
             </label>
           </div>
         </div>
@@ -4164,7 +3952,7 @@ function renderSettings() {
         <div style="font-size:13px;color:var(--fg-muted);line-height:1.6;margin-bottom:16px;">
           Permanently delete your account, all saved business profiles, all underwriting reports, and all consent records. This action is <strong style="color:var(--fg);">irreversible</strong> and complies with <strong style="color:var(--fg);">GDPR Article 17 (Right to Erasure)</strong> and <strong style="color:var(--fg);">CCPA Right to Delete</strong>.
           <br><br>
-          ${u.subscribed ? '<strong style="color:var(--denied);">⚠ Active subscription:</strong> Your subscription will be cancelled immediately upon account deletion. No refund will be issued for the current billing period.' : ''}
+          ${(u.purchases || []).filter(p => p.status === 'paid').length > 0 ? '<strong style="color:var(--denied);">⚠ Unused reports:</strong> You have unused paid reports. They will be permanently lost if you delete your account, with no refund.' : ''}
           <br><br>
           You will receive an email confirming deletion. Some data may be retained briefly in encrypted backups for up to 30 days as required for security and fraud prevention, after which it will be permanently destroyed.
         </div>
@@ -4321,11 +4109,18 @@ function downloadUserData() {
       consent_timestamp: u.consentTimestamp ? new Date(u.consentTimestamp).toISOString() : null,
       consent_history: u.consentHistory || [],
     },
-    subscription: {
-      subscribed: u.subscribed || false,
-      subscription_start: u.subscriptionStartDate ? new Date(u.subscriptionStartDate).toISOString() : null,
-      subscription_next_billing: u.subscriptionNextBilling ? new Date(u.subscriptionNextBilling).toISOString() : null,
-      payment_method: u.paymentMethod || null,
+    purchases: {
+      total_purchases: (u.purchases || []).length,
+      total_spent_cents: (u.purchases || []).reduce((sum, p) => sum + (p.amount_paid_cents || 0), 0),
+      purchase_history: (u.purchases || []).map(p => ({
+        stripe_payment_intent_id: p.stripe_payment_intent_id,
+        amount_paid_cents: p.amount_paid_cents,
+        currency: p.currency,
+        status: p.status,
+        purchased_at: p.purchased_at,
+        consumed_at: p.consumed_at,
+        refunded_at: p.refunded_at,
+      })),
     },
     saved_business_profile: u.savedProfile || null,
     underwriting_reports: (u.reports || []).map(r => ({
@@ -4355,7 +4150,7 @@ function downloadUserData() {
     data_NOT_held_by_us: {
       note: 'We do NOT collect, store, or have access to:',
       items: [
-        'Your full payment card number (handled exclusively by Stripe when subscribed)',
+        'Your full payment card number (handled exclusively by Stripe during purchase)',
         'Your browsing history outside our site',
         'Any biometric or device data',
         'Any third-party social media data',
@@ -4407,7 +4202,7 @@ async function deleteAccountFlow() {
     '• Your business profile\n' +
     `• ${(currentUser.reports || []).length} saved underwriting report${(currentUser.reports||[]).length === 1 ? '' : 's'}\n` +
     '• All consent records and email preferences\n' +
-    (currentUser.subscribed ? `• Your active ${PLANS[currentUser.subscriptionPlan]?.name || ''} subscription will be cancelled immediately (no proration, no refund for current period)\n` : '') +
+    ((currentUser.purchases || []).filter(p => p.status === 'paid').length > 0 ? `• You have ${(currentUser.purchases || []).filter(p => p.status === 'paid').length} unused paid report${(currentUser.purchases || []).filter(p => p.status === 'paid').length === 1 ? '' : 's'} that will NOT be refunded when you delete your account\n` : '') +
     '\nThis action CANNOT BE UNDONE.\n\n' +
     'Continue?'
   );
@@ -4589,84 +4384,82 @@ function renderBilling() {
   const u = currentUser;
   if (!u) { go('signin'); return; }
 
-  // Get current plan info
-  const userPlanId = u.subscriptionPlan || 'starter';
-  const userPlan = PLANS[userPlanId] || PLANS.starter;
-  const userIsAnnual = u.subscriptionBillingPeriod === 'annual';
-  const userAmount = u.subscriptionAmount || (userIsAnnual ? userPlan.annual : userPlan.monthly);
-  const periodText = userIsAnnual ? 'year' : 'month';
-  const billingCycle = userIsAnnual ? 'Annual' : 'Monthly';
+  const purchases = (u.purchases || []).slice().sort((a, b) => new Date(b.purchased_at) - new Date(a.purchased_at));
+  const unusedCount = purchases.filter(p => p.status === 'paid').length;
+  const consumedCount = purchases.filter(p => p.status === 'consumed').length;
+  const refundedCount = purchases.filter(p => p.status === 'refunded').length;
+  const totalSpentCents = purchases.reduce((sum, p) => sum + (p.amount_paid_cents || 0), 0);
+
+  const statusBadge = (status) => {
+    if (status === 'paid')     return '<span style="color:var(--approved);font-weight:500;">Unused</span>';
+    if (status === 'consumed') return '<span style="color:var(--fg-muted);">Used</span>';
+    if (status === 'refunded') return '<span style="color:var(--denied);">Refunded</span>';
+    return escapeHtml(status);
+  };
+  const formatDate = (iso) => iso ? new Date(iso).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '—';
 
   document.getElementById('billing-content').innerHTML = `
     <div class="fade-up">
       <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Billing</div>
-      <h1 class="display" style="font-size:40px;font-weight:400;margin-bottom:48px;">Subscription & billing.</h1>
+      <h1 class="display" style="font-size:40px;font-weight:400;margin-bottom:48px;">Purchase history.</h1>
 
-      <div style="border:1px solid var(--border);background:var(--bg-card);margin-bottom:32px;">
-        <div style="padding:24px 28px;display:flex;justify-content:space-between;align-items:center;gap:16px;">
-          <div>
-            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:6px;">Current Plan</div>
-            <div class="display" style="font-size:22px;font-weight:500;">${u.subscribed ? `${userPlan.name} — ${userPlan.label}` : 'No active subscription'}</div>
-            <div style="font-size:13px;color:var(--fg-muted);margin-top:4px;">${u.subscribed ? `$${userAmount}/${periodText} · ${billingCycle} billing` : 'Subscribe to run reports'}</div>
-          </div>
-          <div class="chip" style="background:${u.subscribed?'var(--approved-bg)':'var(--conditional-bg)'};color:${u.subscribed?'var(--approved)':'var(--conditional)'};">
-            ${u.subscribed ? '● Active' : '● Inactive'}
-          </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--border);background:var(--bg-card);margin-bottom:32px;">
+        <div style="padding:24px;border-right:1px solid var(--border);">
+          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:8px;">Total Purchases</div>
+          <div class="display" style="font-size:32px;font-weight:500;">${purchases.length}</div>
+        </div>
+        <div style="padding:24px;border-right:1px solid var(--border);">
+          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:8px;">Unused</div>
+          <div class="display" style="font-size:32px;font-weight:500;color:${unusedCount > 0 ? 'var(--approved)' : 'var(--fg-muted)'};">${unusedCount}</div>
+        </div>
+        <div style="padding:24px;">
+          <div class="mono" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:8px;">Lifetime Spend</div>
+          <div class="display" style="font-size:32px;font-weight:500;">$${(totalSpentCents / 100).toFixed(0)}</div>
         </div>
       </div>
 
-      ${u.subscribed ? `
-        <div style="border:1px solid var(--border);background:var(--bg-card);margin-bottom:32px;">
-          <div style="padding:20px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">
-            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">Next Billing Date</div>
-            <div style="font-size:14px;font-weight:500;">${u.subscriptionNextBilling ? new Date(u.subscriptionNextBilling).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '—'}</div>
-          </div>
-          <div style="padding:20px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">
-            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">Payment Method</div>
-            <div style="font-size:14px;font-weight:500;">${u.paymentMethod || '—'}</div>
-          </div>
-          <div style="padding:20px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">
-            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">Billing Period</div>
-            <div style="font-size:14px;font-weight:500;">${billingCycle}</div>
-          </div>
-          <div style="padding:20px 28px;display:flex;justify-content:space-between;">
-            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">Subscription Start</div>
-            <div style="font-size:14px;font-weight:500;">${u.subscriptionStartDate ? new Date(u.subscriptionStartDate).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : '—'}</div>
-          </div>
+      <div style="padding:28px;border:1px solid var(--accent);background:var(--bg-card);margin-bottom:32px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;">
+        <div>
+          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">Buy Another Report</div>
+          <div style="font-size:15px;color:var(--fg);font-weight:500;">$149 one-time · No subscription</div>
+          <div style="font-size:13px;color:var(--fg-muted);margin-top:4px;">Each report evaluates your business across all 30 payment processors.</div>
         </div>
+        <button class="btn-primary" onclick="go('subscribe')" style="padding:14px 28px;font-size:12px;flex-shrink:0;">Buy a Report →</button>
+      </div>
 
-        <!-- Single managed-billing CTA. Routes to Stripe Customer Portal for plan changes,
-             payment method updates, invoice history, and cancellation. -->
-        <div style="padding:28px;border:1px solid var(--accent);background:var(--bg-card);margin-bottom:32px;">
-          <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Manage Subscription</div>
-          <div style="font-size:14px;color:var(--fg);margin-bottom:6px;font-weight:500;">Update payment method, change plan, view invoices, or cancel.</div>
-          <div style="font-size:13px;color:var(--fg-muted);margin-bottom:20px;line-height:1.5;">All billing actions are handled through our secure Stripe portal. You'll be redirected and can return here when finished.</div>
-          <button class="btn-primary" onclick="openBillingPortal(this)" style="padding:14px 28px;font-size:12px;">Manage Billing →</button>
+      ${purchases.length > 0 ? `
+        <div style="border:1px solid var(--border);background:var(--bg-card);margin-bottom:32px;">
+          <div style="padding:18px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">Purchase History</div>
+            <button class="btn-ghost" onclick="openBillingPortal(this)" style="padding:8px 16px;font-size:11px;">View receipts in Stripe →</button>
+          </div>
+          ${purchases.map(p => `
+            <div style="padding:18px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+              <div>
+                <div style="font-size:14px;font-weight:500;">$${((p.amount_paid_cents || 0)/100).toFixed(2)} — ${escapeHtml(PURCHASE.name)}</div>
+                <div style="font-size:12px;color:var(--fg-muted);margin-top:2px;">Purchased ${formatDate(p.purchased_at)}${p.consumed_at ? ' · Used ' + formatDate(p.consumed_at) : ''}${p.refunded_at ? ' · Refunded ' + formatDate(p.refunded_at) : ''}</div>
+              </div>
+              <div style="font-size:12px;">${statusBadge(p.status)}</div>
+            </div>
+          `).join('')}
         </div>
       ` : `
-        <div style="padding:32px;background:var(--bg-card);border:1px solid var(--accent);text-align:center;">
-          <div class="display" style="font-size:24px;font-weight:500;margin-bottom:12px;">Activate your subscription</div>
-          <p style="color:var(--fg-muted);font-size:14px;margin-bottom:20px;">Choose from Starter, Growth, or Enterprise · Monthly or Annual · Cancel anytime</p>
-          <button class="btn-primary" onclick="go('subscribe')">View plans →</button>
+        <div style="padding:32px;background:var(--bg-card);border:1px solid var(--border);text-align:center;">
+          <div class="display" style="font-size:22px;font-weight:500;margin-bottom:12px;">No purchases yet</div>
+          <p style="color:var(--fg-muted);font-size:14px;margin-bottom:0;">When you buy a report, it will appear here.</p>
         </div>
       `}
     </div>
   `;
 }
 
-function changePlan(newPlanId, isUpgrade) {
-  const newPlan = PLANS[newPlanId];
-  const message = isUpgrade
-    ? `Upgrade to ${newPlan.name} plan ($${newPlan.monthly}/month)? Your new plan takes effect immediately.`
-    : `Downgrade to ${newPlan.name} plan ($${newPlan.monthly}/month)? Your new plan takes effect immediately. You'll keep access through the end of your current paid period at the old rate, then bill at the new rate going forward.`;
-  if (!confirm(message)) return;
-  selectedPlanId = newPlanId;
+// changePlan / upgradePlan are legacy no-op stubs from the previous subscription model.
+// In the one-time purchase model there is one SKU and no plan switching.
+function changePlan(_newPlanId, _isUpgrade) {
   go('subscribe');
 }
-
-// Legacy alias - kept for backwards compatibility with any code still calling upgradePlan()
-function upgradePlan(newPlanId) {
-  changePlan(newPlanId, true);
+function upgradePlan(_newPlanId) {
+  go('subscribe');
 }
 
 // =============== REPORTS HISTORY RENDER ===============
@@ -5028,14 +4821,15 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
       // Unsubscribed users: Dashboard link + Activate Account button (since they still need to subscribe).
       const navRight = document.getElementById('landing-nav-right');
       if (navRight) {
-        if (currentUser.subscribed) {
+        const hasPaidPurchase = (currentUser.purchases || []).some(p => p.status === 'paid');
+        if (hasPaidPurchase) {
           navRight.innerHTML = `
             <button class="btn-primary" onclick="go('dashboard')" style="padding:10px 20px;font-size:12px;">Dashboard →</button>
           `;
         } else {
           navRight.innerHTML = `
             <a onclick="go('dashboard')" style="color:var(--fg-muted);font-size:14px;text-decoration:none;cursor:pointer;">Dashboard</a>
-            <button class="btn-primary" onclick="startCTA()" style="padding:10px 20px;font-size:12px;">Activate Account →</button>
+            <button class="btn-primary" onclick="go('subscribe')" style="padding:10px 20px;font-size:12px;">Buy a Report →</button>
           `;
         }
       }
