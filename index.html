@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <!-- Favicon set -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -11,14 +11,14 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#a67c2e">
 <title>Processor Help — Payment Processing Solutions Company</title>
-<meta name="description" content="Know your payment processor matches. One intake form. 30 payment processors. Real-time approval or denial insights in 90 seconds.">
+<meta name="description" content="Know your payment processor matches. One intake form. Real-time approval insights in 90 seconds across 30 payment processors.">
 <link rel="canonical" href="https://processorhelp.com/">
 
 <!-- Open Graph (Facebook, LinkedIn, SMS link previews) -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://processorhelp.com/">
 <meta property="og:title" content="Processor Help — Payment Processing Solutions Company">
-<meta property="og:description" content="Know your payment processor matches. One intake form. 30 payment processors. Real-time approval or denial insights in 90 seconds.">
+<meta property="og:description" content="Know your payment processor matches. One intake form. Real-time approval insights in 90 seconds across 30 payment processors.">
 <meta property="og:image" content="https://processorhelp.com/icon-512.png">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
@@ -27,7 +27,7 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Processor Help — Payment Processing Solutions Company">
-<meta name="twitter:description" content="Know your payment processor matches. One intake form. 30 payment processors. Real-time approval or denial insights in 90 seconds.">
+<meta name="twitter:description" content="Know your payment processor matches. One intake form. Real-time approval insights in 90 seconds across 30 payment processors.">
 <meta name="twitter:image" content="https://processorhelp.com/icon-512.png">
 <script>
 // Apply theme immediately to prevent flash of wrong theme
@@ -90,14 +90,58 @@
     background: var(--bg);
     color: var(--fg);
     min-height: 100vh;
+    min-height: 100dvh; /* dynamic viewport - accounts for iOS Safari URL bar collapse */
     overflow-x: hidden;
+    overscroll-behavior-y: none; /* kill iOS rubber-band bounce on body */
     -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent; /* remove iOS blue flash on tap */
     transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  /* When a modal is open, lock body scroll so iOS doesn't scroll the page behind it */
+  body.modal-open { overflow: hidden; }
+  /* Remove tap highlight from interactive elements; use :active visual feedback instead */
+  button, a, [role="button"], input[type="checkbox"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation; /* removes 300ms tap delay on older mobile */
+  }
+  /* Cross-platform <select> normalization — without this, iOS/Android show inconsistent native chrome */
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--fg-muted) 50%), linear-gradient(135deg, var(--fg-muted) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 36px;
+  }
+  /* Safe-area-inset padding for notched devices (iPhone X+, modern Android with display cutouts) */
+  @supports (padding: env(safe-area-inset-bottom)) {
+    #cookie-banner {
+      padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
+    }
+    nav, header {
+      padding-left: max(20px, env(safe-area-inset-left)) !important;
+      padding-right: max(20px, env(safe-area-inset-right)) !important;
+    }
+  }
+  /* Landscape phones — most devices in landscape have <500px height. Tighten vertical padding so hero fits. */
+  @media (max-height: 500px) and (orientation: landscape) {
+    section { padding-top: 32px !important; padding-bottom: 32px !important; }
+    main { padding-top: 24px !important; padding-bottom: 24px !important; }
+    h1.display { font-size: 32px !important; }
+    .stats-row { margin-top: 32px !important; }
   }
   /* When cookie banner is showing, give body padding-bottom so footer isn't obscured */
   body.has-cookie-banner { padding-bottom: 140px; }
+  @supports (padding: env(safe-area-inset-bottom)) {
+    body.has-cookie-banner { padding-bottom: calc(140px + env(safe-area-inset-bottom)); }
+  }
   @media (max-width: 768px) {
     body.has-cookie-banner { padding-bottom: 200px; }
+    @supports (padding: env(safe-area-inset-bottom)) {
+      body.has-cookie-banner { padding-bottom: calc(200px + env(safe-area-inset-bottom)); }
+    }
   }
   body, body * {
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
@@ -422,6 +466,7 @@
       z-index: 100;
       box-shadow: 0 4px 16px rgba(0,0,0,0.08);
       max-height: calc(100vh - 70px);
+      max-height: calc(100dvh - 70px); /* dynamic viewport — iOS Safari URL bar */
       overflow-y: auto;
     }
     .app-nav.open { display: flex !important; }
@@ -794,7 +839,7 @@
     </h1>
 
     <p class="fade-up" style="font-size:20px;max-width:680px;margin-top:40px;color:var(--fg-muted);line-height:1.5;animation-delay:0.2s;">
-      One intake form. 30 payment processors. Real-time approval or denial insights in 90 seconds.
+      One intake form. Real-time approval insights in 90 seconds across 30 payment processors.
     </p>
 
     <div class="fade-up hero-ctas" style="display:flex;gap:16px;margin-top:48px;animation-delay:0.3s;flex-wrap:wrap;">
@@ -909,8 +954,8 @@
           <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Email support, 48hr response</span></div>
         </div>
 
-        <button class="btn-primary" onclick="startPurchase()" style="padding:18px 24px;font-size:13px;width:100%;">Buy Report — $149 →</button>
-        <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--fg-dim);">Secure checkout via Stripe · Cancel before report runs for full refund</div>
+        <button class="btn-primary" onclick="startPurchase({triggerEl: this})" style="padding:18px 24px;font-size:13px;width:100%;">Buy Report — $149 →</button>
+        <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--fg-dim);">Secure checkout via Stripe · 7-day refund if you haven't run your report</div>
       </div>
 
     </div>
@@ -1216,7 +1261,7 @@
     <p style="margin-top:12px;"><strong style="color:var(--fg);">Refund policy.</strong> Refunds are issued in three specific scenarios:</p>
     <ul style="margin-top:8px;padding-left:24px;">
       <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Technical failure or service delivery failure:</strong> if the service was inaccessible, the underwriting engine was broken, or your account was unusable. Submit refund requests to <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a> within <strong>7 days</strong> of the failed charge.</li>
-      <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Erroneous billing:</strong> if you were charged after a verified cancellation, or charged in error. Submit refund requests within <strong>7 days</strong> of the erroneous charge.</li>
+      <li style="margin-bottom:8px;"><strong style="color:var(--fg);">Erroneous billing:</strong> if you were charged twice for the same report, charged the wrong amount, or otherwise charged in error. Submit refund requests within <strong>7 days</strong> of the erroneous charge.</li>
       <li style="margin-bottom:8px;"><strong style="color:var(--fg);">7-day no-use refund window:</strong> if you have not yet run your report, we issue a full refund within <strong>7 days</strong> of purchase. Once the report has been generated and delivered, the charge is final.</li>
     </ul>
     <p style="margin-top:12px;">Outside of these scenarios, all purchase fees are final once the report has been generated. We aim to respond to refund requests within 2 business days.</p>
@@ -2018,7 +2063,7 @@ const STEPS = [
 
 const PUBLIC_VIEWS = ['landing','processors-list','faq','legal','signup','signin','forgot'];
 const AUTH_REQUIRED_VIEWS = ['dashboard','settings','billing','reports','subscribe','application','results'];
-// Subscription is only required for RUNNING new reports (application).
+// A paid (unused) purchase is only required for RUNNING new reports (application).
 // Viewing historical results is always allowed — once a report is generated, it stays accessible.
 const SUBSCRIPTION_REQUIRED_VIEWS = ['application'];
 
@@ -2363,6 +2408,14 @@ async function handleSignup() {
     errorEl.style.display = 'none';
     btn.disabled = false;
     btn.textContent = originalLabel;
+
+    // If user landed on signup via "Buy a Report" CTA, resume checkout flow now.
+    // Flag is set in startCTA() and startPurchase() before they redirect to signup.
+    if (sessionStorage.getItem('ph_pending_purchase') === '1') {
+      sessionStorage.removeItem('ph_pending_purchase');
+      startPurchase();
+      return;
+    }
     go('dashboard');
   } catch (err) {
     console.error('Signup error:', err);
@@ -2476,6 +2529,14 @@ async function handleSignin() {
 
     errorEl.style.display = 'none';
     resetButton();
+
+    // If user landed on signin via "Buy a Report" CTA (or signup → email confirm → signin path),
+    // resume checkout flow now. Flag is set in startCTA() and startPurchase().
+    if (sessionStorage.getItem('ph_pending_purchase') === '1') {
+      sessionStorage.removeItem('ph_pending_purchase');
+      startPurchase();
+      return;
+    }
     go('dashboard');
   } catch (err) {
     console.error('[SIGNIN] Caught error:', err);
@@ -3008,7 +3069,7 @@ function renderStep(step) {
 
 function nextStep() {
   // Per-step validation. The Edge Function also validates server-side, but front-end
-  // checks let us show clear errors before the user wastes a click and a report quota.
+  // checks let us show clear errors before the user wastes a click and consumes a paid report.
   if (currentStep === 0) {
     if (!merchant.businessName.trim()) {
       showAlertToast('Please enter your business name to continue.', 'error');
@@ -3069,8 +3130,8 @@ function prevStep() {
 // =============== RESULTS RENDER ===============
 // Two modes:
 //   1. Fresh run (window._reportJustRan === true): POST to evaluate-processors Edge Function.
-//      Server runs the eval, persists via run_underwriting_report RPC (which enforces plan limits),
-//      and returns { report, decisions }. Handle 402 limit_reached → render inline upgrade panel.
+//      Server runs the eval, persists via run_underwriting_report RPC (which consumes one paid purchase
+//      atomically), and returns { report, decisions }. Handle 402 → buy-a-report prompt.
 //   2. Historical view (window._viewingPastReport set): use the decisions stored on the report row.
 //      No API call. If decisions are missing (legacy report), show a "regenerate" prompt.
 async function renderResults() {
@@ -4034,10 +4095,12 @@ function promptPassword(opts) {
     confirmWrap.style.display = requireConfirm ? '' : 'none';
 
     modal.style.display = 'flex';
+    document.body.classList.add('modal-open');
     setTimeout(() => input.focus(), 30);
 
     const cleanup = () => {
       modal.style.display = 'none';
+      document.body.classList.remove('modal-open');
       submitBtn.removeEventListener('click', onSubmit);
       cancelBtn.removeEventListener('click', onCancel);
       modal.removeEventListener('click', onBackdrop);
@@ -4152,7 +4215,7 @@ function downloadUserData() {
       avg_ticket: r.merchant.avgTicket,
       country: r.merchant.country,
       product_type: r.merchant.productType,
-      subscription_model: r.merchant.subscription,
+      recurring_billing_model: r.merchant.subscription,
       chargeback_ratio: r.merchant.chargebackRatio,
       refund_ratio: r.merchant.refundRatio,
       terminations: r.merchant.terminations,
@@ -4254,9 +4317,8 @@ async function deleteAccountFlow() {
   // gateway strips custom CORS headers from raw fetch on Edge Functions, breaking the
   // preflight. The client handles auth + headers + preflight correctly.
   // Server-side, the function handles:
-  //   1. Cancelling the Stripe subscription (if any) — service role + Stripe secret key
-  //   2. Deleting auth.users — Postgres ON DELETE CASCADE clears profiles, subscriptions,
-  //      reports, and renewal_reminders automatically.
+  //   1. Deleting auth.users — Postgres ON DELETE CASCADE clears profiles, purchases,
+  //      and reports automatically.
   let data, error;
   try {
     const result = await supabaseClient.functions.invoke('delete-user-account', {
@@ -4283,7 +4345,7 @@ async function deleteAccountFlow() {
     const errCode = errBody && errBody.error;
 
     if (errCode === 'stripe_cancel_failed') {
-      showAlertToast('We could not cancel your Stripe subscription, so we did not delete your account. No data was deleted. Please contact support@processorhelp.com so we can sort this out manually.', 'error', 8000);
+      showAlertToast('We hit a Stripe-side issue, so we did not delete your account. No data was deleted. Please contact support@processorhelp.com so we can sort this out manually.', 'error', 8000);
     } else if (errCode === 'not_authenticated') {
       showAlertToast('Your session has expired. Please sign in again and retry.', 'error');
       go('signin');
@@ -4486,7 +4548,9 @@ function renderReportsHistory() {
         <div style="padding:64px 32px;text-align:center;border:1px dashed var(--border-strong);background:var(--bg-card);">
           <div class="display" style="font-size:24px;font-weight:500;margin-bottom:12px;color:var(--fg-muted);">No reports yet.</div>
           <p style="color:var(--fg-muted);font-size:14px;margin-bottom:24px;">Run your first underwriting report to see how all 30 payment processors evaluate your business.</p>
-          <button class="btn-primary" onclick="go('application')">Run first report →</button>
+          ${(u.availableCredits || 0) > 0
+            ? `<button class="btn-primary" onclick="go('application')">Run first report →</button>`
+            : `<button class="btn-primary" onclick="startPurchase({triggerEl: this})">Buy report — $149 →</button>`}
         </div>
       ` : `
         <div style="display:flex;flex-direction:column;gap:12px;">
@@ -4512,7 +4576,9 @@ function renderReportsHistory() {
           }).join('')}
         </div>
         <div style="margin-top:32px;text-align:center;">
-          <button class="btn-primary" onclick="go('application')">Run new report →</button>
+          ${(u.availableCredits || 0) > 0
+            ? `<button class="btn-primary" onclick="go('application')">Run new report →</button>`
+            : `<button class="btn-primary" onclick="startPurchase({triggerEl: this})">Buy report — $149 →</button>`}
         </div>
       `}
     </div>
@@ -4762,11 +4828,11 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
         if (processingToast && processingToast.parentNode) processingToast.remove();
         if (currentUser) {
           showSuccessToast();
-          // Route into the dashboard so the user sees their now-active subscription state
+          // Route into the dashboard so the user sees their now-available report
           go('dashboard');
         } else {
           // Session was lost between checkout and return — webhook still fired and
-          // the subscription IS active in our DB, but this browser/tab can't see it.
+          // the purchase IS recorded in our DB, but this browser/tab can't see it.
           // Don't lie to the user. Tell them to sign in.
           showSignInPromptToast();
           go('signin');
@@ -4784,13 +4850,13 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
       document.body.appendChild(toast);
       setTimeout(() => { toast.style.transition = 'opacity 0.3s ease'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 350); }, 5000);
 
-      // If user is signed in, route them to subscribe so they can pick a plan again. Otherwise leave them on landing.
+      // If user is signed in, route them to subscribe so they can try the purchase again. Otherwise leave them on landing.
       if (currentUser) {
         go('subscribe');
       }
     } else if (urlParams.get('billing') === 'returned') {
       // =============== BILLING PORTAL RETURN ===============
-      // When user returns from Stripe Customer Portal (after updating card / changing plan / cancelling),
+      // When user returns from Stripe Customer Portal (after viewing receipts or updating payment method),
       // they land on ?billing=returned. Re-hydrate to pick up any webhook-driven state changes, then route to billing.
       // NOTE: this branch is mutually exclusive with the checkout=* branches above so we never
       // run two re-hydrate timers at once on a single page load.
