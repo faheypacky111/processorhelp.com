@@ -173,13 +173,9 @@
     position: absolute;
     top: -10px; left: -10px; right: -10px; bottom: -10px;
   }
-  /* Stabilize price/note display - tabular numbers prevent digit-width shifts */
-  .starter-price, .growth-price, .enterprise-price,
-  .starter-period, .growth-period, .enterprise-period {
+  /* Stabilize price display - tabular numbers prevent digit-width shifts */
+  .price-display {
     font-variant-numeric: tabular-nums;
-  }
-  .starter-billing-note, .growth-billing-note, .enterprise-billing-note {
-    min-height: 1.5em;
   }
 
   .grain::before {
@@ -487,14 +483,6 @@
 
     /* Subscribe checkout 2-col -> stack */
     #subscribe-content div[style*="1fr 1fr"] { grid-template-columns: 1fr !important; gap: 32px !important; }
-
-    /* Plan-switcher and billing-period buttons on subscribe — match new mobile button scale */
-    #subscribe-content button[onclick^="switchPlan"],
-    #subscribe-content button[onclick^="switchBilling"] {
-      padding: 10px 14px !important;
-      font-size: 11px !important;
-      min-height: 44px !important;
-    }
 
     /* About Us "Who We Serve" and "Principles" 2-col -> stack */
     section div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; gap: 24px !important; }
@@ -828,8 +816,8 @@
         <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:12px;">Decision Engine</div>
       </div>
       <div class="stat-cell" style="padding:32px 24px;">
-        <div class="display stat-number" data-target="29" data-format="dollar" style="font-size:48px;font-weight:500;line-height:1;">$0</div>
-        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:12px;">Per Month · Starting Price</div>
+        <div class="display stat-number" data-target="149" data-format="dollar" style="font-size:48px;font-weight:500;line-height:1;">$0</div>
+        <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);margin-top:12px;">Per Report · One-Time</div>
       </div>
     </div>
   </section>
@@ -906,7 +894,7 @@
       <div style="border:2px solid var(--accent);background:var(--bg-card);padding:48px 40px;display:flex;flex-direction:column;width:100%;position:relative;">
         <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">Processor Help</div>
         <h3 class="display" style="font-size:32px;font-weight:500;margin-bottom:8px;">Evaluation Report</h3>
-        <p style="font-size:14px;color:var(--fg-muted);margin-bottom:32px;line-height:1.5;">One-time payment. No subscription. The report is yours forever.</p>
+        <p style="font-size:14px;color:var(--fg-muted);margin-bottom:32px;line-height:1.5;">One-time payment. No subscription. Your report is kept in your account for as long as you keep it.</p>
 
         <div style="margin-bottom:32px;">
           <span class="display" style="font-size:64px;font-weight:500;line-height:1;">$149</span>
@@ -917,7 +905,7 @@
           <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Underwriting verdict across <strong>all 30</strong> payment processors</span></div>
           <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Match score + reasoning for every processor</span></div>
           <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Direct apply links to approved processors</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Saved to your account permanently</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Kept in your account</span></div>
           <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Email support, 48hr response</span></div>
         </div>
 
@@ -1095,7 +1083,7 @@
   <section style="padding:64px 48px 32px;max-width:1400px;margin:0 auto;">
     <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Resources · Legal</div>
     <h1 class="display" style="font-size:clamp(42px, 5vw, 64px);line-height:1.05;font-weight:400;margin-bottom:16px;">Legal Center.</h1>
-    <p style="color:var(--fg-muted);font-size:17px;max-width:700px;">Our complete legal documentation in one place. Select a document from the sidebar to read its contents. All policies were last updated May 6, 2026.</p>
+    <p style="color:var(--fg-muted);font-size:17px;max-width:700px;">Our complete legal documentation in one place. Select a document from the sidebar to read its contents. All policies were last updated May 21, 2026.</p>
   </section>
 
   <section style="padding:32px 48px 120px;max-width:1400px;margin:0 auto;">
@@ -1111,7 +1099,7 @@
       <div style="min-width:0;">
       <div class="legal-content" id="legal-privacy" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">Privacy Policy</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 14, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 21, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
       <strong style="color:var(--fg);">Plain-language summary:</strong> We collect the business information you provide to generate your underwriting report. We charge a one-time $149 fee per underwriting report. We don't sell your data. We don't share your intake form with the payment processors listed in your report — you apply to those directly. We do share data with the service providers we use to run the platform (like Stripe and Supabase), as described in Section 4a. You're always in control.
@@ -1145,7 +1133,7 @@
     <p>We use carefully selected third-party services to operate Processor Help. These providers receive only the data necessary to perform their function, are bound by data protection agreements, and may not use your information for their own purposes.</p>
     <ul style="margin-top:16px;padding-left:24px;">
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Supabase, Inc.</strong> — Hosts our database, authentication, and serverless backend functions. Supabase stores your account credentials, business profile, purchase history, and saved reports. May log standard request metadata (IP address, user-agent, request timestamps) for security and abuse prevention. Their <a href="https://supabase.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
-      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Stripe, Inc.</strong> — Payment processing for your subscription. Stripe receives your name, email, billing address, and payment card details. Stripe is PCI-DSS Level 1 certified. Their <a href="https://stripe.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
+      <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Stripe, Inc.</strong> — Payment processing for one-time report purchases. Stripe receives your name, email, billing address, and payment card details. Stripe is PCI-DSS Level 1 certified. Their <a href="https://stripe.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Resend</strong> — Delivers transactional emails (account confirmations, password resets, receipts, account notifications). Resend receives your email address and the message content for each transactional email we send you. Their <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of your data.</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">GitHub, Inc.</strong> — Hosts our public-facing website (GitHub Pages). May log basic technical information (IP address, browser type, request timestamps) for service operation.</li>
       <li style="margin-bottom:12px;"><strong style="color:var(--fg);">Google LLC — Google Analytics 4 (consent-gated)</strong> — Loaded only after you choose "Accept All" in our cookie banner. Receives anonymized usage data (page views, session source, device type, anonymized IP) to help us understand which features and pages are being used. Configured with IP anonymization on, Google Signals off, and ad personalization off. Their <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a> governs their use of data.</li>
@@ -1188,7 +1176,7 @@
       </div>
       <div class="legal-content" id="legal-tos" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">Terms of Service</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 14, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 21, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
       <strong style="color:var(--fg);">Plain-language summary:</strong> Processor Help is an advisory tool, not a payment processor or broker. We charge a one-time fee of $149 per underwriting report across 30 payment processors. No subscription, no recurring billing. Results are informational — processors make their own final decisions. Don't misrepresent your business on the form.
@@ -1247,7 +1235,7 @@
     <p style="margin-top:12px;">We may modify, suspend, or discontinue any aspect of the service at any time. For material changes that affect functionality, we will provide reasonable advance notice. For full discontinuation of the service, we will provide at least 30 days' notice and will honor any refund obligations in accordance with Section 6. We may also restrict access in certain geographic regions due to legal or regulatory requirements. Except as otherwise required by law, we are not liable for losses arising from service unavailability or modification.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">7c. Email Communications</h2>
-    <p><strong style="color:var(--fg);">Transactional emails (always sent):</strong> account confirmations, password resets, payment receipts, subscription notifications, security alerts, service announcements, and policy updates. These are required for account operation and cannot be opted out of while you maintain an account.</p>
+    <p><strong style="color:var(--fg);">Transactional emails (always sent):</strong> account confirmations, password resets, payment receipts, refund confirmations, security alerts, service announcements, and policy updates. These are required for account operation and cannot be opted out of while you maintain an account.</p>
     <p style="margin-top:12px;"><strong style="color:var(--fg);">Marketing emails (opt-in only):</strong> product updates, industry insights, payment processor news, and promotional content. These require your explicit consent at signup or in your settings. You can unsubscribe at any time using the link in any marketing email or by emailing <a href="mailto:support@processorhelp.com" style="color:var(--accent);text-decoration:underline;">support@processorhelp.com</a>.</p>
 
     <h2 class="display" style="font-size:24px;font-weight:500;color:var(--fg);margin-bottom:12px;margin-top:32px;">8. Disclaimers</h2>
@@ -1275,7 +1263,7 @@
       </div>
       <div class="legal-content" id="legal-cookies" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">Cookie Policy</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 14, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 21, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
       <strong style="color:var(--fg);">Plain-language summary:</strong> We use essential cookies to keep you signed in and remember your preferences. With your consent, we also use privacy-respecting analytics (Google Analytics 4 and Microsoft Clarity) to understand how the site is used. You can choose "Essential Only" or "Accept All" from our cookie banner.
@@ -1317,7 +1305,7 @@
       </div>
       <div class="legal-content" id="legal-ccpa" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">California Privacy Rights</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 14, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 21, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
       <strong style="color:var(--fg);">Plain-language summary:</strong> California residents have specific rights over their personal information under the California Consumer Privacy Act (CCPA) and California Privacy Rights Act (CPRA). Processor Help does NOT sell your personal information. You have the right to know, delete, correct, and opt out.
@@ -1372,7 +1360,7 @@
       </div>
       <div class="legal-content" id="legal-dmca" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">DMCA & Copyright Policy</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 14, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 21, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
       <strong style="color:var(--fg);">Plain-language summary:</strong> We respect intellectual property rights. If you believe content on Processor Help infringes your copyright, we have a formal takedown process under the Digital Millennium Copyright Act (DMCA).
@@ -1428,7 +1416,7 @@
       </div>
       <div class="legal-content" id="legal-accessibility" style="display:none;">
         <h2 class="display" style="font-size:clamp(36px, 4vw, 52px);line-height:1.05;font-weight:400;margin-bottom:12px;">Accessibility Statement</h2>
-        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 14, 2026</div>
+        <div class="mono" style="font-size:12px;color:var(--fg-muted);letter-spacing:0.1em;margin-bottom:32px;">Effective Date: April 23, 2026 · Last Updated: May 21, 2026</div>
         <div style="color:var(--fg-muted);font-size:16px;line-height:1.8;">
 <p style="padding:20px;background:var(--bg-elevated);border:1px solid var(--border-strong);font-size:14px;margin-bottom:40px;">
       <strong style="color:var(--fg);">Plain-language summary:</strong> We're committed to making Processor Help usable for everyone. If you experience accessibility barriers, let us know and we'll work with you to provide equivalent access.
@@ -1771,6 +1759,38 @@
 // =============== SUPABASE CLIENT ===============
 const SUPABASE_URL = 'https://wfrjltxeeadehqcffrif.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmcmpsdHhlZWFkZWhxY2ZmcmlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDMzMjUsImV4cCI6MjA5Mjk3OTMyNX0.J6o5EBdbHGTuFqWaRfMG1lyP5Hh8q5BAzpMNwKW0xtk';
+
+// =============== GLOBAL TOAST ===============
+// Used everywhere in place of native alert(). Three styles: 'error' (red), 'success' (green), 'info' (gold).
+// Auto-dismiss after `duration` ms; 'error' lingers longer by default.
+function showAlertToast(message, type, duration) {
+  type = type || 'info';
+  const colorMap = {
+    error:   { border: 'var(--denied)',    bg: 'var(--denied-bg)',    fg: 'var(--denied)',    icon: '!', defaultDur: 6000 },
+    success: { border: 'var(--approved)',  bg: 'var(--approved-bg)',  fg: 'var(--approved)',  icon: '✓', defaultDur: 4000 },
+    info:    { border: 'var(--accent)',    bg: 'var(--bg-elevated)',  fg: 'var(--accent)',    icon: 'i', defaultDur: 4500 },
+  };
+  const c = colorMap[type] || colorMap.info;
+  const dur = typeof duration === 'number' ? duration : c.defaultDur;
+  try {
+    const existing = document.getElementById('ph-alert-toast');
+    if (existing) existing.remove();
+  } catch(e) {}
+  const toast = document.createElement('div');
+  toast.id = 'ph-alert-toast';
+  toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
+  toast.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
+  toast.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);background:var(--bg-card);border:1px solid ' + c.border + ';color:var(--fg);padding:14px 20px;font-size:13px;line-height:1.5;z-index:5000;box-shadow:0 4px 16px rgba(0,0,0,0.12);display:flex;align-items:flex-start;gap:12px;max-width:480px;font-family:Inter,system-ui,sans-serif;';
+  const safe = String(message == null ? '' : message).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  toast.innerHTML = '<div style="width:20px;height:20px;background:' + c.bg + ';border:1px solid ' + c.border + ';border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:' + c.fg + ';flex-shrink:0;font-weight:600;margin-top:1px;">' + c.icon + '</div><span style="flex:1;">' + safe + '</span>';
+  document.body.appendChild(toast);
+  setTimeout(function() {
+    toast.style.transition = 'opacity 0.3s ease';
+    toast.style.opacity = '0';
+    setTimeout(function() { try { toast.remove(); } catch(e) {} }, 350);
+  }, dur);
+}
+
 // Disable the navigator.locks-based auth lock — it can deadlock when a tab loses/regains focus
 // or in certain browser environments, causing signInWithPassword to hang indefinitely even
 // though the underlying HTTP request succeeded. Replacing with a no-op lock fixes it.
@@ -2688,7 +2708,7 @@ const PRODUCT = {
     'Underwriting verdict across 30 payment processors',
     'Match score + reasoning for every processor',
     'Direct apply links to approved processors',
-    'Saved to your account permanently',
+    'Kept in your account',
     'Email support, 48hr response',
   ],
 };
@@ -2749,7 +2769,7 @@ async function startPurchase(opts) {
     window.location.href = url;
   } catch (e) {
     console.error('[PURCHASE] Failed to start checkout:', e);
-    alert('Could not start checkout: ' + (e.message || 'Unknown error') + '\n\nPlease try again or email support@processorhelp.com.');
+    showAlertToast('Could not start checkout: ' + (e.message || 'Unknown error') + ' Please try again or email support@processorhelp.com.', 'error');
     if (triggerEl) {
       triggerEl.disabled = false;
       triggerEl.textContent = triggerEl.dataset._origText || 'Buy Report — $149 →';
@@ -2835,24 +2855,24 @@ function renderStep(step) {
     <h2 class="display" style="font-size:40px;font-weight:400;margin-bottom:12px;">Tell us about your business.</h2>
     <p style="color:var(--fg-muted);font-size:16px;margin-bottom:48px;">Core entity information. This shapes which payment processors can work with you.</p>
 
-    <div class="field"><label>Legal business name</label>
-      <input value="${escapeHtml(merchant.businessName)}" oninput="merchant.businessName = this.value" placeholder="Acme Commerce LLC" />
+    <div class="field"><label for="intake-business-name">Legal business name</label>
+      <input id="intake-business-name" value="${escapeHtml(merchant.businessName)}" oninput="merchant.businessName = this.value" placeholder="Acme Commerce LLC" />
     </div>
 
     <div class="two-col">
-      <div class="field"><label>Entity type</label>
-        <select onchange="merchant.entityType = this.value">
+      <div class="field"><label for="intake-entity-type">Entity type</label>
+        <select id="intake-entity-type" onchange="merchant.entityType = this.value">
           <option ${merchant.entityType==='LLC'?'selected':''}>LLC</option>
           <option ${merchant.entityType==='Corporation'?'selected':''}>Corporation</option>
           <option ${merchant.entityType==='Sole Proprietor'?'selected':''}>Sole Proprietor</option>
           <option ${merchant.entityType==='Partnership'?'selected':''}>Partnership</option>
         </select>
       </div>
-      <div class="field"><label>Years in business</label>
-        <input type="number" min="0" max="200" value="${merchant.yearsInBusiness}" oninput="merchant.yearsInBusiness = Number(this.value)" />
+      <div class="field"><label for="intake-years">Years in business</label>
+        <input id="intake-years" type="number" min="0" max="200" value="${merchant.yearsInBusiness}" oninput="merchant.yearsInBusiness = Number(this.value)" />
       </div>
-      <div class="field"><label>Country of registration</label>
-        <select onchange="merchant.country = this.value">
+      <div class="field"><label for="intake-country">Country of registration</label>
+        <select id="intake-country" onchange="merchant.country = this.value">
           <option value="US" ${merchant.country==='US'?'selected':''}>United States</option>
           <option value="EU" ${merchant.country==='EU'?'selected':''}>European Union</option>
           <option value="UK" ${merchant.country==='UK'?'selected':''}>United Kingdom</option>
@@ -2865,8 +2885,8 @@ function renderStep(step) {
           <option value="AE" ${merchant.country==='AE'?'selected':''}>United Arab Emirates</option>
         </select>
       </div>
-      <div class="field"><label>Product type</label>
-        <select onchange="merchant.productType = this.value">
+      <div class="field"><label for="intake-product-type">Product type</label>
+        <select id="intake-product-type" onchange="merchant.productType = this.value">
           <option value="physical" ${merchant.productType==='physical'?'selected':''}>Physical goods</option>
           <option value="digital" ${merchant.productType==='digital'?'selected':''}>Digital products</option>
           <option value="service" ${merchant.productType==='service'?'selected':''}>Services</option>
@@ -2882,24 +2902,24 @@ function renderStep(step) {
     <p style="color:var(--fg-muted);font-size:16px;margin-bottom:48px;">Payment processors price and route based on size and category. Be accurate.</p>
 
     <div class="two-col">
-      <div class="field"><label>Monthly processing volume (USD)</label>
+      <div class="field"><label for="intake-monthly-volume">Monthly processing volume (USD)</label>
         <div class="hint">Gross volume processed per month, on average</div>
-        <input type="number" min="0" step="1000" value="${merchant.monthlyVolume}" oninput="merchant.monthlyVolume = Number(this.value)" />
+        <input id="intake-monthly-volume" type="number" min="0" step="1000" value="${merchant.monthlyVolume}" oninput="merchant.monthlyVolume = Number(this.value)" />
       </div>
-      <div class="field"><label>Average ticket size (USD)</label>
-        <input type="number" min="0" step="1" value="${merchant.avgTicket}" oninput="merchant.avgTicket = Number(this.value)" />
+      <div class="field"><label for="intake-avg-ticket">Average ticket size (USD)</label>
+        <input id="intake-avg-ticket" type="number" min="0" step="1" value="${merchant.avgTicket}" oninput="merchant.avgTicket = Number(this.value)" />
       </div>
     </div>
 
-    <div class="field"><label>Industry / vertical</label>
+    <div class="field"><label for="intake-industry">Industry / vertical</label>
       <div class="hint">Pick the closest match — this drives payment processor routing</div>
-      <select onchange="merchant.industry = this.value">
+      <select id="intake-industry" onchange="merchant.industry = this.value">
         ${Object.entries(INDUSTRY_RISK).map(([k,v]) => `<option value="${k}" ${merchant.industry===k?'selected':''}>${v.label} · ${v.tier.toUpperCase()} RISK</option>`).join('')}
       </select>
     </div>
 
-    <div class="field"><label>Recurring billing / subscriptions?</label>
-      <select onchange="merchant.subscription = this.value">
+    <div class="field"><label for="intake-recurring">Recurring billing / subscriptions?</label>
+      <select id="intake-recurring" onchange="merchant.subscription = this.value">
         <option value="no" ${merchant.subscription==='no'?'selected':''}>No — one-time purchases only</option>
         <option value="yes" ${merchant.subscription==='yes'?'selected':''}>Yes — subscription or recurring billing</option>
       </select>
@@ -2912,20 +2932,20 @@ function renderStep(step) {
     <p style="color:var(--fg-muted);font-size:16px;margin-bottom:48px;">Accuracy here matters. Underwriters verify everything — better to be up-front.</p>
 
     <div class="two-col">
-      <div class="field"><label>Chargeback ratio (%)</label>
+      <div class="field"><label for="intake-chargeback">Chargeback ratio (%)</label>
         <div class="hint">Last 12-month average</div>
-        <input type="number" min="0" max="10" step="0.1" value="${merchant.chargebackRatio}" oninput="merchant.chargebackRatio = Number(this.value)" />
+        <input id="intake-chargeback" type="number" min="0" max="10" step="0.1" value="${merchant.chargebackRatio}" oninput="merchant.chargebackRatio = Number(this.value)" />
       </div>
-      <div class="field"><label>Refund ratio (%)</label>
-        <input type="number" min="0" max="100" step="0.5" value="${merchant.refundRatio}" oninput="merchant.refundRatio = Number(this.value)" />
+      <div class="field"><label for="intake-refund">Refund ratio (%)</label>
+        <input id="intake-refund" type="number" min="0" max="100" step="0.5" value="${merchant.refundRatio}" oninput="merchant.refundRatio = Number(this.value)" />
       </div>
-      <div class="field"><label>Prior payment processor terminations</label>
+      <div class="field"><label for="intake-terminations">Prior payment processor terminations</label>
         <div class="hint">How many times has a payment processor closed your account?</div>
-        <input type="number" min="0" max="10" value="${merchant.terminations}" oninput="merchant.terminations = Number(this.value)" />
+        <input id="intake-terminations" type="number" min="0" max="10" value="${merchant.terminations}" oninput="merchant.terminations = Number(this.value)" />
       </div>
-      <div class="field"><label>On the MATCH list?</label>
+      <div class="field"><label for="intake-match">On the MATCH list?</label>
         <div class="hint">Mastercard MATCH / TMF list status</div>
-        <select onchange="merchant.matchList = this.value">
+        <select id="intake-match" onchange="merchant.matchList = this.value">
           <option value="no" ${merchant.matchList==='no'?'selected':''}>No</option>
           <option value="yes" ${merchant.matchList==='yes'?'selected':''}>Yes</option>
           <option value="unsure" ${merchant.matchList==='unsure'?'selected':''}>Unsure</option>
@@ -2933,9 +2953,9 @@ function renderStep(step) {
       </div>
     </div>
 
-    <div class="field"><label>Personal credit tier</label>
+    <div class="field"><label for="intake-credit">Personal credit tier</label>
       <div class="hint">Most payment processors require a personal guarantee</div>
-      <select onchange="merchant.credit = this.value">
+      <select id="intake-credit" onchange="merchant.credit = this.value">
         <option value="excellent" ${merchant.credit==='excellent'?'selected':''}>Excellent (740+)</option>
         <option value="good" ${merchant.credit==='good'?'selected':''}>Good (680-739)</option>
         <option value="fair" ${merchant.credit==='fair'?'selected':''}>Fair (620-679)</option>
@@ -2991,35 +3011,35 @@ function nextStep() {
   // checks let us show clear errors before the user wastes a click and a report quota.
   if (currentStep === 0) {
     if (!merchant.businessName.trim()) {
-      alert('Please enter your business name to continue.');
+      showAlertToast('Please enter your business name to continue.', 'error');
       return;
     }
     if (merchant.businessName.length > 200) {
-      alert('Business name is too long. Please shorten it to 200 characters or fewer.');
+      showAlertToast('Business name is too long. Please shorten it to 200 characters or fewer.', 'error');
       return;
     }
   }
   if (currentStep === 1) {
     if (!Number.isFinite(merchant.monthlyVolume) || merchant.monthlyVolume <= 0) {
-      alert('Please enter your monthly processing volume to continue. If you are pre-revenue, enter your projected monthly volume.');
+      showAlertToast('Please enter your monthly processing volume to continue. If you are pre-revenue, enter your projected monthly volume.', 'error');
       return;
     }
     if (!Number.isFinite(merchant.avgTicket) || merchant.avgTicket <= 0) {
-      alert('Please enter your average ticket size to continue.');
+      showAlertToast('Please enter your average ticket size to continue.', 'error');
       return;
     }
   }
   if (currentStep === 2) {
     if (!Number.isFinite(merchant.chargebackRatio) || merchant.chargebackRatio < 0) {
-      alert('Please enter a valid chargeback ratio (0 if you have none).');
+      showAlertToast('Please enter a valid chargeback ratio (0 if you have none).', 'error');
       return;
     }
     if (!Number.isFinite(merchant.refundRatio) || merchant.refundRatio < 0) {
-      alert('Please enter a valid refund ratio (0 if you have none).');
+      showAlertToast('Please enter a valid refund ratio (0 if you have none).', 'error');
       return;
     }
     if (!Number.isFinite(merchant.terminations) || merchant.terminations < 0) {
-      alert('Please enter a valid number for prior payment processor terminations (0 if none).');
+      showAlertToast('Please enter a valid number for prior payment processor terminations (0 if none).', 'error');
       return;
     }
   }
@@ -3356,7 +3376,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Do you earn commissions from payment processors?',
-    a: 'No. Processor Help earns revenue exclusively from subscription fees paid by users. We do not accept referral commissions, kickbacks, or residuals from any payment processor on our platform. This independence is why we can tell you the truth about which processors will deny you.'
+    a: 'No. Processor Help earns revenue exclusively from the one-time $149 report fees paid by users. We do not accept referral commissions, kickbacks, or residuals from any payment processor on our platform. This independence is why we can tell you the truth about which processors will deny you.'
   },
   {
     q: 'What if I have prior processor terminations or MATCH list status?',
@@ -3372,7 +3392,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Is my data safe?',
-    a: 'Yes. All data transmission is encrypted with TLS. We do not sell your data. We do not share your business profile with the payment processors listed in our underwriting engine — when you click "Apply," you are redirected to that processor\'s own site to apply directly. We do share data with the third-party service providers we use to operate the platform (Stripe for subscription billing, Supabase for database hosting, Resend for transactional email, GitHub for hosting), as detailed in our Privacy Policy. Your reports are saved to your account for as long as your account remains active. You can export all your data anytime from your Settings page (GDPR Article 20) or permanently delete your account at any time.'
+    a: 'Yes. All data transmission is encrypted with TLS. We do not sell your data. We do not share your business profile with the payment processors listed in our underwriting engine — when you click "Apply," you are redirected to that processor\'s own site to apply directly. We do share data with the third-party service providers we use to operate the platform (Stripe for one-time payment processing, Supabase for database hosting, Resend for transactional email, GitHub for hosting), as detailed in our Privacy Policy. Your reports are kept in your account for as long as you keep the account active. You can export all your data anytime from your Settings page (GDPR Article 20) or permanently delete your account at any time.'
   },
   {
     q: 'What if I need help beyond the report?',
@@ -3384,7 +3404,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Can I use the tool more than once?',
-    a: 'Yes — periodic re-runs are exactly what subscription access is designed for. Every time your business profile changes — new volume tier, chargeback shift, new vertical, new country — run the tool again. The payment processor landscape also shifts quarterly, so periodic re-runs are worthwhile. Each plan includes a monthly report quota: Starter gets 3, Growth gets 6, Enterprise is unlimited.'
+    a: 'Yes — periodic re-runs are exactly the use case. Every time your business profile changes — new volume, chargeback shift, new vertical, new country — buy a fresh $149 report. The payment processor landscape also shifts quarterly, so periodic re-evaluations are worthwhile. Each report is a one-time $149 purchase; there is no subscription, monthly quota, or auto-renewal. Buy another whenever you need one.'
   },
 ];
 
@@ -3549,7 +3569,7 @@ function renderSubscribe() {
     'Real-time approval, conditional, and denial decisions',
     'Match scores and underwriting reasoning for every processor',
     'Direct apply links to every processor',
-    'Permanently saved to your account',
+    'Kept in your account for as long as you keep it',
     'Email support (48-hour response)',
   ];
 
@@ -3618,7 +3638,7 @@ function renderSubscribe() {
         <div style="margin-top:16px;padding:16px;background:var(--bg-elevated);border:1px solid var(--border-strong);">
           <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--fg);line-height:1.6;">
             <div>
-              <strong style="color:var(--fg);">One-time purchase disclosure:</strong> By clicking Continue, you authorize Processor Help to charge your payment method <strong>$${PURCHASE.price}.00 USD one time</strong>. There is no subscription, no recurring billing, and no auto-renewal. After payment, your report becomes available immediately and is permanently saved to your account.
+              <strong style="color:var(--fg);">One-time purchase disclosure:</strong> By clicking Continue, you authorize Processor Help to charge your payment method <strong>$${PURCHASE.price}.00 USD one time</strong>. There is no subscription, no recurring billing, and no auto-renewal. After payment, your report becomes available immediately and is kept in your account for as long as your account remains active.
               <br><br>
               <strong style="color:var(--fg);">Refund window:</strong> Full refund within 7 days if you have not yet run your report. No refund once the report has been generated, as the underwriting evaluation has already been delivered.
             </div>
@@ -3751,9 +3771,9 @@ async function openBillingPortal(triggerEl) {
 
       // Friendlier copy for the most common error: user has never subscribed
       if (errMsg && /no stripe customer|customer not found|no customer/i.test(errMsg)) {
-        alert('You have not made a purchase yet. Buy a report to manage billing.');
+        showAlertToast('You have not made a purchase yet. Buy a report to manage billing.', 'info');
       } else {
-        alert('Could not open billing portal. Please try again or contact support@processorhelp.com.');
+        showAlertToast('Could not open billing portal. Please try again or contact support@processorhelp.com.', 'error');
       }
       restoreButton();
       return;
@@ -3761,7 +3781,7 @@ async function openBillingPortal(triggerEl) {
 
     if (!data.url) {
       console.error('[BILLING PORTAL] No URL returned:', data);
-      alert('Could not open billing portal. Please try again or contact support@processorhelp.com.');
+      showAlertToast('Could not open billing portal. Please try again or contact support@processorhelp.com.', 'error');
       restoreButton();
       return;
     }
@@ -3770,7 +3790,7 @@ async function openBillingPortal(triggerEl) {
     window.location.href = data.url;
   } catch (err) {
     console.error('[BILLING PORTAL] Unexpected error:', err);
-    alert('Could not open billing portal. Please try again or contact support@processorhelp.com.');
+    showAlertToast('Could not open billing portal. Please try again or contact support@processorhelp.com.', 'error');
     restoreButton();
   }
 }
@@ -3787,7 +3807,7 @@ async function processSubscription() {
   content.innerHTML = `
     <div class="fade-up" style="text-align:center;padding:80px 0;">
       <div class="spinner" style="width:64px;height:64px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;margin:0 auto 32px;"></div>
-      <h2 class="display" style="font-size:32px;font-weight:400;margin-bottom:12px;">'Preparing your purchase…'</h2>
+      <h2 class="display" style="font-size:32px;font-weight:400;margin-bottom:12px;">Preparing your purchase…</h2>
       <p style="color:var(--fg-muted);font-size:15px;">Redirecting to secure checkout. Do not close this window.</p>
     </div>
   `;
@@ -4189,7 +4209,7 @@ function downloadUserData() {
     updated_at: new Date().toISOString(),
   });
 
-  alert(`Your data has been exported as "${fileName}". A copy of this request has been logged for compliance audit.`);
+  showAlertToast('Your data has been exported as "' + fileName + '". A copy of this request has been logged for compliance audit.', 'success', 6000);
   })();
 }
 
@@ -4214,7 +4234,7 @@ async function deleteAccountFlow() {
     'This is your final chance to cancel.'
   );
   if (confirmation !== 'DELETE') {
-    alert('Account deletion cancelled.');
+    showAlertToast('Account deletion cancelled.', 'info');
     return;
   }
 
@@ -4246,7 +4266,7 @@ async function deleteAccountFlow() {
     error = result.error;
   } catch (err) {
     console.error('[DELETE ACCOUNT] Network error:', err);
-    alert('Network error. Please check your connection and try again, or contact support@processorhelp.com.');
+    showAlertToast('Network error. Please check your connection and try again, or contact support@processorhelp.com.', 'error');
     return;
   }
 
@@ -4263,19 +4283,13 @@ async function deleteAccountFlow() {
     const errCode = errBody && errBody.error;
 
     if (errCode === 'stripe_cancel_failed') {
-      alert(
-        'We could not cancel your Stripe subscription, so we did not delete your account.\n\n' +
-        'No data was deleted. Please contact support@processorhelp.com so we can sort this out manually.'
-      );
+      showAlertToast('We could not cancel your Stripe subscription, so we did not delete your account. No data was deleted. Please contact support@processorhelp.com so we can sort this out manually.', 'error', 8000);
     } else if (errCode === 'not_authenticated') {
-      alert('Your session has expired. Please sign in again and retry.');
+      showAlertToast('Your session has expired. Please sign in again and retry.', 'error');
       go('signin');
     } else {
       const detail = (errBody && (errBody.details || errBody.error)) || error.message || 'Unknown error.';
-      alert(
-        'There was a problem deleting your account: ' + detail + '\n\n' +
-        'Please contact support@processorhelp.com if this persists.'
-      );
+      showAlertToast('There was a problem deleting your account: ' + detail + ' Please contact support@processorhelp.com if this persists.', 'error', 8000);
     }
     return;
   }
@@ -4290,23 +4304,18 @@ async function deleteAccountFlow() {
   } catch (e) {}
 
   // Confirmation screen
-  alert(
-    '✓ Account Deleted\n\n' +
-    `The account for ${deletedEmail} and all associated data has been permanently deleted from our systems.\n\n` +
-    'Some data may persist briefly in encrypted backups for up to 30 days as required for security and fraud prevention, after which it will be permanently destroyed.\n\n' +
-    'Thank you for using Processor Help.'
-  );
+  showAlertToast('Account deleted. The account for ' + deletedEmail + ' and all associated data has been permanently deleted. Some data may persist briefly in encrypted backups for up to 30 days as required for security and fraud prevention. Thank you for using Processor Help.', 'success', 10000);
   go('landing');
 }
 
 async function updateBusiness() {
   const newName = document.getElementById('settings-business').value.trim();
   if (newName.length < 2) {
-    alert('Business name must be at least 2 characters.');
+    showAlertToast('Business name must be at least 2 characters.', 'error');
     return;
   }
   if (newName.length > 100) {
-    alert('Business name must be 100 characters or fewer.');
+    showAlertToast('Business name must be 100 characters or fewer.', 'error');
     return;
   }
   // Capture previous value so we can revert in-memory state if persistence fails.
@@ -4319,12 +4328,12 @@ async function updateBusiness() {
     updated_at: new Date().toISOString(),
   });
   if (ok) {
-    alert('Business name updated.');
+    showAlertToast('Business name updated.', 'success');
     renderSettings();
   } else {
     // Revert in-memory state so subsequent renders don't show an unsaved value.
     currentUser.business = previousName;
-    alert('Unable to update business name. Please try again.');
+    showAlertToast('Unable to update business name. Please try again.', 'error');
   }
 }
 
@@ -4340,7 +4349,7 @@ async function changePasswordPrompt() {
   if (newPw === null) return; // user cancelled
 
   if (!window._authToken) {
-    alert('Session expired. Please sign in again.');
+    showAlertToast('Session expired. Please sign in again.', 'error');
     return;
   }
 
@@ -4364,13 +4373,13 @@ async function changePasswordPrompt() {
     if (!res.ok) {
       const errBody = await res.json().catch(() => ({}));
       const msg = errBody.msg || errBody.error_description || errBody.message || 'unknown error';
-      alert('Unable to update password: ' + msg);
+      showAlertToast('Unable to update password: ' + msg, 'error');
       return;
     }
-    alert('Password updated.');
+    showAlertToast('Password updated.', 'success');
   } catch (err) {
     console.error('Password change error:', err);
-    alert('Unable to update password. Please try again.');
+    showAlertToast('Unable to update password. Please try again.', 'error');
   }
 }
 
@@ -4517,7 +4526,7 @@ function viewPastReport(index) {
   }
   const report = currentUser.reports[index];
   if (!report || !report.merchant) {
-    alert('Unable to load report. It may have been deleted or corrupted.');
+    showAlertToast('Unable to load report. It may have been deleted or corrupted.', 'error');
     return;
   }
   merchant = { ...report.merchant };
@@ -4715,7 +4724,7 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
         const toast = document.createElement('div');
         toast.id = 'stripe-success-toast';
         toast.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);background:var(--bg-card);border:1px solid var(--approved);color:var(--fg);padding:14px 24px;font-size:13px;z-index:2000;box-shadow:0 4px 16px rgba(0,0,0,0.12);display:flex;align-items:center;gap:12px;';
-        toast.innerHTML = `<div class="spinner" style="width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--approved);border-radius:50%;flex-shrink:0;"></div><span>Finalizing your subscription…</span>`;
+        toast.innerHTML = `<div class="spinner" style="width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--approved);border-radius:50%;flex-shrink:0;"></div><span>Unlocking your report…</span>`;
         document.body.appendChild(toast);
         return toast;
       };
@@ -4724,7 +4733,7 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
         if (existing) existing.remove();
         const toast = document.createElement('div');
         toast.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);background:var(--bg-card);border:1px solid var(--approved);color:var(--fg);padding:14px 24px;font-size:13px;z-index:2000;box-shadow:0 4px 16px rgba(0,0,0,0.12);display:flex;align-items:center;gap:12px;';
-        toast.innerHTML = `<div style="width:18px;height:18px;background:var(--approved-bg);border:1px solid var(--approved);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--approved);flex-shrink:0;">✓</div><span><strong>Subscription activated.</strong> You're all set.</span>`;
+        toast.innerHTML = `<div style="width:18px;height:18px;background:var(--approved-bg);border:1px solid var(--approved);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--approved);flex-shrink:0;">✓</div><span><strong>Report unlocked.</strong> You're all set.</span>`;
         document.body.appendChild(toast);
         setTimeout(() => { toast.style.transition = 'opacity 0.3s ease'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 350); }, 4000);
       };
@@ -4733,7 +4742,7 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
         if (existing) existing.remove();
         const toast = document.createElement('div');
         toast.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);background:var(--bg-card);border:1px solid var(--accent);color:var(--fg);padding:14px 24px;font-size:13px;z-index:2000;box-shadow:0 4px 16px rgba(0,0,0,0.12);display:flex;align-items:center;gap:12px;max-width:480px;';
-        toast.innerHTML = `<div style="width:18px;height:18px;background:var(--bg-elevated);border:1px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--accent);flex-shrink:0;">i</div><span><strong>Subscription activated.</strong> Please sign in to access your account.</span>`;
+        toast.innerHTML = `<div style="width:18px;height:18px;background:var(--bg-elevated);border:1px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--accent);flex-shrink:0;">i</div><span><strong>Report unlocked.</strong> Please sign in to access your account.</span>`;
         document.body.appendChild(toast);
         setTimeout(() => { toast.style.transition = 'opacity 0.3s ease'; toast.style.opacity = '0'; setTimeout(() => toast.remove(), 350); }, 6000);
       };
@@ -4817,8 +4826,8 @@ document.querySelectorAll('.stats-row').forEach(row => statsObserver.observe(row
   if (currentUser) {
     if (currentView === 'landing') {
       // Update landing nav to show Dashboard link.
-      // Subscribed users: just the Dashboard link (no extra button).
-      // Unsubscribed users: Dashboard link + Activate Account button (since they still need to subscribe).
+      // Paid users: just the Dashboard link (no extra button).
+      // Free users: Dashboard link + Buy a Report button.
       const navRight = document.getElementById('landing-nav-right');
       if (navRight) {
         const hasPaidPurchase = (currentUser.purchases || []).some(p => p.status === 'paid');
@@ -4919,13 +4928,13 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
         );
         if (!res.ok) {
           const errBody = await res.json().catch(() => ({}));
-          alert('Unable to update password: ' + (errBody.msg || errBody.message || 'unknown error'));
+          showAlertToast('Unable to update password: ' + (errBody.msg || errBody.message || 'unknown error'), 'error');
         } else {
-          alert('Password updated. Please sign in with your new password.');
+          showAlertToast('Password updated. Please sign in with your new password.', 'success', 6000);
         }
       } catch (err) {
         console.error('Password recovery error:', err);
-        alert('Unable to update password. Please try again.');
+        showAlertToast('Unable to update password. Please try again.', 'error');
       }
     }
   }
