@@ -42,8 +42,8 @@
   } catch(e) {}
 })();
 </script>
-<!-- Supabase JS SDK — pinned to 2.106.0 for stable SRI. defer prevents render block. -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.106.0/dist/umd/supabase.min.js" defer></script>
+<!-- Supabase JS SDK — pinned to 2.106.0 for stable SRI. Loaded synchronously because the inline script below depends on window.supabase being defined at parse time. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.106.0/dist/umd/supabase.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=JetBrains+Mono:wght@500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
