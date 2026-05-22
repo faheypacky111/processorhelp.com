@@ -1348,8 +1348,7 @@
 
       <div style="border:2px solid var(--accent);background:var(--bg-card);padding:48px 40px;display:flex;flex-direction:column;width:100%;position:relative;">
         <div class="mono" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">Processor Help</div>
-        <h3 class="display" style="font-size:32px;font-weight:500;margin-bottom:8px;">Evaluation Report</h3>
-        <p style="font-size:14px;color:var(--fg-muted);margin-bottom:32px;line-height:1.5;">One-time payment. No subscription. Your report is kept in your account for as long as you keep it.</p>
+        <h3 class="display" style="font-size:32px;font-weight:500;margin-bottom:32px;">Evaluation Report</h3>
 
         <div style="margin-bottom:32px;">
           <span class="display" style="font-size:64px;font-weight:500;line-height:1;">$149</span>
@@ -1357,11 +1356,10 @@
         </div>
 
         <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:40px;font-size:14px;">
-          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Underwriting verdict across <strong>all 30</strong> payment processors</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Match score + reasoning for every processor</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Direct apply links to approved processors</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Kept in your account</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Email support, 48hr response</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Verdict across <strong>all 30 processors</strong> — approved, conditional, denied</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Match score + reasoning per processor</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Direct apply links to your approved matches</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--approved);font-weight:700;flex-shrink:0;">✓</span><span>Available anytime in your account</span></div>
         </div>
 
         <button class="btn-primary" onclick="startPurchase({triggerEl: this})" style="padding:18px 24px;font-size:13px;width:100%;">Buy Report — $149 →</button>
@@ -3161,11 +3159,10 @@ const PRODUCT = {
   price: 149,
   description: 'One-time payment. No subscription.',
   features: [
-    'Underwriting verdict across 30 payment processors',
-    'Match score + reasoning for every processor',
-    'Direct apply links to approved processors',
-    'Kept in your account',
-    'Email support, 48hr response',
+    'Verdict across all 30 processors — approved, conditional, denied',
+    'Match score + reasoning per processor',
+    'Direct apply links to your approved matches',
+    'Available anytime in your account',
   ],
 };
 
@@ -4017,12 +4014,10 @@ function renderSubscribe() {
   if (!u) { go('signin'); return; }
 
   const features = [
-    'One underwriting report across all 30 payment processors',
-    'Real-time approval, conditional, and denial decisions',
-    'Match scores and underwriting reasoning for every processor',
-    'Direct apply links to every processor',
-    'Kept in your account for as long as you keep it',
-    'Email support (48-hour response)',
+    'Verdict across all 30 processors — approved, conditional, denied',
+    'Match score + reasoning per processor',
+    'Direct apply links to your approved matches',
+    'Available anytime in your account',
   ];
 
   const content = document.getElementById('subscribe-content');
